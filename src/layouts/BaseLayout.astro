@@ -1,7 +1,6 @@
 ---
 import '../styles/global.css';
 import Navbar from '../components/layout/Navbar.astro';
-import Footer from '../components/layout/Footer.astro';
 
 interface Props {
   title?: string;
@@ -10,7 +9,7 @@ interface Props {
 
 const {
   title = "SJSU National Security Innovation Network",
-  description = "Bridging Silicon Valley innovation with our nation's most pressing security challenges. A student organization at San Jose State University."
+  description = "Applying innovation methodologies to national security challenges. A student organization at San Jose State University."
 } = Astro.props;
 ---
 
@@ -27,14 +26,13 @@ const {
     <meta name="generator" content={Astro.generator} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen flex flex-col">
+  <body class="min-h-screen bg-white">
     <Navbar />
-    <main class="flex-1">
+    <main>
       <slot />
     </main>
-    <Footer />
   </body>
 </html>

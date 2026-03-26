@@ -1,7 +1,6 @@
 ---
 const navLinks = [
   { label: "About", href: "/about" },
-  { label: "Events", href: "/events" },
   { label: "Join Us", href: "/join" },
 ];
 
@@ -19,9 +18,9 @@ const currentPath = Astro.url.pathname;
         <a
           href={link.href}
           class:list={[
-            "text-sm uppercase tracking-[0.15em] transition-colors duration-200",
+            "text-[13px] uppercase tracking-[0.15em] transition-colors duration-200",
             currentPath === link.href || currentPath === link.href + "/"
-              ? "text-near-black font-semibold"
+              ? "text-near-black font-medium"
               : "text-mid-gray hover:text-near-black"
           ]}
         >
@@ -48,7 +47,7 @@ const currentPath = Astro.url.pathname;
       {navLinks.map(link => (
         <a
           href={link.href}
-          class="text-sm uppercase tracking-[0.15em] text-dark-gray hover:text-near-black transition-colors"
+          class="text-[13px] uppercase tracking-[0.15em] text-dark-gray hover:text-near-black transition-colors"
         >
           {link.label}
         </a>

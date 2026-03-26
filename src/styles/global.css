@@ -2,7 +2,7 @@
 
 @theme {
   --color-white: #FFFFFF;
-  --color-off-white: #FAFAFA;
+  --color-off-white: #FFFFFF;
   --color-light-gray: #E5E5E5;
   --color-mid-gray: #737373;
   --color-dark-gray: #262626;
@@ -26,13 +26,13 @@
   body {
     font-family: var(--font-sans);
     color: var(--color-dark-gray);
-    background-color: var(--color-white);
+    background-color: #FFFFFF;
   }
 
   h1, h2, h3, h4, h5, h6 {
     color: var(--color-near-black);
     font-family: var(--font-display);
-    font-weight: 700;
+    font-weight: 400;
     letter-spacing: -0.02em;
   }
 

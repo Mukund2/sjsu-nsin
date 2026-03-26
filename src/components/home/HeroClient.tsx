@@ -1,18 +1,18 @@
 import { Spotlight } from "../ui/spotlight";
 import { EncryptedText } from "../ui/encrypted-text";
-import { ElevatingGrid } from "../ui/elevating-grid";
+import { FloatingParticles } from "../ui/floating-particles";
 
 export default function HeroClient() {
   return (
     <Spotlight className="relative min-h-screen w-full flex items-center justify-center bg-white">
-      <ElevatingGrid />
+      <FloatingParticles />
 
       <div className="relative z-20 mx-auto max-w-4xl px-6 text-center">
-        <p className="text-near-black text-xs font-semibold uppercase tracking-[0.3em] mb-6 font-mono">
-          SJSU
+        <p className="text-mid-gray text-[11px] uppercase tracking-[0.3em] mb-6 font-mono">
+          San Jose State University
         </p>
 
-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-near-black leading-[1.1] font-display tracking-tight">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl text-near-black leading-[1.1] font-display tracking-tight">
           <EncryptedText
             text="National Security Innovation Network"
             speed={25}
@@ -20,21 +20,20 @@ export default function HeroClient() {
           />
         </h1>
 
-        <p className="mt-8 text-dark-gray text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-          Bridging Silicon Valley innovation with our nation's most pressing
-          security challenges
+        <p className="mt-8 text-mid-gray text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed font-light">
+          Applying innovation methodologies to national security challenges
         </p>
 
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
             href="/join"
-            className="inline-block bg-near-black text-white px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] hover:bg-dark-gray transition-colors font-display"
+            className="inline-block bg-near-black text-white px-8 py-3 text-[13px] font-medium uppercase tracking-[0.15em] hover:bg-dark-gray transition-colors"
           >
             Get Involved
           </a>
           <a
-            href="#what-we-do"
-            className="inline-block border border-near-black text-near-black px-8 py-3 text-sm font-semibold uppercase tracking-[0.15em] hover:bg-near-black hover:text-white transition-colors font-display"
+            href="#focus-areas"
+            className="inline-block border border-light-gray text-near-black px-8 py-3 text-[13px] font-medium uppercase tracking-[0.15em] hover:border-near-black transition-colors"
           >
             Learn More
           </a>
