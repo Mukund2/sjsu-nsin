@@ -1,0 +1,22 @@
+---
+const requirements = [
+  "Must be a current SJSU student",
+  "Complete the membership application",
+  "No specific major required — we welcome all disciplines",
+  "Active participation in events expected",
+];
+---
+
+<section class="bg-white py-24 px-6">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="text-xs uppercase tracking-[0.2em] text-accent font-medium mb-10">Requirements</h2>
+    <div class="flex flex-col gap-5">
+      {requirements.map((req) => (
+        <div class="flex items-start gap-4">
+          <span class="w-5 h-[2px] bg-accent mt-2.5 shrink-0"></span>
+          <p class="text-dark-gray">{req}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
