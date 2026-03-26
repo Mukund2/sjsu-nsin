@@ -3,11 +3,6 @@ import { cn } from "../../lib/utils";
 
 interface DotGridProps {
   className?: string;
-  color?: string;
-  dotSize?: number;
-  gap?: number;
-  repulsionRadius?: number;
-  repulsionStrength?: number;
 }
 
 interface Dot {
@@ -19,22 +14,19 @@ interface Dot {
   vy: number;
 }
 
-export function DotGrid({
-  className,
-  color = "rgba(0, 0, 0, 0.15)",
-  dotSize = 1.2,
-  gap = 24,
-  repulsionRadius = 120,
-  repulsionStrength = 35,
-}: DotGridProps) {
+export function DotGrid({ className }: DotGridProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
   const dotsRef = useRef<Dot[]>([]);
   const mouseRef = useRef({ x: -9999, y: -9999, active: false });
   const rafRef = useRef<number>(0);
 
-  const SPRING = 0.06;
-  const DAMPING = 0.85;
+  const GAP = 24;
+  const DOT_SIZE = 1.2;
+  const RADIUS = 80;
+  const STRENGTH = 18;
+  const SPRING = 0.03;
+  const DAMPING = 0.92;
 
   const buildGrid = useCallback(() => {
     const canvas = canvasRef.current;
@@ -48,26 +40,23 @@ export function DotGrid({
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
 
-    const cols = Math.floor(rect.width / gap);
-    const rows = Math.floor(rect.height / gap);
-    const startX = (rect.width - (cols - 1) * gap) / 2;
-    const startY = (rect.height - (rows - 1) * gap) / 2;
+    const cols = Math.floor(rect.width / GAP);
+    const rows = Math.floor(rect.height / GAP);
+    const startX = (rect.width - (cols - 1) * GAP) / 2;
+    const startY = (rect.height - (rows - 1) * GAP) / 2;
 
     const dots: Dot[] = [];
     for (let row = 0; row < rows; row++) {
       for (let col = 0; col < cols; col++) {
         dots.push({
-          homeX: startX + col * gap,
-          homeY: startY + row * gap,
-          offsetX: 0,
-          offsetY: 0,
-          vx: 0,
-          vy: 0,
+          homeX: startX + col * GAP,
+          homeY: startY + row * GAP,
+          offsetX: 0, offsetY: 0, vx: 0, vy: 0,
         });
       }
     }
     dotsRef.current = dots;
-  }, [gap]);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -76,7 +65,7 @@ export function DotGrid({
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 1;
-    const radiusSq = repulsionRadius * repulsionRadius;
+    const radiusSq = RADIUS * RADIUS;
 
     const tick = () => {
       const w = canvas.width / dpr;
@@ -97,9 +86,10 @@ export function DotGrid({
 
           if (distSq < radiusSq && distSq > 0) {
             const dist = Math.sqrt(distSq);
-            const force = (1 - dist / repulsionRadius) * repulsionStrength;
-            dot.vx += (dx / dist) * force * 0.3;
-            dot.vy += (dy / dist) * force * 0.3;
+            const t = 1 - dist / RADIUS;
+            const force = t * t * STRENGTH; // quadratic falloff for wave feel
+            dot.vx += (dx / dist) * force * 0.15;
+            dot.vy += (dy / dist) * force * 0.15;
           }
         }
 
@@ -111,8 +101,8 @@ export function DotGrid({
         dot.offsetY += dot.vy;
 
         ctx.beginPath();
-        ctx.arc(dot.homeX + dot.offsetX, dot.homeY + dot.offsetY, dotSize, 0, Math.PI * 2);
-        ctx.fillStyle = color;
+        ctx.arc(dot.homeX + dot.offsetX, dot.homeY + dot.offsetY, DOT_SIZE, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(0, 0, 0, 0.12)";
         ctx.fill();
       }
 
@@ -121,36 +111,37 @@ export function DotGrid({
 
     tick();
     return () => cancelAnimationFrame(rafRef.current);
-  }, [color, dotSize, repulsionRadius, repulsionStrength]);
+  }, []);
 
+  // Listen on wrapper (covers entire hero including text) instead of canvas
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
 
     const onMove = (e: MouseEvent) => {
-      const rect = canvas.getBoundingClientRect();
+      const rect = wrapper.getBoundingClientRect();
       mouseRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top, active: true };
     };
     const onLeave = () => { mouseRef.current.active = false; };
     const onTouch = (e: TouchEvent) => {
       if (e.touches[0]) {
-        const rect = canvas.getBoundingClientRect();
+        const rect = wrapper.getBoundingClientRect();
         mouseRef.current = { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top, active: true };
       }
     };
 
-    canvas.addEventListener("mousemove", onMove);
-    canvas.addEventListener("mouseenter", onMove);
-    canvas.addEventListener("mouseleave", onLeave);
-    canvas.addEventListener("touchmove", onTouch, { passive: true });
-    canvas.addEventListener("touchend", onLeave);
+    wrapper.addEventListener("mousemove", onMove);
+    wrapper.addEventListener("mouseenter", onMove);
+    wrapper.addEventListener("mouseleave", onLeave);
+    wrapper.addEventListener("touchmove", onTouch, { passive: true });
+    wrapper.addEventListener("touchend", onLeave);
 
     return () => {
-      canvas.removeEventListener("mousemove", onMove);
-      canvas.removeEventListener("mouseenter", onMove);
-      canvas.removeEventListener("mouseleave", onLeave);
-      canvas.removeEventListener("touchmove", onTouch);
-      canvas.removeEventListener("touchend", onLeave);
+      wrapper.removeEventListener("mousemove", onMove);
+      wrapper.removeEventListener("mouseenter", onMove);
+      wrapper.removeEventListener("mouseleave", onLeave);
+      wrapper.removeEventListener("touchmove", onTouch);
+      wrapper.removeEventListener("touchend", onLeave);
     };
   }, []);
 
@@ -164,8 +155,8 @@ export function DotGrid({
   }, [buildGrid]);
 
   return (
-    <div ref={wrapperRef} className={cn("absolute inset-0", className)}>
-      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />
+    <div ref={wrapperRef} className={cn("absolute inset-0 z-0", className)}>
+      <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none" />
     </div>
   );
 }

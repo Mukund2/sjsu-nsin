@@ -3,10 +3,15 @@ import { DotGrid } from "../ui/dot-grid";
 
 export default function HeroClient() {
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center bg-white overflow-hidden">
+    <div
+      className="relative min-h-screen w-full flex items-center justify-center overflow-hidden"
+      style={{
+        background: "linear-gradient(135deg, #f0f4f8 0%, #ffffff 40%, #f5f0eb 100%)",
+      }}
+    >
       <DotGrid />
 
-      <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
+      <div className="relative z-10 mx-auto max-w-4xl px-6 text-center pointer-events-none">
         <p className="text-mid-gray text-[11px] uppercase tracking-[0.3em] mb-6 font-mono">
           San Jose State University
         </p>
@@ -23,7 +28,7 @@ export default function HeroClient() {
           Applying innovation methodologies to national security challenges
         </p>
 
-        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 pointer-events-auto">
           <a
             href="/join"
             className="inline-block bg-near-black text-white px-8 py-3 text-[13px] font-medium uppercase tracking-[0.15em] hover:bg-dark-gray transition-colors"
