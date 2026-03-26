@@ -1,0 +1,21 @@
+---
+import { events } from "../../data/events";
+import EventCard from "./EventCard.astro";
+import { TracingBeam } from "../ui/tracing-beam";
+---
+
+<TracingBeam client:visible>
+  <div class="flex flex-col gap-4">
+    {events.map((event) => (
+      <EventCard
+        title={event.title}
+        date={event.date}
+        time={event.time}
+        location={event.location}
+        description={event.description}
+        rsvpLink={event.rsvpLink}
+        status={event.status}
+      />
+    ))}
+  </div>
+</TracingBeam>

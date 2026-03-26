@@ -1,0 +1,51 @@
+---
+import { Timeline } from "../ui/timeline";
+
+const roadmapItems = [
+  {
+    date: "Spring 2026",
+    title: "Founded",
+    description:
+      "SJSU NSIN established as a student organization dedicated to bridging the gap between Silicon Valley innovation and national security.",
+  },
+  {
+    date: "Spring 2026",
+    title: "Speaker Series Launch",
+    description:
+      "First speaker events bringing defense tech leaders and national security experts to the SJSU campus.",
+  },
+  {
+    date: "Fall 2026",
+    title: "Externship Program",
+    description:
+      "Launch of partnerships with defense companies and government agencies for student consulting and prototype development.",
+  },
+  {
+    date: "Fall 2026",
+    title: "Policy Forum Series",
+    description:
+      "Interdisciplinary discussion series on emerging technology and national security strategy.",
+  },
+  {
+    date: "Spring 2027",
+    title: "First Hackathon",
+    description:
+      "Inaugural hackathon tackling Department of Defense challenge problems with student-built prototypes.",
+  },
+];
+---
+
+<section class="py-24 md:py-32 bg-off-white">
+  <div class="max-w-5xl mx-auto px-6 md:px-12">
+    <div class="mb-16">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-accent font-medium">
+        TIMELINE
+      </span>
+      <h2 class="text-3xl md:text-4xl font-bold text-near-black mt-4">
+        Roadmap
+      </h2>
+    </div>
+
+    <Timeline client:visible items={roadmapItems} />
+  </div>
+</section>

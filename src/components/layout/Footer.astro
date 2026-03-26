@@ -1,0 +1,51 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-light-gray bg-off-white">
+  <div class="max-w-6xl mx-auto px-6 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+      <!-- Brand -->
+      <div>
+        <div class="flex items-center gap-3 mb-4">
+          <img src="/logo.svg" alt="NSIN" class="h-6 w-auto" />
+          <span class="text-near-black font-semibold text-sm uppercase tracking-tight">
+            SJSU NSIN
+          </span>
+        </div>
+        <p class="text-sm text-mid-gray leading-relaxed max-w-xs">
+          Bridging Silicon Valley innovation with our nation's most pressing security challenges.
+        </p>
+      </div>
+
+      <!-- Links -->
+      <div>
+        <h4 class="text-xs uppercase tracking-[0.2em] text-near-black mb-4 font-semibold">Navigate</h4>
+        <div class="flex flex-col gap-2">
+          <a href="/about" class="text-sm text-mid-gray hover:text-near-black transition-colors">About</a>
+          <a href="/events" class="text-sm text-mid-gray hover:text-near-black transition-colors">Events</a>
+          <a href="/join" class="text-sm text-mid-gray hover:text-near-black transition-colors">Join Us</a>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div>
+        <h4 class="text-xs uppercase tracking-[0.2em] text-near-black mb-4 font-semibold">Connect</h4>
+        <div class="flex flex-col gap-2">
+          <p class="text-sm text-mid-gray">San Jose State University</p>
+          <p class="text-sm text-mid-gray">Burdick Room</p>
+          <p class="text-sm text-mid-gray">San Jose, CA 95192</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-light-gray mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-mid-gray">
+        &copy; {year} National Security Innovation Network at SJSU. All rights reserved.
+      </p>
+      <p class="text-xs text-mid-gray">
+        Inspired by Stanford's Gordian Knot Center for National Security Innovation
+      </p>
+    </div>
+  </div>
+</footer>

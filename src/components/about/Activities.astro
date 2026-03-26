@@ -1,0 +1,41 @@
+---
+import { StickyScrollReveal } from "../ui/sticky-scroll-reveal";
+
+const activities = [
+  {
+    title: "Speaker Events",
+    description:
+      "We bring defense industry leaders, intelligence community veterans, and startup founders to campus. Our speaker series connects SJSU students directly with the people building the future of national security.",
+  },
+  {
+    title: "Hackathons",
+    description:
+      "Starting Spring 2027, we'll host hackathons focused on real Department of Defense challenge problems. Students build working prototypes that address genuine security needs.",
+  },
+  {
+    title: "Externships & Consulting",
+    description:
+      "Beginning Fall 2026, our externship program partners students with defense companies and government agencies for hands-on project work. Real problems. Real impact.",
+  },
+  {
+    title: "Policy Discussions",
+    description:
+      "National security isn't just technical. We host interdisciplinary forums bringing together engineers, policy students, and domain experts to discuss the strategic dimensions of emerging technology.",
+  },
+];
+---
+
+<section class="py-24 md:py-32 bg-off-white">
+  <div class="max-w-5xl mx-auto px-6 md:px-12">
+    <div class="mb-16">
+      <span class="text-[11px] uppercase tracking-[0.2em] text-accent font-medium">
+        WHAT WE DO
+      </span>
+      <h2 class="text-3xl md:text-4xl font-bold text-near-black mt-4">
+        Activities
+      </h2>
+    </div>
+
+    <StickyScrollReveal client:visible content={activities} />
+  </div>
+</section>

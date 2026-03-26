@@ -1,0 +1,60 @@
+---
+import { events } from "../../data/events";
+
+const upcoming = events
+  .filter((e) => e.status === "upcoming")
+  .slice(0, 3);
+
+function formatDate(dateStr: string) {
+  const d = new Date(dateStr + "T00:00:00");
+  const month = d.toLocaleDateString("en-US", { month: "short" }).toUpperCase();
+  const day = d.getDate();
+  return { month, day: String(day) };
+}
+---
+
+<section class="py-24 px-6 bg-off-white">
+  <div class="mx-auto max-w-5xl">
+    <p class="text-accent text-xs font-semibold uppercase tracking-[0.2em] mb-4">
+      Upcoming
+    </p>
+    <h2 class="text-3xl sm:text-4xl font-bold text-near-black mb-12">
+      Events
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {upcoming.map((event) => {
+        const { month, day } = formatDate(event.date);
+        return (
+          <div class="bg-white border border-light-gray p-6 flex gap-5">
+            <div class="flex-shrink-0 text-center w-14">
+              <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-accent">
+                {month}
+              </p>
+              <p class="text-3xl font-bold text-near-black leading-tight">
+                {day}
+              </p>
+            </div>
+            <div>
+              <h3 class="font-semibold text-near-black mb-1 leading-snug">
+                {event.title}
+              </h3>
+              <p class="text-sm text-mid-gray">
+                {event.time} &middot; {event.location}
+              </p>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="mt-10">
+      <a
+        href="/events"
+        class="text-sm font-semibold uppercase tracking-[0.15em] text-near-black border-b border-near-black pb-1 hover:text-accent hover:border-accent transition-colors"
+      >
+        View All Events
+      </a>
+    </div>
+  </div>
+</section>

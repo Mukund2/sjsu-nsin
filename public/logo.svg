@@ -1,0 +1,7 @@
+<svg width="800" height="800" viewBox="0 0 800 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- NSIN Logo — F-117 Nighthawk notched trailing edge -->
+  <!-- Left half -->
+  <path d="M396 150 L180 432 L235 448 L318 416 L396 438 Z" fill="#000000"/>
+  <!-- Right half -->
+  <path d="M404 150 L620 432 L565 448 L482 416 L404 438 Z" fill="#000000"/>
+</svg>

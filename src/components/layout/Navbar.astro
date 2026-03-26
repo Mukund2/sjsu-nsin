@@ -1,0 +1,84 @@
+---
+const navLinks = [
+  { label: "About", href: "/about" },
+  { label: "Events", href: "/events" },
+  { label: "Join Us", href: "/join" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-light-gray">
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 group">
+      <img src="/logo.svg" alt="NSIN" class="h-8 w-auto" />
+      <span class="text-near-black font-semibold tracking-tight text-sm uppercase">
+        SJSU NSIN
+      </span>
+    </a>
+
+    <div class="hidden md:flex items-center gap-8">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class:list={[
+            "text-sm uppercase tracking-[0.15em] transition-colors duration-200",
+            currentPath === link.href || currentPath === link.href + "/"
+              ? "text-near-black font-semibold"
+              : "text-mid-gray hover:text-near-black"
+          ]}
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+
+    <a
+      href="/join"
+      class="hidden md:inline-flex bg-near-black text-white text-xs uppercase tracking-[0.2em] px-6 py-2.5 hover:bg-accent transition-colors duration-200"
+    >
+      Apply
+    </a>
+
+    <!-- Mobile menu button -->
+    <button
+      id="mobile-menu-btn"
+      class="md:hidden p-2 text-near-black"
+      aria-label="Toggle menu"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="hidden md:hidden border-t border-light-gray bg-white">
+    <div class="px-6 py-4 flex flex-col gap-4">
+      {navLinks.map(link => (
+        <a
+          href={link.href}
+          class="text-sm uppercase tracking-[0.15em] text-dark-gray hover:text-near-black transition-colors"
+        >
+          {link.label}
+        </a>
+      ))}
+      <a
+        href="/join"
+        class="bg-near-black text-white text-xs uppercase tracking-[0.2em] px-6 py-2.5 text-center hover:bg-accent transition-colors"
+      >
+        Apply
+      </a>
+    </div>
+  </div>
+</nav>
+
+<div class="h-16"></div>
+
+<script>
+  const btn = document.getElementById('mobile-menu-btn');
+  const menu = document.getElementById('mobile-menu');
+  btn?.addEventListener('click', () => {
+    menu?.classList.toggle('hidden');
+  });
+</script>

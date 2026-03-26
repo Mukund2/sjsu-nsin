@@ -1,0 +1,40 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import EventList from "../components/events/EventList.astro";
+---
+
+<BaseLayout title="Events — SJSU NSIN">
+  <!-- Header -->
+  <section class="py-24 px-6">
+    <div class="max-w-6xl mx-auto">
+      <h1 class="text-4xl md:text-5xl font-bold text-near-black tracking-tight">Events</h1>
+      <p class="mt-4 text-dark-gray text-lg max-w-2xl">
+        All events are held in the Burdick Room at SJSU unless otherwise noted.
+      </p>
+    </div>
+  </section>
+
+  <!-- Event List -->
+  <section class="py-16 px-6">
+    <div class="max-w-6xl mx-auto">
+      <EventList />
+    </div>
+  </section>
+
+  <!-- Suggest an Event -->
+  <section class="bg-off-white py-24 px-6">
+    <div class="max-w-6xl mx-auto text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-near-black">Have a speaker or topic in mind?</h2>
+      <p class="mt-4 text-dark-gray max-w-xl mx-auto">
+        We're always looking for compelling speakers and relevant topics. If you know someone who should
+        present to our community, let us know.
+      </p>
+      <a
+        href="#"
+        class="inline-block mt-8 bg-near-black text-white text-xs uppercase tracking-[0.2em] px-8 py-3 hover:bg-accent transition-colors duration-200"
+      >
+        Suggest an Event
+      </a>
+    </div>
+  </section>
+</BaseLayout>

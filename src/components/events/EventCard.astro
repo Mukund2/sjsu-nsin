@@ -1,0 +1,49 @@
+---
+interface Props {
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  description: string;
+  rsvpLink?: string;
+  status: 'upcoming' | 'past';
+}
+
+const { title, date, time, location, description, rsvpLink, status } = Astro.props;
+
+const dateObj = new Date(date + "T00:00:00");
+const month = dateObj.toLocaleString("en-US", { month: "short" }).toUpperCase();
+const day = dateObj.getDate().toString();
+---
+
+<div class="bg-white border border-light-gray p-6 flex items-start gap-6">
+  <!-- Date block -->
+  <div class="flex flex-col items-center shrink-0 w-14">
+    <span class="text-xs uppercase tracking-[0.2em] text-accent font-medium">{month}</span>
+    <span class="text-3xl font-mono font-medium text-near-black leading-tight">{day}</span>
+  </div>
+
+  <!-- Content -->
+  <div class="flex-1 min-w-0">
+    <h3 class="font-semibold text-near-black text-base leading-snug">{title}</h3>
+    <p class="text-sm text-dark-gray mt-1 line-clamp-2">{description}</p>
+    <div class="flex items-center gap-4 mt-3">
+      <span class="text-xs uppercase tracking-[0.15em] text-mid-gray">{location}</span>
+      <span class="text-xs text-mid-gray">{time}</span>
+    </div>
+  </div>
+
+  <!-- Action -->
+  <div class="shrink-0 flex items-start pt-1">
+    {status === "upcoming" && rsvpLink ? (
+      <a
+        href={rsvpLink}
+        class="text-xs uppercase tracking-[0.2em] border border-near-black text-near-black px-4 py-2 hover:bg-near-black hover:text-white transition-colors duration-200"
+      >
+        RSVP
+      </a>
+    ) : (
+      <span class="text-xs uppercase tracking-[0.2em] text-mid-gray">Completed</span>
+    )}
+  </div>
+</div>
