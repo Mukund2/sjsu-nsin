@@ -1,11 +1,11 @@
 import { Spotlight } from "../ui/spotlight";
 import { EncryptedText } from "../ui/encrypted-text";
-import { GridBackground } from "../ui/grid-background";
+import { ElevatingGrid } from "../ui/elevating-grid";
 
 export default function HeroClient() {
   return (
     <Spotlight className="relative min-h-screen w-full flex items-center justify-center bg-white">
-      <GridBackground />
+      <ElevatingGrid />
 
       <div className="relative z-20 mx-auto max-w-4xl px-6 text-center">
         <p className="text-near-black text-xs font-semibold uppercase tracking-[0.3em] mb-6 font-mono">
