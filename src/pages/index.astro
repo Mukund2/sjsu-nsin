@@ -1,12 +1,29 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/home/Hero.astro";
-import WhatWeDo from "../components/home/WhatWeDo.astro";
+import ImageSection from "../components/home/ImageSection.astro";
+import FocusAreas from "../components/home/FocusAreas.astro";
 import CTABanner from "../components/home/CTABanner.astro";
 ---
 
 <BaseLayout>
   <Hero />
-  <WhatWeDo />
+
+  <ImageSection
+    image="/images/server-room.jpg"
+    label="Our Mission"
+    title="Bridging Silicon Valley and national security"
+    description="We connect SJSU students with defense-tech leaders, government agencies, and real-world problems that need solving."
+  />
+
+  <FocusAreas />
+
+  <ImageSection
+    image="/images/satellite.jpg"
+    label="The Network"
+    title="From campus to the front lines of innovation"
+    description="Experiential learning on live problems from the national security community. Tested in the field, not just on paper."
+  />
+
   <CTABanner />
 </BaseLayout>

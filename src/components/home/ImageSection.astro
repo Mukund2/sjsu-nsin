@@ -1,0 +1,35 @@
+---
+interface Props {
+  image: string;
+  label?: string;
+  title: string;
+  description?: string;
+}
+
+const { image, label, title, description } = Astro.props;
+---
+
+<section class="relative h-[70vh] min-h-[500px] overflow-hidden">
+  <img
+    src={image}
+    alt=""
+    class="absolute inset-0 w-full h-full object-cover"
+    loading="lazy"
+  />
+  <div class="absolute inset-0 bg-black/50"></div>
+  <div class="relative z-10 h-full flex flex-col justify-end p-8 sm:p-16 max-w-6xl mx-auto">
+    {label && (
+      <p class="text-white/60 text-[11px] uppercase tracking-[0.3em] mb-3 font-mono">
+        {label}
+      </p>
+    )}
+    <h2 class="text-3xl sm:text-4xl md:text-5xl text-white font-display max-w-2xl">
+      {title}
+    </h2>
+    {description && (
+      <p class="mt-4 text-white/70 text-lg max-w-xl font-light leading-relaxed">
+        {description}
+      </p>
+    )}
+  </div>
+</section>

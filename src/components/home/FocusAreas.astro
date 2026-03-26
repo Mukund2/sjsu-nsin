@@ -1,0 +1,52 @@
+---
+const areas = [
+  {
+    num: "01",
+    title: "Speaker Series",
+    desc: "Defense-tech founders, operators, and policymakers share how technology is reshaping national security.",
+  },
+  {
+    num: "02",
+    title: "Hackathons",
+    desc: "Team-based sprints on real-world security challenges. Build prototypes, deliver actionable outcomes.",
+  },
+  {
+    num: "03",
+    title: "Government & Industry Projects",
+    desc: "Get paired with defense and intelligence organizations to work on live problems. Real-world projects, not hypotheticals.",
+  },
+  {
+    num: "04",
+    title: "Policy & Strategy",
+    desc: "Interdisciplinary discussions on AI governance, export controls, and the future of deterrence.",
+  },
+];
+---
+
+<section id="focus-areas" class="py-32 px-6 bg-white">
+  <div class="mx-auto max-w-6xl">
+    <p class="text-mid-gray text-[11px] uppercase tracking-[0.3em] mb-4 font-mono">
+      What We Do
+    </p>
+    <h2 class="text-3xl sm:text-4xl text-near-black mb-20 max-w-lg font-display">
+      Where technology meets national security
+    </h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-16">
+      {areas.map((area) => (
+        <div class="group">
+          <span class="text-[11px] uppercase tracking-[0.3em] text-mid-gray font-mono">
+            {area.num}
+          </span>
+          <h3 class="text-2xl font-display text-near-black mt-3 mb-4">
+            {area.title}
+          </h3>
+          <p class="text-mid-gray leading-relaxed text-[15px]">
+            {area.desc}
+          </p>
+          <div class="mt-6 h-px bg-light-gray group-hover:bg-near-black transition-colors duration-500"></div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>

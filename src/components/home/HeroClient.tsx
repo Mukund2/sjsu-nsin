@@ -1,13 +1,12 @@
-import { Spotlight } from "../ui/spotlight";
 import { EncryptedText } from "../ui/encrypted-text";
-import { FloatingParticles } from "../ui/floating-particles";
+import { DotGrid } from "../ui/dot-grid";
 
 export default function HeroClient() {
   return (
-    <Spotlight className="relative min-h-screen w-full flex items-center justify-center bg-white">
-      <FloatingParticles />
+    <div className="relative min-h-screen w-full flex items-center justify-center bg-white overflow-hidden">
+      <DotGrid />
 
-      <div className="relative z-20 mx-auto max-w-4xl px-6 text-center">
+      <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
         <p className="text-mid-gray text-[11px] uppercase tracking-[0.3em] mb-6 font-mono">
           San Jose State University
         </p>
@@ -39,6 +38,6 @@ export default function HeroClient() {
           </a>
         </div>
       </div>
-    </Spotlight>
+    </div>
   );
 }
