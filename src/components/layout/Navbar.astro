@@ -10,11 +10,8 @@ const currentPath = Astro.url.pathname;
 
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-light-gray">
   <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3 group">
-      <img src="/logo.svg" alt="NSIN" class="h-8 w-auto" />
-      <span class="text-near-black font-semibold tracking-tight text-sm uppercase">
-        SJSU NSIN
-      </span>
+    <a href="/" class="flex items-center group">
+      <img src="/logo.svg" alt="SJSU NSIN" class="h-10 w-auto" />
     </a>
 
     <div class="hidden md:flex items-center gap-8">
@@ -32,13 +29,6 @@ const currentPath = Astro.url.pathname;
         </a>
       ))}
     </div>
-
-    <a
-      href="/join"
-      class="hidden md:inline-flex bg-near-black text-white text-xs uppercase tracking-[0.2em] px-6 py-2.5 hover:bg-accent transition-colors duration-200"
-    >
-      Apply
-    </a>
 
     <!-- Mobile menu button -->
     <button
@@ -63,12 +53,6 @@ const currentPath = Astro.url.pathname;
           {link.label}
         </a>
       ))}
-      <a
-        href="/join"
-        class="bg-near-black text-white text-xs uppercase tracking-[0.2em] px-6 py-2.5 text-center hover:bg-accent transition-colors"
-      >
-        Apply
-      </a>
     </div>
   </div>
 </nav>

@@ -12,7 +12,7 @@ function MicrophoneIcon() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-accent"
+      className="text-near-black"
     >
       <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
       <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
@@ -33,7 +33,7 @@ function CodeIcon() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-accent"
+      className="text-near-black"
     >
       <polyline points="16 18 22 12 16 6" />
       <polyline points="8 6 2 12 8 18" />
@@ -53,7 +53,7 @@ function BriefcaseIcon() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-accent"
+      className="text-near-black"
     >
       <rect width="20" height="14" x="2" y="7" />
       <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
@@ -73,7 +73,7 @@ function MessageIcon() {
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="text-accent"
+      className="text-near-black"
     >
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
     </svg>
@@ -90,7 +90,7 @@ export default function BentoGridClient() {
             <MicrophoneIcon />
           </div>
           <div>
-            <span className="inline-block text-[10px] font-semibold uppercase tracking-[0.2em] text-accent bg-accent/10 px-2 py-1 mb-3">
+            <span className="inline-block text-[10px] font-semibold uppercase tracking-[0.3em] text-near-black bg-light-gray px-2 py-1 mb-3 font-mono">
               Current Focus
             </span>
             <h3 className="text-xl font-bold text-near-black mb-2">

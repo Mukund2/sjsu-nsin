@@ -48,7 +48,7 @@ export function EncryptedText({ text, className, speed = 30 }: EncryptedTextProp
   }, [text, speed]);
 
   return (
-    <span className={cn(resolved < text.length ? "font-mono" : "", className)}>
+    <span className={cn(resolved < text.length ? "font-mono tracking-normal" : "", className)}>
       {displayed || text}
     </span>
   );
