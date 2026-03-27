@@ -98,60 +98,24 @@ function FocusCards() {
 export default function Sections() {
   return (
     <>
-      {/* --- F-117 with mission text overlay --- */}
+      {/* --- The Mission --- */}
       <section className="px-4 sm:px-8 mt-12 mb-12">
         <FadeIn>
           <div className="max-w-7xl mx-auto">
-            <div className="relative overflow-hidden rounded-none" style={{ height: "70vh", minHeight: "500px" }}>
-              <img
-                src="/images/f117.jpg"
-                alt="F-117 Nighthawk"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
-              <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-14 z-10">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-white max-w-2xl leading-[1.15] mb-4">
-                  SJSU has the talent. We're building the bridge to the problems that matter most.
-                </h2>
-              </div>
-            </div>
-          </div>
-        </FadeIn>
-      </section>
-
-      {/* --- Focus areas with images --- */}
-      <section id="focus-areas" className="py-16 sm:py-24 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <FadeIn>
-            <h2 className="text-3xl sm:text-4xl font-display text-near-black leading-[1.15] mb-10">
-              Four focus areas
-            </h2>
-          </FadeIn>
-          <FadeIn delay={100}>
-            <FocusCards />
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* --- The Mission --- */}
-      <section className="py-20 sm:py-28 px-4 sm:px-8 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <FadeIn>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
-              <div className="relative overflow-hidden rounded-sm aspect-[4/3]">
+              <div className="relative overflow-hidden rounded-sm" style={{ height: "70vh", minHeight: "500px" }}>
                 <img
                   src="/images/fighter-jets.jpg"
                   alt="Fighter jets in formation"
                   className="absolute inset-0 w-full h-full object-cover"
-                  loading="lazy"
                 />
               </div>
               <div>
                 <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-mid-gray mb-4">
                   The Mission
                 </p>
-                <h2 className="text-3xl sm:text-4xl font-display text-near-black leading-[1.15] mb-6">
-                  The best tech talent and the hardest national security problems are separated by a single gap: access.
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-near-black leading-[1.15] mb-6">
+                  The best tech talent and the hardest problems are separated by a single gap: access.
                 </h2>
                 <div className="space-y-4 text-mid-gray leading-relaxed">
                   <p>
@@ -169,6 +133,20 @@ export default function Sections() {
                 </a>
               </div>
             </div>
+          </div>
+        </FadeIn>
+      </section>
+
+      {/* --- Focus areas with images --- */}
+      <section id="focus-areas" className="py-16 sm:py-24 px-4 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <FadeIn>
+            <h2 className="text-3xl sm:text-4xl font-display text-near-black leading-[1.15] mb-10">
+              Four focus areas
+            </h2>
+          </FadeIn>
+          <FadeIn delay={100}>
+            <FocusCards />
           </FadeIn>
         </div>
       </section>
