@@ -8,7 +8,7 @@ export default function HeroClient() {
         alt=""
         className="absolute inset-0 w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 bg-black/25" />
 
       <div className="relative z-10 mx-auto max-w-5xl px-6 text-center">
         <h1 className="text-4xl sm:text-5xl md:text-7xl text-white leading-[1.1] font-display tracking-tight drop-shadow-lg">

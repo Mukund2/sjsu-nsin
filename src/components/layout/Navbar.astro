@@ -8,10 +8,10 @@ const navLinks = [
 const currentPath = Astro.url.pathname;
 ---
 
-<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-light-gray">
-  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3 group">
-      <img src="/logo.svg" alt="SJSU NSIN" class="h-14 w-auto" />
+<nav id="main-navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-light-gray opacity-0 -translate-y-full transition-all duration-300">
+  <div class="max-w-7xl mx-auto px-2 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 group p-0">
+      <img src="/logo.svg" alt="SJSU NSIN" class="h-16 w-auto" />
       <span class="text-[10px] uppercase tracking-[0.12em] text-near-black font-medium hidden sm:block leading-tight">
         National Security Innovation Network<br />
         <span class="text-mid-gray">at San Jose State University</span>
@@ -63,7 +63,8 @@ const currentPath = Astro.url.pathname;
   </div>
 </nav>
 
-<div class="h-16"></div>
+<!-- Spacer not needed since navbar starts hidden and appears on scroll -->
+
 
 <script>
   const btn = document.getElementById('mobile-menu-btn');
@@ -71,4 +72,20 @@ const currentPath = Astro.url.pathname;
   btn?.addEventListener('click', () => {
     menu?.classList.toggle('hidden');
   });
+
+  const navbar = document.getElementById('main-navbar');
+  const threshold = window.innerHeight; // 100vh
+
+  function handleScroll() {
+    if (window.scrollY >= threshold) {
+      navbar?.classList.remove('opacity-0', '-translate-y-full');
+      navbar?.classList.add('opacity-100', 'translate-y-0');
+    } else {
+      navbar?.classList.remove('opacity-100', 'translate-y-0');
+      navbar?.classList.add('opacity-0', '-translate-y-full');
+    }
+  }
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  handleScroll();
 </script>
