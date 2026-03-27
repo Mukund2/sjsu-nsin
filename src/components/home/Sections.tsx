@@ -102,32 +102,26 @@ export default function Sections() {
       <section className="px-4 sm:px-8 mt-12 mb-12">
         <FadeIn>
           <div className="max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
-              <div className="relative overflow-hidden rounded-sm" style={{ height: "70vh", minHeight: "500px" }}>
-                <img
-                  src="/images/f117.jpg"
-                  alt="F-117 Nighthawk"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>
-              <div>
-                <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-mid-gray mb-4">
+            <div className="relative overflow-hidden rounded-none" style={{ height: "70vh", minHeight: "500px" }}>
+              <img
+                src="/images/f117.jpg"
+                alt="F-117 Nighthawk"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
+              <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-14 z-10 max-w-2xl">
+                <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/50 mb-4">
                   The Mission
                 </p>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-near-black leading-[1.15] mb-6">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-white leading-[1.15] mb-5">
                   The best tech talent and the hardest problems are separated by a single gap: access.
                 </h2>
-                <div className="space-y-4 text-mid-gray leading-relaxed">
-                  <p>
-                    Silicon Valley builds the future, but the defense and intelligence communities still struggle to tap into it. Meanwhile, students with the skills to make a difference have no clear path in.
-                  </p>
-                  <p>
-                    NSIN at SJSU closes that gap. We connect engineers, designers, and strategists directly to the people defending the country — through real projects, real challenges, and real relationships.
-                  </p>
-                </div>
+                <p className="text-white/60 leading-relaxed mb-6">
+                  NSIN at SJSU connects engineers, designers, and strategists directly to the people defending the country — through real projects, real challenges, and real relationships.
+                </p>
                 <a
                   href="/about"
-                  className="inline-block mt-8 text-[13px] font-medium uppercase tracking-[0.15em] text-near-black border-b border-near-black pb-1 hover:text-mid-gray hover:border-mid-gray transition-colors"
+                  className="inline-block text-[13px] font-medium uppercase tracking-[0.15em] text-white border-b border-white/50 pb-1 hover:border-white transition-colors"
                 >
                   Learn our story
                 </a>
