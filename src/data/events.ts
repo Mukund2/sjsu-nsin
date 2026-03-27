@@ -32,7 +32,7 @@ export const events: Event[] = [
     date: "2026-05-13",
     time: "6:00 PM",
     location: "Burdick Room, SJSU",
-    description: "From autonomous systems to intelligence analysis — how artificial intelligence is transforming national security and where SJSU students fit in.",
+    description: "From autonomous systems to intelligence analysis, artificial intelligence is transforming national security. Here's where SJSU students fit in.",
     rsvpLink: "#",
     status: "upcoming",
   },

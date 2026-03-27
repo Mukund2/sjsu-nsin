@@ -13,7 +13,7 @@ export default function BentoGridClient() {
           </h3>
           <p className="text-mid-gray leading-relaxed text-[15px]">
             Defense-tech founders, operators, and policymakers share how
-            technology is reshaping national security — directly with SJSU
+            technology is reshaping national security, directly with SJSU
             students.
           </p>
         </div>
@@ -61,7 +61,7 @@ export default function BentoGridClient() {
           </h3>
           <p className="text-mid-gray leading-relaxed text-[15px]">
             Interdisciplinary discussions on the policy dimensions of emerging
-            defense technology — AI governance, export controls, and the future
+            defense technology: AI governance, export controls, and the future
             of deterrence.
           </p>
         </div>
