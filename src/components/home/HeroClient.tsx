@@ -20,7 +20,7 @@ export default function HeroClient() {
         </h1>
 
         <p className="mt-8 text-white/70 text-lg sm:text-xl max-w-2xl mx-auto leading-relaxed">
-          Where Silicon Valley technology meets Washington's most pressing security challenges
+          Bridging Silicon Valley technology with Washington's most pressing national security challenges
         </p>
 
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
