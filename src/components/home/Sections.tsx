@@ -108,8 +108,8 @@ export default function Sections() {
           <div className="max-w-6xl mx-auto">
             <div className="relative overflow-hidden rounded-lg" style={{ height: "60vh", minHeight: "400px" }}>
               <img
-                src="/images/booster-catch.jpg"
-                alt="SpaceX Super Heavy booster catch"
+                src="/images/rocket-launch.jpg"
+                alt="SpaceX Falcon Heavy launch"
                 className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
               />
