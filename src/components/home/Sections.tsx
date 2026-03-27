@@ -133,6 +133,46 @@ export default function Sections() {
         </div>
       </section>
 
+      {/* --- The Mission --- */}
+      <section className="py-20 sm:py-28 px-4 sm:px-8 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <FadeIn>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
+              <div className="relative overflow-hidden rounded-sm aspect-[4/3]">
+                <img
+                  src="/images/fighter-jets.jpg"
+                  alt="Fighter jets in formation"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  loading="lazy"
+                />
+              </div>
+              <div>
+                <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-mid-gray mb-4">
+                  The Mission
+                </p>
+                <h2 className="text-3xl sm:text-4xl font-display text-near-black leading-[1.15] mb-6">
+                  The best tech talent and the hardest national security problems are separated by a single gap: access.
+                </h2>
+                <div className="space-y-4 text-mid-gray leading-relaxed">
+                  <p>
+                    Silicon Valley builds the future, but the defense and intelligence communities still struggle to tap into it. Meanwhile, students with the skills to make a difference have no clear path in.
+                  </p>
+                  <p>
+                    NSIN at SJSU closes that gap. We connect engineers, designers, and strategists directly to the people defending the country — through real projects, real challenges, and real relationships.
+                  </p>
+                </div>
+                <a
+                  href="/about"
+                  className="inline-block mt-8 text-[13px] font-medium uppercase tracking-[0.15em] text-near-black border-b border-near-black pb-1 hover:text-mid-gray hover:border-mid-gray transition-colors"
+                >
+                  Learn our story
+                </a>
+              </div>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
       {/* --- CTA Join --- */}
       <section id="join-us" className="mx-4 sm:mx-8 rounded-none overflow-hidden relative my-12">
         <img
