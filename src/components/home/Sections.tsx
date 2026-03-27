@@ -105,8 +105,8 @@ export default function Sections() {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center">
               <div className="relative overflow-hidden rounded-sm" style={{ height: "70vh", minHeight: "500px" }}>
                 <img
-                  src="/images/fighter-jets.jpg"
-                  alt="Fighter jets in formation"
+                  src="/images/f117.jpg"
+                  alt="F-117 Nighthawk"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
               </div>
