@@ -11,8 +11,8 @@ const focusAreas = [
   },
   {
     num: "02",
-    title: "Hackathons",
-    desc: "Build working prototypes for real Department of Defense challenge problems. Prepare for Stanford's Hacking for Defense program.",
+    title: "Build & Compete",
+    desc: "Prototype sprints and challenge competitions tackling real Department of Defense problems. Preparation pipeline for Stanford's Hacking for Defense program.",
     image: "/images/mission-control.jpg",
     tall: false,
   },
@@ -146,7 +146,7 @@ export default function Sections() {
           className="absolute inset-0 w-full h-full object-cover"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-black/60" />
+        <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 py-32 sm:py-44 px-6">
           <div className="max-w-3xl mx-auto text-center">
             <FadeIn delay={100}>
