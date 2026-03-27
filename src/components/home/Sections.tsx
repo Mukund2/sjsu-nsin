@@ -152,7 +152,7 @@ export default function Sections() {
             <FadeIn delay={200}>
               <p className="text-white/50 mt-8 mb-12 text-lg leading-relaxed max-w-xl mx-auto">
                 Engineers, designers, and policy thinkers working on real problems
-                for real stakeholders.
+                that our country can't afford to ignore.
               </p>
             </FadeIn>
             <FadeIn delay={300}>
