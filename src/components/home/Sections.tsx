@@ -12,7 +12,7 @@ const focusAreas = [
   {
     num: "02",
     title: "Build & Compete",
-    desc: "Prototype sprints and challenge competitions tackling real Department of Defense problems. Preparation pipeline for Stanford's Hacking for Defense program.",
+    desc: "Prototype sprints and challenge competitions tackling real Department of Defense problems. Preparation pipeline for the National Security Hackathon.",
     image: "/images/mission-control.jpg",
     tall: false,
   },
