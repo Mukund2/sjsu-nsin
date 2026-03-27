@@ -5,26 +5,30 @@ const focusAreas = [
   {
     num: "01",
     title: "Speaker Series",
-    desc: "Defense-tech founders, operators, and policymakers share how technology is reshaping national security.",
-    image: "/images/speaker.jpg",
+    desc: "Defense-tech leaders, policymakers, and intelligence community veterans share how technology is reshaping national security.",
+    image: "/images/speaker-podium.jpg",
+    when: "Fall & Spring",
   },
   {
     num: "02",
     title: "Hackathons",
-    desc: "Team-based sprints on real-world security challenges. Build prototypes, deliver actionable outcomes.",
-    image: "/images/hackathon.jpg",
+    desc: "Build working prototypes for real Department of Defense challenge problems. Prepare for Stanford's Hacking for Defense program.",
+    image: "/images/mission-control.jpg",
+    when: "Spring",
   },
   {
     num: "03",
     title: "Government & Industry Projects",
-    desc: "Get paired with defense and intelligence organizations to work on live problems.",
-    image: "/images/handshake.jpg",
+    desc: "Get paired with defense and intelligence organizations to work on live problems. Experiential learning, not hypotheticals.",
+    image: "/images/satellite.jpg",
+    when: "Fall & Spring",
   },
   {
     num: "04",
     title: "Policy & Strategy",
     desc: "Interdisciplinary discussions on AI governance, export controls, and the future of deterrence.",
     image: "/images/capitol.jpg",
+    when: "Year-round",
   },
 ];
 
@@ -53,7 +57,7 @@ function FocusCards() {
               <div className="flex items-end justify-between">
                 <div>
                   <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 font-mono">
-                    {area.num}
+                    {area.when}
                   </span>
                   <h3 className="text-lg sm:text-xl font-display text-white mt-1">
                     {area.title}
@@ -96,33 +100,25 @@ export default function Sections() {
           </FadeIn>
           <FadeIn delay={200}>
             <p className="mt-6 text-mid-gray text-lg max-w-lg leading-relaxed">
-              Not a club. A working group of engineers, designers, and policy
-              thinkers applying startup methodologies to defense challenges.
+              A working group of engineers, designers, and policy thinkers
+              applying startup methodologies to defense challenges at San Jose
+              State University.
             </p>
           </FadeIn>
         </div>
       </section>
 
-      {/* --- F-117 Nighthawk image --- */}
+      {/* --- F-117 image, no text overlay --- */}
       <section className="px-4 sm:px-8 pb-6">
         <FadeIn>
           <div className="max-w-7xl mx-auto">
             <div className="relative overflow-hidden rounded-lg" style={{ height: "55vh", minHeight: "380px" }}>
               <img
                 src="/images/f117.jpg"
-                alt="F-117 Nighthawk stealth fighter"
+                alt="F-117 Nighthawk"
                 className="absolute inset-0 w-full h-full object-cover"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-6 sm:p-10 z-10">
-                <p className="text-white/50 text-[10px] uppercase tracking-[0.3em] font-mono mb-2">
-                  The Nighthawk
-                </p>
-                <h3 className="text-2xl sm:text-3xl font-display text-white max-w-md">
-                  Stealth, precision, and innovation — the principles behind everything we do
-                </h3>
-              </div>
             </div>
           </div>
         </FadeIn>
@@ -138,44 +134,6 @@ export default function Sections() {
           </FadeIn>
           <FadeIn delay={100}>
             <FocusCards />
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* --- Two images --- */}
-      <section className="px-4 sm:px-8 py-3">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-3">
-          <FadeIn direction="left">
-            <div className="relative overflow-hidden rounded-lg" style={{ height: "45vh", minHeight: "320px" }}>
-              <img
-                src="/images/satellite.jpg"
-                alt="Satellite in orbit above Earth"
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-5 sm:p-8">
-                <h3 className="text-xl sm:text-2xl font-display text-white max-w-xs">
-                  Space, cyber, and autonomous systems
-                </h3>
-              </div>
-            </div>
-          </FadeIn>
-          <FadeIn direction="right" delay={150}>
-            <div className="relative overflow-hidden rounded-lg" style={{ height: "45vh", minHeight: "320px" }}>
-              <img
-                src="/images/reaper-drone.jpg"
-                alt="MQ-9 Reaper unmanned aerial vehicle"
-                className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-5 sm:p-8">
-                <h3 className="text-xl sm:text-2xl font-display text-white max-w-xs">
-                  Unmanned systems and autonomous defense
-                </h3>
-              </div>
-            </div>
           </FadeIn>
         </div>
       </section>
