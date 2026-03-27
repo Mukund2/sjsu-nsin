@@ -13,13 +13,13 @@ const isHomepage = currentPath === "/" || currentPath === "";
   "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
   !isHomepage && "bg-white/80 backdrop-blur-md border-b border-light-gray"
 ]}>
-  <div class="w-full px-4 h-20 flex items-center justify-between">
+  <div class="w-full px-4 h-14 flex items-center justify-between">
     <a href="/" class="flex items-center gap-3">
       <img
         src="/logo.svg"
         alt="SJSU NSIN"
         class:list={[
-          "h-20 w-auto navbar-logo transition-all duration-300",
+          "h-10 w-auto navbar-logo transition-all duration-300",
           !isHomepage && "no-invert"
         ]}
       />
@@ -83,7 +83,7 @@ const isHomepage = currentPath === "/" || currentPath === "";
   </div>
 </nav>
 
-<div class:list={[!isHomepage && "h-20"]}></div>
+<div class:list={[!isHomepage && "h-14"]}></div>
 
 <script>
   const btn = document.getElementById('mobile-menu-btn');
