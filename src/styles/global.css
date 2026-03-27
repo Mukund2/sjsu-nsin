@@ -10,8 +10,10 @@
   --color-accent: #0A0A0A;
   --color-accent-light: #404040;
   --color-accent-dark: #000000;
+  --color-sjsu-blue: #0055A2;
+  --color-sjsu-gold: #E5A823;
 
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Instrument Serif", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }

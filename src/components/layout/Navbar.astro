@@ -1,22 +1,28 @@
 ---
 const navLinks = [
   { label: "About", href: "/about" },
-  { label: "Join Us", href: "#contact" },
+  { label: "Join Us", href: "https://forms.gle/9MLweCMRaaTkrEkGA" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const currentPath = Astro.url.pathname;
 ---
 
 <nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-light-gray">
-  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-    <a href="/" class="flex items-center group">
-      <img src="/logo.svg" alt="SJSU NSIN" class="h-10 w-auto" />
+  <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+    <a href="/" class="flex items-center gap-3 group">
+      <img src="/logo.svg" alt="SJSU NSIN" class="h-12 w-auto" />
+      <span class="text-[11px] uppercase tracking-[0.2em] text-mid-gray font-mono hidden sm:block">
+        San Jose State University
+      </span>
     </a>
 
     <div class="hidden md:flex items-center gap-8">
       {navLinks.map(link => (
         <a
           href={link.href}
+          target={link.href.startsWith("http") ? "_blank" : undefined}
+          rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
           class:list={[
             "text-[13px] uppercase tracking-[0.15em] transition-colors duration-200",
             currentPath === link.href || currentPath === link.href + "/"
@@ -29,7 +35,6 @@ const currentPath = Astro.url.pathname;
       ))}
     </div>
 
-    <!-- Mobile menu button -->
     <button
       id="mobile-menu-btn"
       class="md:hidden p-2 text-near-black"
@@ -41,12 +46,13 @@ const currentPath = Astro.url.pathname;
     </button>
   </div>
 
-  <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden md:hidden border-t border-light-gray bg-white">
     <div class="px-6 py-4 flex flex-col gap-4">
       {navLinks.map(link => (
         <a
           href={link.href}
+          target={link.href.startsWith("http") ? "_blank" : undefined}
+          rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
           class="text-[13px] uppercase tracking-[0.15em] text-dark-gray hover:text-near-black transition-colors"
         >
           {link.label}
