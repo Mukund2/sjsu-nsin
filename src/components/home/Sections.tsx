@@ -7,28 +7,24 @@ const focusAreas = [
     title: "Speaker Series",
     desc: "Defense-tech leaders, policymakers, and intelligence community veterans share how technology is reshaping national security.",
     image: "/images/speaker-podium.jpg",
-    when: "Fall & Spring",
   },
   {
     num: "02",
     title: "Hackathons",
     desc: "Build working prototypes for real Department of Defense challenge problems. Prepare for Stanford's Hacking for Defense program.",
     image: "/images/mission-control.jpg",
-    when: "Spring",
   },
   {
     num: "03",
     title: "Government & Industry Projects",
     desc: "Get paired with defense and intelligence organizations to work on live problems. Experiential learning, not hypotheticals.",
     image: "/images/satellite.jpg",
-    when: "Fall & Spring",
   },
   {
     num: "04",
     title: "Policy & Strategy",
     desc: "Interdisciplinary discussions on AI governance, export controls, and the future of deterrence.",
     image: "/images/capitol.jpg",
-    when: "Year-round",
   },
 ];
 
@@ -43,7 +39,7 @@ function FocusCards() {
           <div
             key={area.num}
             className="relative overflow-hidden rounded-lg cursor-pointer group"
-            style={{ height: area.num === "01" || area.num === "04" ? "320px" : "260px" }}
+            style={{ height: "280px" }}
             onClick={() => setExpanded(isOpen ? null : area.num)}
           >
             <img
@@ -56,10 +52,7 @@ function FocusCards() {
             <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10">
               <div className="flex items-end justify-between">
                 <div>
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-white/50 font-mono">
-                    {area.when}
-                  </span>
-                  <h3 className="text-lg sm:text-xl font-display text-white mt-1">
+                  <h3 className="text-lg sm:text-xl font-display text-white">
                     {area.title}
                   </h3>
                 </div>
@@ -91,7 +84,7 @@ export default function Sections() {
   return (
     <>
       {/* --- F-117 with mission text overlay --- */}
-      <section className="px-4 sm:px-8 pt-6 pb-6">
+      <section className="px-4 sm:px-8 pt-4 pb-4">
         <FadeIn>
           <div className="max-w-7xl mx-auto">
             <div className="relative overflow-hidden rounded-lg" style={{ height: "70vh", minHeight: "500px" }}>
@@ -117,7 +110,7 @@ export default function Sections() {
       </section>
 
       {/* --- Focus areas with images --- */}
-      <section id="focus-areas" className="py-24 sm:py-32 px-4 bg-white">
+      <section id="focus-areas" className="pt-4 pb-16 sm:pb-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <FadeIn>
             <h2 className="text-3xl sm:text-4xl font-display text-near-black leading-[1.15] mb-10">
