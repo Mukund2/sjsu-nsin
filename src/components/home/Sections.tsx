@@ -102,7 +102,7 @@ export default function Sections() {
       <section className="px-4 sm:px-8 mt-12 mb-12">
         <FadeIn>
           <div className="max-w-7xl mx-auto">
-            <div className="relative overflow-hidden rounded-lg" style={{ height: "70vh", minHeight: "500px" }}>
+            <div className="relative overflow-hidden rounded-none" style={{ height: "70vh", minHeight: "500px" }}>
               <img
                 src="/images/f117.jpg"
                 alt="F-117 Nighthawk"
@@ -139,7 +139,7 @@ export default function Sections() {
       </section>
 
       {/* --- CTA Join --- */}
-      <section id="join-us" className="mx-4 sm:mx-8 rounded-lg overflow-hidden relative my-12">
+      <section id="join-us" className="mx-4 sm:mx-8 rounded-none overflow-hidden relative my-12">
         <img
           src="/images/falcon9.jpg"
           alt="Falcon 9 launch"
