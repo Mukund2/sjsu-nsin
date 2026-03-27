@@ -1,7 +1,7 @@
 ---
 const navLinks = [
   { label: "About", href: "/about" },
-  { label: "Join Us", href: "https://forms.gle/9MLweCMRaaTkrEkGA" },
+  { label: "Join Us", href: "/#join-us" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -12,8 +12,9 @@ const currentPath = Astro.url.pathname;
   <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
     <a href="/" class="flex items-center gap-3 group">
       <img src="/logo.svg" alt="SJSU NSIN" class="h-14 w-auto" />
-      <span class="text-[12px] uppercase tracking-[0.15em] text-near-black font-medium hidden sm:block">
-        nsin<span class="text-sjsu-blue">@</span>sjsu
+      <span class="text-[10px] uppercase tracking-[0.12em] text-near-black font-medium hidden sm:block leading-tight">
+        National Security Innovation Network<br />
+        <span class="text-mid-gray">at San Jose State University</span>
       </span>
     </a>
 

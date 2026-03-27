@@ -4,51 +4,56 @@ import { cn } from "../../lib/utils";
 interface EncryptedTextProps {
   text: string;
   className?: string;
-  speed?: number;
+  duration?: number;
 }
 
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*";
+const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-export function EncryptedText({ text, className, speed = 30 }: EncryptedTextProps) {
+export function EncryptedText({ text, className, duration = 1500 }: EncryptedTextProps) {
   const [displayed, setDisplayed] = useState("");
-  const [resolved, setResolved] = useState(0);
+  const [done, setDone] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const startRef = useRef<number>(0);
 
   useEffect(() => {
-    let tick = 0;
-    const totalTicks = text.length * 3;
+    startRef.current = Date.now();
 
     intervalRef.current = setInterval(() => {
-      tick++;
-      const charsResolved = Math.floor((tick / totalTicks) * text.length);
+      const elapsed = Date.now() - startRef.current;
+      const progress = Math.min(elapsed / duration, 1);
 
+      // Each character has a random threshold - once progress passes it, it resolves
       let result = "";
       for (let i = 0; i < text.length; i++) {
         if (text[i] === " ") {
           result += " ";
-        } else if (i < charsResolved) {
-          result += text[i];
         } else {
-          result += CHARS[Math.floor(Math.random() * CHARS.length)];
+          // Use a seeded threshold per character position
+          const threshold = (Math.sin(i * 7.3 + 0.5) * 0.5 + 0.5) * 0.7 + 0.15;
+          if (progress >= threshold) {
+            result += text[i];
+          } else {
+            result += CHARS[Math.floor(Math.random() * CHARS.length)];
+          }
         }
       }
 
       setDisplayed(result);
-      setResolved(charsResolved);
 
-      if (charsResolved >= text.length) {
+      if (progress >= 1) {
         if (intervalRef.current) clearInterval(intervalRef.current);
         setDisplayed(text);
+        setDone(true);
       }
-    }, speed);
+    }, 30);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [text, speed]);
+  }, [text, duration]);
 
   return (
-    <span className={cn(resolved < text.length ? "font-mono tracking-normal" : "", className)}>
+    <span className={cn(!done ? "font-mono tracking-normal" : "", className)}>
       {displayed || text}
     </span>
   );

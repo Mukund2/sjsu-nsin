@@ -90,35 +90,27 @@ function FocusCards() {
 export default function Sections() {
   return (
     <>
-      {/* --- Mission --- */}
-      <section className="py-24 sm:py-32 px-4 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <FadeIn delay={100}>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-near-black max-w-3xl leading-[1.15]">
-              We connect students with the people and problems shaping national security.
-            </h2>
-          </FadeIn>
-          <FadeIn delay={200}>
-            <p className="mt-6 text-mid-gray text-lg max-w-lg leading-relaxed">
-              A working group of engineers, designers, and policy thinkers
-              applying startup methodologies to defense challenges at San Jose
-              State University.
-            </p>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* --- F-117 image, no text overlay --- */}
-      <section className="px-4 sm:px-8 pb-6">
+      {/* --- F-117 with mission text overlay --- */}
+      <section className="px-4 sm:px-8 pt-6 pb-6">
         <FadeIn>
           <div className="max-w-7xl mx-auto">
-            <div className="relative overflow-hidden rounded-lg" style={{ height: "55vh", minHeight: "380px" }}>
+            <div className="relative overflow-hidden rounded-lg" style={{ height: "70vh", minHeight: "500px" }}>
               <img
                 src="/images/f117.jpg"
                 alt="F-117 Nighthawk"
                 className="absolute inset-0 w-full h-full object-cover"
-                loading="lazy"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
+              <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-14 z-10">
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-white max-w-2xl leading-[1.15] mb-4">
+                  We connect students with the people and problems shaping national security.
+                </h2>
+                <p className="text-white/60 text-lg max-w-lg leading-relaxed">
+                  A working group of engineers, designers, and policy thinkers
+                  applying startup methodologies to defense challenges at San Jose
+                  State University.
+                </p>
+              </div>
             </div>
           </div>
         </FadeIn>
@@ -139,7 +131,7 @@ export default function Sections() {
       </section>
 
       {/* --- CTA Join --- */}
-      <section className="mx-4 sm:mx-8 rounded-lg overflow-hidden relative my-10">
+      <section id="join-us" className="mx-4 sm:mx-8 rounded-lg overflow-hidden relative my-10">
         <img
           src="/images/falcon9.jpg"
           alt="Falcon 9 launch"
