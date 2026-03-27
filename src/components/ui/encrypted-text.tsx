@@ -9,7 +9,7 @@ interface EncryptedTextProps {
 
 const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-export function EncryptedText({ text, className, duration = 1500 }: EncryptedTextProps) {
+export function EncryptedText({ text, className, duration = 800 }: EncryptedTextProps) {
   const [displayed, setDisplayed] = useState("");
   const [done, setDone] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
