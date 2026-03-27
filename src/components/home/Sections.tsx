@@ -39,7 +39,7 @@ function FocusCards() {
           <div
             key={area.num}
             className="relative overflow-hidden rounded-lg cursor-pointer group"
-            style={{ height: "280px" }}
+            style={{ height: area.num === "01" || area.num === "04" ? "340px" : "240px" }}
             onClick={() => setExpanded(isOpen ? null : area.num)}
           >
             <img

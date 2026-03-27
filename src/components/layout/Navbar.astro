@@ -8,13 +8,13 @@ const navLinks = [
 const currentPath = Astro.url.pathname;
 ---
 
-<nav id="main-navbar" class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-light-gray opacity-0 -translate-y-full transition-all duration-300">
+<nav id="main-navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300">
   <div class="max-w-7xl mx-auto px-2 h-16 flex items-center justify-between">
-    <a href="/" class="flex items-center gap-3 group p-0">
-      <img src="/logo.svg" alt="SJSU NSIN" class="h-16 w-auto" />
-      <span class="text-[10px] uppercase tracking-[0.12em] text-near-black font-medium hidden sm:block leading-tight">
+    <a href="/" class="flex items-center gap-3 group">
+      <img src="/logo.svg" alt="SJSU NSIN" class="h-16 w-auto navbar-logo transition-all duration-300" />
+      <span class="navbar-text text-[10px] uppercase tracking-[0.12em] font-medium hidden sm:block leading-tight transition-colors duration-300 text-white">
         National Security Innovation Network<br />
-        <span class="text-mid-gray">at San Jose State University</span>
+        <span class="navbar-subtext text-white/60 transition-colors duration-300">at San Jose State University</span>
       </span>
     </a>
 
@@ -25,10 +25,10 @@ const currentPath = Astro.url.pathname;
           target={link.href.startsWith("http") ? "_blank" : undefined}
           rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
           class:list={[
-            "text-[13px] uppercase tracking-[0.15em] transition-colors duration-200",
+            "navbar-link text-[13px] uppercase tracking-[0.15em] transition-colors duration-300",
             currentPath === link.href || currentPath === link.href + "/"
-              ? "text-near-black font-medium"
-              : "text-mid-gray hover:text-near-black"
+              ? "text-white font-medium"
+              : "text-white/70 hover:text-white"
           ]}
         >
           {link.label}
@@ -38,7 +38,7 @@ const currentPath = Astro.url.pathname;
 
     <button
       id="mobile-menu-btn"
-      class="md:hidden p-2 text-near-black"
+      class="md:hidden p-2 navbar-link text-white transition-colors duration-300"
       aria-label="Toggle menu"
     >
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -63,9 +63,6 @@ const currentPath = Astro.url.pathname;
   </div>
 </nav>
 
-<!-- Spacer not needed since navbar starts hidden and appears on scroll -->
-
-
 <script>
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
@@ -74,15 +71,46 @@ const currentPath = Astro.url.pathname;
   });
 
   const navbar = document.getElementById('main-navbar');
-  const threshold = window.innerHeight; // 100vh
+  const threshold = window.innerHeight * 0.5;
 
   function handleScroll() {
-    if (window.scrollY >= threshold) {
-      navbar?.classList.remove('opacity-0', '-translate-y-full');
-      navbar?.classList.add('opacity-100', 'translate-y-0');
+    if (!navbar) return;
+    const scrolled = window.scrollY >= threshold;
+
+    if (scrolled) {
+      navbar.classList.add('bg-white/80', 'backdrop-blur-md', 'border-b', 'border-light-gray');
+      navbar.querySelectorAll('.navbar-text').forEach(el => {
+        el.classList.remove('text-white');
+        el.classList.add('text-near-black');
+      });
+      navbar.querySelectorAll('.navbar-subtext').forEach(el => {
+        el.classList.remove('text-white/60');
+        el.classList.add('text-mid-gray');
+      });
+      navbar.querySelectorAll('.navbar-link').forEach(el => {
+        el.classList.remove('text-white', 'text-white/70', 'hover:text-white');
+        el.classList.add('text-mid-gray', 'hover:text-near-black');
+      });
+      navbar.querySelectorAll('.navbar-logo').forEach(el => {
+        (el as HTMLElement).style.filter = 'none';
+      });
     } else {
-      navbar?.classList.remove('opacity-100', 'translate-y-0');
-      navbar?.classList.add('opacity-0', '-translate-y-full');
+      navbar.classList.remove('bg-white/80', 'backdrop-blur-md', 'border-b', 'border-light-gray');
+      navbar.querySelectorAll('.navbar-text').forEach(el => {
+        el.classList.remove('text-near-black');
+        el.classList.add('text-white');
+      });
+      navbar.querySelectorAll('.navbar-subtext').forEach(el => {
+        el.classList.remove('text-mid-gray');
+        el.classList.add('text-white/60');
+      });
+      navbar.querySelectorAll('.navbar-link').forEach(el => {
+        el.classList.remove('text-mid-gray', 'hover:text-near-black');
+        el.classList.add('text-white/70', 'hover:text-white');
+      });
+      navbar.querySelectorAll('.navbar-logo').forEach(el => {
+        (el as HTMLElement).style.filter = 'invert(1) brightness(2)';
+      });
     }
   }
 
