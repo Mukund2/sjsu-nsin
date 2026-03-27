@@ -111,13 +111,8 @@ export default function Sections() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10" />
               <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-14 z-10">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-white max-w-2xl leading-[1.15] mb-4">
-                  We connect students with the people and problems shaping national security.
+                  San Jose State has the talent. We're building the bridge to the problems that matter most.
                 </h2>
-                <p className="text-white/60 text-lg max-w-lg leading-relaxed">
-                  A working group of engineers, designers, and policy thinkers
-                  applying startup methodologies to defense challenges at San Jose
-                  State University.
-                </p>
               </div>
             </div>
           </div>
