@@ -110,9 +110,6 @@ export default function Sections() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-black/10" />
               <div className="absolute bottom-0 left-0 right-0 p-8 sm:p-14 z-10 max-w-2xl">
-                <p className="text-[11px] font-medium uppercase tracking-[0.2em] text-white/50 mb-4">
-                  The Mission
-                </p>
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-display text-white leading-[1.15] mb-5">
                   The best tech talent and the hardest problems are separated by a single gap: access.
                 </h2>
