@@ -7,7 +7,8 @@ interface EncryptedTextProps {
   duration?: number;
 }
 
-const CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const LOWER = "abcdefghijklmnopqrstuvwxyz";
 
 export function EncryptedText({ text, className, duration = 800 }: EncryptedTextProps) {
   const [displayed, setDisplayed] = useState("");
@@ -35,7 +36,8 @@ export function EncryptedText({ text, className, duration = 800 }: EncryptedText
           result += text[i];
           count++;
         } else {
-          result += CHARS[Math.floor(Math.random() * CHARS.length)];
+          const pool = text[i] === text[i].toUpperCase() ? UPPER : LOWER;
+          result += pool[Math.floor(Math.random() * pool.length)];
           count++;
         }
       }
