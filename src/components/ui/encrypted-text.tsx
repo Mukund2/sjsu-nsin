@@ -10,14 +10,8 @@ interface EncryptedTextProps {
 const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const LOWER = "abcdefghijklmnopqrstuvwxyz";
 
-interface CharState {
-  char: string;
-  resolved: boolean;
-}
-
 export function EncryptedText({ text, className, duration = 800 }: EncryptedTextProps) {
-  const [chars, setChars] = useState<CharState[]>([]);
-  const [done, setDone] = useState(false);
+  const [displayed, setDisplayed] = useState(text);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startRef = useRef<number>(0);
 
@@ -30,26 +24,26 @@ export function EncryptedText({ text, className, duration = 800 }: EncryptedText
       const elapsed = Date.now() - startRef.current;
       const resolved = Math.min(Math.floor(elapsed / perChar), charCount);
 
-      const result: CharState[] = [];
+      let result = "";
       let count = 0;
       for (let i = 0; i < text.length; i++) {
         if (text[i] === " ") {
-          result.push({ char: " ", resolved: true });
+          result += " ";
         } else if (count < resolved) {
-          result.push({ char: text[i], resolved: true });
+          result += text[i];
           count++;
         } else {
           const pool = text[i] === text[i].toUpperCase() ? UPPER : LOWER;
-          result.push({ char: pool[Math.floor(Math.random() * pool.length)], resolved: false });
+          result += pool[Math.floor(Math.random() * pool.length)];
           count++;
         }
       }
 
-      setChars(result);
+      setDisplayed(result);
 
       if (resolved >= charCount) {
         if (intervalRef.current) clearInterval(intervalRef.current);
-        setDone(true);
+        setDisplayed(text);
       }
     }, 30);
 
@@ -58,24 +52,9 @@ export function EncryptedText({ text, className, duration = 800 }: EncryptedText
     };
   }, [text, duration]);
 
-  if (done) {
-    return <span className={cn(className)}>{text}</span>;
-  }
-
   return (
-    <span className={cn(className)} aria-label={text}>
-      {(chars.length ? chars : text.split("").map(c => ({ char: c, resolved: true }))).map((c, i) =>
-        c.char === " " ? (
-          <span key={i}>{" "}</span>
-        ) : (
-          <span
-            key={i}
-            style={{ display: "inline-block", width: "0.6em", textAlign: "center" }}
-          >
-            {c.char}
-          </span>
-        )
-      )}
+    <span className={cn(className)}>
+      {displayed}
     </span>
   );
 }
