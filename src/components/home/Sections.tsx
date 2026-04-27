@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import FadeIn from "../ui/fade-in";
 
 const focusAreas = [
@@ -32,21 +32,50 @@ const focusAreas = [
   },
 ];
 
+function Typewriter({ text, speed = 20 }: { text: string; speed?: number }) {
+  const [count, setCount] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    setCount(0);
+    intervalRef.current = setInterval(() => {
+      setCount((c) => {
+        if (c >= text.length) {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          return c;
+        }
+        return c + 1;
+      });
+    }, speed);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [text, speed]);
+
+  return (
+    <>
+      {text.slice(0, count)}
+      {count < text.length && <span className="inline-block w-[2px] h-[1em] bg-white/70 align-middle ml-[1px] animate-pulse" />}
+    </>
+  );
+}
+
 function FocusCards() {
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
 
   // Split into two columns for proper alignment
   const leftCol = [focusAreas[0], focusAreas[2]]; // 01 tall, 03 short
   const rightCol = [focusAreas[1], focusAreas[3]]; // 02 short, 04 tall
 
   const renderCard = (area: typeof focusAreas[0]) => {
-    const isOpen = expanded === area.num;
+    const isOpen = hovered === area.num;
     return (
       <div
         key={area.num}
         className="relative overflow-hidden rounded-lg cursor-pointer group"
         style={{ height: area.tall ? "340px" : "240px" }}
-        onClick={() => setExpanded(isOpen ? null : area.num)}
+        onMouseEnter={() => setHovered(area.num)}
+        onMouseLeave={() => setHovered(null)}
       >
         <img
           src={area.image}
@@ -73,7 +102,7 @@ function FocusCards() {
             className={`overflow-hidden transition-all duration-400 ease-out ${isOpen ? "max-h-32 opacity-100 mt-3" : "max-h-0 opacity-0"}`}
           >
             <p className="text-white/70 text-sm leading-relaxed">
-              {area.desc}
+              {isOpen && <Typewriter text={area.desc} />}
             </p>
           </div>
         </div>
