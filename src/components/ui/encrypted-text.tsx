@@ -10,43 +10,45 @@ interface EncryptedTextProps {
 const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const LOWER = "abcdefghijklmnopqrstuvwxyz";
 
+interface CharState {
+  char: string;
+  resolved: boolean;
+}
+
 export function EncryptedText({ text, className, duration = 800 }: EncryptedTextProps) {
-  const [displayed, setDisplayed] = useState("");
+  const [chars, setChars] = useState<CharState[]>([]);
   const [done, setDone] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const startRef = useRef<number>(0);
 
   useEffect(() => {
-    // Count non-space characters
     const charCount = text.replace(/ /g, "").length;
     const perChar = duration / charCount;
     startRef.current = Date.now();
 
     intervalRef.current = setInterval(() => {
       const elapsed = Date.now() - startRef.current;
-      // How many non-space characters should be resolved
       const resolved = Math.min(Math.floor(elapsed / perChar), charCount);
 
-      let result = "";
+      const result: CharState[] = [];
       let count = 0;
       for (let i = 0; i < text.length; i++) {
         if (text[i] === " ") {
-          result += " ";
+          result.push({ char: " ", resolved: true });
         } else if (count < resolved) {
-          result += text[i];
+          result.push({ char: text[i], resolved: true });
           count++;
         } else {
           const pool = text[i] === text[i].toUpperCase() ? UPPER : LOWER;
-          result += pool[Math.floor(Math.random() * pool.length)];
+          result.push({ char: pool[Math.floor(Math.random() * pool.length)], resolved: false });
           count++;
         }
       }
 
-      setDisplayed(result);
+      setChars(result);
 
       if (resolved >= charCount) {
         if (intervalRef.current) clearInterval(intervalRef.current);
-        setDisplayed(text);
         setDone(true);
       }
     }, 30);
@@ -56,9 +58,24 @@ export function EncryptedText({ text, className, duration = 800 }: EncryptedText
     };
   }, [text, duration]);
 
+  if (done) {
+    return <span className={cn(className)}>{text}</span>;
+  }
+
   return (
-    <span className={cn(className)}>
-      {displayed || text}
+    <span className={cn(className)} aria-label={text}>
+      {(chars.length ? chars : text.split("").map(c => ({ char: c, resolved: true }))).map((c, i) =>
+        c.char === " " ? (
+          <span key={i}>{" "}</span>
+        ) : (
+          <span
+            key={i}
+            style={{ display: "inline-block", width: "0.6em", textAlign: "center" }}
+          >
+            {c.char}
+          </span>
+        )
+      )}
     </span>
   );
 }
