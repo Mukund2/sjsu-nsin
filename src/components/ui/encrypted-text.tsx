@@ -55,7 +55,7 @@ export function EncryptedText({ text, className, duration = 800 }: EncryptedText
   }, [text, duration]);
 
   return (
-    <span className={cn(!done ? "font-mono tracking-normal" : "", className)}>
+    <span className={cn(className)}>
       {displayed || text}
     </span>
   );
