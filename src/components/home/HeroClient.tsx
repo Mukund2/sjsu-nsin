@@ -14,7 +14,7 @@ export default function HeroClient() {
         <h1 className="text-4xl sm:text-5xl md:text-7xl text-white leading-[1.1] font-display tracking-tight drop-shadow-lg">
           <EncryptedText
             text="National Security Innovation Network"
-            speed={25}
+            duration={1500}
             className="font-display"
           />
         </h1>

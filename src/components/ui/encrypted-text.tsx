@@ -16,31 +16,33 @@ export function EncryptedText({ text, className, duration = 800 }: EncryptedText
   const startRef = useRef<number>(0);
 
   useEffect(() => {
+    // Count non-space characters
+    const charCount = text.replace(/ /g, "").length;
+    const perChar = duration / charCount;
     startRef.current = Date.now();
 
     intervalRef.current = setInterval(() => {
       const elapsed = Date.now() - startRef.current;
-      const progress = Math.min(elapsed / duration, 1);
+      // How many non-space characters should be resolved
+      const resolved = Math.min(Math.floor(elapsed / perChar), charCount);
 
-      // Each character has a random threshold - once progress passes it, it resolves
       let result = "";
+      let count = 0;
       for (let i = 0; i < text.length; i++) {
         if (text[i] === " ") {
           result += " ";
+        } else if (count < resolved) {
+          result += text[i];
+          count++;
         } else {
-          // Use a seeded threshold per character position
-          const threshold = (Math.sin(i * 7.3 + 0.5) * 0.5 + 0.5) * 0.7 + 0.15;
-          if (progress >= threshold) {
-            result += text[i];
-          } else {
-            result += CHARS[Math.floor(Math.random() * CHARS.length)];
-          }
+          result += CHARS[Math.floor(Math.random() * CHARS.length)];
+          count++;
         }
       }
 
       setDisplayed(result);
 
-      if (progress >= 1) {
+      if (resolved >= charCount) {
         if (intervalRef.current) clearInterval(intervalRef.current);
         setDisplayed(text);
         setDone(true);
