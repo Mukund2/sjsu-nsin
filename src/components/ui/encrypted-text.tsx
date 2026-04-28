@@ -8,36 +8,29 @@ interface EncryptedTextProps {
 }
 
 export function EncryptedText({ text, className, duration = 800 }: EncryptedTextProps) {
-  const words = text.split(" ");
-  const stagger = 150; // ms between each word
-  const [visible, setVisible] = useState<boolean[]>(words.map(() => false));
+  const chars = text.split("");
+  const stagger = 40; // ms between each letter
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
-    const timers = words.map((_, i) =>
-      setTimeout(() => {
-        setVisible((prev) => {
-          const next = [...prev];
-          next[i] = true;
-          return next;
-        });
-      }, i * stagger)
+    const timers = chars.map((_, i) =>
+      setTimeout(() => setCount(i + 1), i * stagger)
     );
     return () => timers.forEach(clearTimeout);
   }, [text]);
 
   return (
     <span className={cn(className)}>
-      {words.map((word, i) => (
+      {chars.map((char, i) => (
         <span
           key={i}
-          className="inline-block transition-all duration-500 ease-out"
+          className={`inline-block transition-all duration-400 ease-out ${char === " " ? "w-[0.3em]" : ""}`}
           style={{
-            opacity: visible[i] ? 1 : 0,
-            transform: visible[i] ? "translateY(0)" : "translateY(12px)",
+            opacity: i < count ? 1 : 0,
+            transform: i < count ? "translateY(0)" : "translateY(10px)",
           }}
         >
-          {word}
-          {i < words.length - 1 && "\u00A0"}
+          {char === " " ? "\u00A0" : char}
         </span>
       ))}
     </span>
