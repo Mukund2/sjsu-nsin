@@ -3,9 +3,12 @@ import { EncryptedText } from "../ui/encrypted-text";
 export default function HeroClient() {
   return (
     <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
-      <img
-        src="/images/mechazilla-catch.jpg"
-        alt=""
+      <video
+        src="/videos/mechazilla-catch.mp4"
+        autoPlay
+        muted
+        loop
+        playsInline
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="absolute inset-0 bg-black/25" />
