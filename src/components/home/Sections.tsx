@@ -136,7 +136,7 @@ export default function Sections() {
                   The best tech talent and the hardest problems are separated by a single gap: access.
                 </h2>
                 <p className="text-white/60 leading-relaxed mb-6">
-                  NSIN at SJSU connects engineers, designers, and strategists directly to the people defending the country. Real projects, real challenges, real relationships.
+                  NSIN at SJSU connects engineers, designers, and strategists with the defense and intelligence community. Real projects, real challenges, real relationships.
                 </p>
                 <a
                   href="/about"
