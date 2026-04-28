@@ -61,21 +61,24 @@ function Typewriter({ text, speed = 20 }: { text: string; speed?: number }) {
 }
 
 function FocusCards() {
-  const [hovered, setHovered] = useState<string | null>(null);
+  const [revealed, setRevealed] = useState<Set<string>>(new Set());
 
   // Split into two columns for proper alignment
   const leftCol = [focusAreas[0], focusAreas[2]]; // 01 tall, 03 short
   const rightCol = [focusAreas[1], focusAreas[3]]; // 02 short, 04 tall
 
   const renderCard = (area: typeof focusAreas[0]) => {
-    const isOpen = hovered === area.num;
+    const isOpen = revealed.has(area.num);
     return (
       <div
         key={area.num}
         className="relative overflow-hidden rounded-lg cursor-pointer group"
         style={{ height: area.tall ? "340px" : "240px" }}
-        onMouseEnter={() => setHovered(area.num)}
-        onMouseLeave={() => setHovered(null)}
+        onMouseEnter={() => {
+          if (!revealed.has(area.num)) {
+            setRevealed((prev) => new Set(prev).add(area.num));
+          }
+        }}
       >
         <img
           src={area.image}
@@ -85,24 +88,14 @@ function FocusCards() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 z-10">
-          <div className="flex items-end justify-between">
-            <h3 className="text-lg sm:text-xl font-display text-white">
-              {area.title}
-            </h3>
-            <svg
-              className={`w-5 h-5 text-white/60 transition-transform duration-300 flex-shrink-0 ${isOpen ? "rotate-45" : ""}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 4v16m8-8H4" />
-            </svg>
-          </div>
+          <h3 className="text-lg sm:text-xl font-display text-white">
+            {area.title}
+          </h3>
           <div
             className={`overflow-hidden transition-all duration-400 ease-out ${isOpen ? "max-h-32 opacity-100 mt-3" : "max-h-0 opacity-0"}`}
           >
             <p className="text-white/70 text-sm leading-relaxed">
-              {isOpen && <Typewriter text={area.desc} />}
+              {isOpen && <Typewriter text={area.desc} speed={12} />}
             </p>
           </div>
         </div>
