@@ -9,17 +9,29 @@ const currentPath = Astro.url.pathname;
 const isHomepage = currentPath === "/" || currentPath === "";
 ---
 
-<nav id="main-navbar" class="fixed top-0 left-0 right-0 z-50 mix-blend-exclusion">
+<nav id="main-navbar" class:list={[
+  "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+  !isHomepage && "navbar-scrolled"
+]}>
   <div class="w-full px-4 h-14 flex items-center justify-between">
     <a href="/" class="flex items-center gap-3">
       <img
         src="/logo.svg"
         alt="SJSU NSIN"
-        class="h-10 w-auto invert brightness-200"
+        class:list={[
+          "h-10 w-auto navbar-logo transition-all duration-300",
+          isHomepage ? "invert brightness-200" : ""
+        ]}
       />
-      <span class="text-[12px] uppercase tracking-[0.12em] font-medium hidden sm:block leading-tight text-white">
+      <span class:list={[
+        "navbar-text text-[12px] uppercase tracking-[0.12em] font-medium hidden sm:block leading-tight transition-colors duration-300",
+        isHomepage ? "text-white" : "text-near-black"
+      ]}>
         National Security Innovation Network<br />
-        <span class="text-white/60">at San Jos&eacute; State University</span>
+        <span class:list={[
+          "navbar-subtext transition-colors duration-300",
+          isHomepage ? "text-white/60" : "text-mid-gray"
+        ]}>at San Jos&eacute; State University</span>
       </span>
     </a>
 
@@ -30,8 +42,10 @@ const isHomepage = currentPath === "/" || currentPath === "";
           target={link.href.startsWith("http") ? "_blank" : undefined}
           rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
           class:list={[
-            "text-[13px] uppercase tracking-[0.15em] text-white/70 hover:text-white transition-colors duration-300",
-            (currentPath === link.href || currentPath === link.href + "/") && "text-white font-medium"
+            "navbar-link text-[13px] uppercase tracking-[0.15em] transition-colors duration-300",
+            isHomepage
+              ? (currentPath === link.href ? "text-white font-medium" : "text-white/70 hover:text-white")
+              : (currentPath === link.href || currentPath === link.href + "/" ? "text-near-black font-medium" : "text-mid-gray hover:text-near-black")
           ]}
         >
           {link.label}
@@ -41,7 +55,10 @@ const isHomepage = currentPath === "/" || currentPath === "";
 
     <button
       id="mobile-menu-btn"
-      class="md:hidden p-2 text-white transition-colors duration-300"
+      class:list={[
+        "md:hidden p-2 navbar-link transition-colors duration-300",
+        isHomepage ? "text-white" : "text-near-black"
+      ]}
       aria-label="Toggle menu"
     >
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -68,10 +85,50 @@ const isHomepage = currentPath === "/" || currentPath === "";
 
 <div class:list={[!isHomepage && "h-14"]}></div>
 
+<style>
+  .navbar-scrolled {
+    @apply bg-white border-b border-light-gray;
+  }
+</style>
+
 <script>
   const btn = document.getElementById('mobile-menu-btn');
   const menu = document.getElementById('mobile-menu');
   btn?.addEventListener('click', () => {
     menu?.classList.toggle('hidden');
   });
+
+  const isHome = window.location.pathname === '/' || window.location.pathname === '';
+  if (isHome) {
+    const navbar = document.getElementById('main-navbar');
+
+    function handleScroll() {
+      if (!navbar) return;
+      const scrolled = window.scrollY > 50;
+
+      navbar.classList.toggle('navbar-scrolled', scrolled);
+
+      navbar.querySelectorAll('.navbar-text').forEach(el => {
+        el.classList.toggle('text-white', !scrolled);
+        el.classList.toggle('text-near-black', scrolled);
+      });
+      navbar.querySelectorAll('.navbar-subtext').forEach(el => {
+        el.classList.toggle('text-white/60', !scrolled);
+        el.classList.toggle('text-mid-gray', scrolled);
+      });
+      navbar.querySelectorAll('.navbar-link').forEach(el => {
+        el.classList.toggle('text-white', !scrolled);
+        el.classList.toggle('text-white/70', !scrolled);
+        el.classList.toggle('hover:text-white', !scrolled);
+        el.classList.toggle('text-mid-gray', scrolled);
+        el.classList.toggle('hover:text-near-black', scrolled);
+      });
+      navbar.querySelectorAll('.navbar-logo').forEach(el => {
+        (el as HTMLElement).style.filter = scrolled ? 'none' : 'invert(1) brightness(2)';
+      });
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+  }
 </script>
