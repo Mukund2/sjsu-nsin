@@ -25,7 +25,9 @@ export default function HeroClient() {
 
         <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
           <a
-            href="#join-us"
+            href="https://forms.gle/9MLweCMRaaTkrEkGA"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-block bg-white text-near-black px-8 py-3 text-[13px] font-medium uppercase tracking-[0.15em] hover:bg-light-gray transition-colors"
           >
             Get Involved
