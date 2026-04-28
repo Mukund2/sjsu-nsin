@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { cn } from "../../lib/utils";
 
 interface EncryptedTextProps {
@@ -7,32 +7,32 @@ interface EncryptedTextProps {
   duration?: number;
 }
 
-export function EncryptedText({ text, className, duration = 800 }: EncryptedTextProps) {
-  const chars = text.split("");
-  const stagger = 40; // ms between each letter
+export function EncryptedText({ text, className }: EncryptedTextProps) {
   const [count, setCount] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    const timers = chars.map((_, i) =>
-      setTimeout(() => setCount(i + 1), i * stagger)
-    );
-    return () => timers.forEach(clearTimeout);
+    setCount(0);
+    intervalRef.current = setInterval(() => {
+      setCount((c) => {
+        if (c >= text.length) {
+          if (intervalRef.current) clearInterval(intervalRef.current);
+          return c;
+        }
+        return c + 1;
+      });
+    }, 40);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
   }, [text]);
 
   return (
     <span className={cn(className)}>
-      {chars.map((char, i) => (
-        <span
-          key={i}
-          className={`inline-block transition-all duration-400 ease-out ${char === " " ? "w-[0.3em]" : ""}`}
-          style={{
-            opacity: i < count ? 1 : 0,
-            transform: i < count ? "translateY(0)" : "translateY(10px)",
-          }}
-        >
-          {char === " " ? "\u00A0" : char}
-        </span>
-      ))}
+      {text.slice(0, count)}
+      {count < text.length && (
+        <span className="inline-block w-[3px] h-[0.85em] bg-white/70 align-middle ml-[2px] animate-pulse" />
+      )}
     </span>
   );
 }
