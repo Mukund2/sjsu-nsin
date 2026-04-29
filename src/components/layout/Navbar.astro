@@ -107,7 +107,7 @@ const isHomepage = currentPath === "/" || currentPath === "";
 
     function handleScroll() {
       if (!navbar) return;
-      const scrolled = window.scrollY > 50;
+      const scrolled = window.scrollY > 0;
 
       navbar.classList.toggle('navbar-scrolled', scrolled);
 
