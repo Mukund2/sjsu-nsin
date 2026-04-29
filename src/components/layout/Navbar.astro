@@ -87,7 +87,10 @@ const isHomepage = currentPath === "/" || currentPath === "";
 
 <style>
   .navbar-scrolled {
-    @apply bg-white/80 backdrop-blur-md border-b border-light-gray;
+    background-color: rgb(255 255 255 / 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--color-light-gray, #e5e5e5);
   }
 </style>
 
