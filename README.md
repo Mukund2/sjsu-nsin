@@ -41,3 +41,10 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+## Security
+
+This site has a documented security posture. Before changing
+`astro.config.mjs`, `public/_headers`, or anything under `.github/workflows/`,
+read [`docs/SECURITY-HARDENING.md`](./docs/SECURITY-HARDENING.md). To report a
+vulnerability, see [`SECURITY.md`](./SECURITY.md).

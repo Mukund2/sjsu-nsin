@@ -1,0 +1,52 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Security Policy — SJSU NSIN"
+  description="Responsible disclosure policy for sjsunsin.org."
+>
+  <section class="py-24 sm:py-32 px-4">
+    <div class="max-w-3xl mx-auto prose">
+      <p class="text-sm uppercase tracking-[0.2em] text-mid-gray mb-2">Security</p>
+      <h1 class="text-4xl md:text-5xl font-display text-near-black mb-8">Responsible Disclosure</h1>
+
+      <p class="text-mid-gray text-lg leading-relaxed mb-6">
+        We appreciate the security research community's work in helping us
+        keep <code>sjsunsin.org</code> safe. If you believe you have found a
+        vulnerability, please report it through one of the contacts below.
+      </p>
+
+      <h2 class="text-2xl font-display text-near-black mt-12 mb-4">Contact</h2>
+      <ul class="text-mid-gray space-y-2">
+        <li>Email: <a href="mailto:security@sjsunsin.org" class="text-sjsu-blue hover:underline">security@sjsunsin.org</a></li>
+        <li>LinkedIn: <a href="https://www.linkedin.com/company/sjsu-nsin/" target="_blank" rel="noopener noreferrer" class="text-sjsu-blue hover:underline">SJSU NSIN</a></li>
+        <li>Machine-readable: <a href="/.well-known/security.txt" class="text-sjsu-blue hover:underline">/.well-known/security.txt</a></li>
+      </ul>
+
+      <h2 class="text-2xl font-display text-near-black mt-12 mb-4">Scope</h2>
+      <p class="text-mid-gray mb-4">In scope:</p>
+      <ul class="text-mid-gray list-disc list-inside space-y-1 mb-6">
+        <li>Stored or reflected XSS on <code>sjsunsin.org</code></li>
+        <li>Domain or subdomain takeover</li>
+        <li>Supply-chain issues in declared dependencies</li>
+        <li>Sensitive information disclosure in committed code</li>
+      </ul>
+
+      <p class="text-mid-gray mb-4">Out of scope:</p>
+      <ul class="text-mid-gray list-disc list-inside space-y-1 mb-6">
+        <li>Volumetric DDoS reports (handled upstream)</li>
+        <li>Lack of rate-limiting on a static site</li>
+        <li>Automated scanner output without a working proof of concept</li>
+        <li>Missing best-practice headers without demonstrated impact</li>
+      </ul>
+
+      <h2 class="text-2xl font-display text-near-black mt-12 mb-4" id="acknowledgments">Acknowledgments</h2>
+      <p class="text-mid-gray">
+        Researchers who report valid issues will be credited here, with their
+        permission. We disclose vulnerabilities publicly after they are
+        remediated, typically within 90 days of the initial report.
+      </p>
+    </div>
+  </section>
+</BaseLayout>

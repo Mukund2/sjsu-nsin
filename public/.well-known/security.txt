@@ -1,0 +1,16 @@
+Contact: mailto:security@sjsunsin.org
+Contact: https://www.linkedin.com/company/sjsu-nsin/
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://sjsunsin.org/.well-known/security.txt
+Policy: https://sjsunsin.org/security-policy
+Acknowledgments: https://sjsunsin.org/security-policy#acknowledgments
+
+# If you believe you have found a security vulnerability in sjsunsin.org,
+# please report it via the contacts above. We appreciate responsible
+# disclosure and will respond within 5 business days.
+#
+# Out of scope:
+#   - Reports about volumetric DDoS (mitigated upstream).
+#   - Reports about lack of rate-limiting on a fully static site.
+#   - Automated scanner output without a working proof of concept.

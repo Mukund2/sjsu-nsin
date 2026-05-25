@@ -1,0 +1,6 @@
+Contact: mailto:security@sjsunsin.org
+Contact: https://www.linkedin.com/company/sjsu-nsin/
+Expires: 2027-01-01T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://sjsunsin.org/.well-known/security.txt
+Policy: https://sjsunsin.org/security-policy
