@@ -127,3 +127,29 @@ One unbroken scroll-jacked journey, no ordinary sections until the CTA:
 4) World dissolves → "Join the first cohort." CTA → footer.
 Voyager protagonist rides the whole journey (beats need re-mapping to the
 new structure: over the map it should fly across like the timeline beat).
+
+## ENVIRONMENT JOURNEY (user clarification, FINAL form of the traverse)
+The orbit→sky→sea→seabed→cyber journey must be FULLY ANIMATED — one
+continuous shot in ONE three.js scene. NOT the photo tile strip (#alt-strip
+gets replaced). Build src/components/home/EnvironmentJourney.astro:
+single pinned canvas (~700% scrub), camera travels DOWN a world column;
+everything alive and shader-driven, golden-hour graded (ink/paper/gold):
+- space: stars + faint Earth-limb glow fading as you descend
+- atmosphere: huge gradient dome, colors evolve with altitude
+  (black → deep blue → golden haze); 4-6 alpha cloud billboards you
+  pass through (drift slowly)
+- ocean surface: animated displaced plane (sin-wave vertex shader, gold
+  specular), camera PLUNGES through it (white foam flash at contact)
+- underwater: fog shifts deep teal, additive god-ray cones from above,
+  drifting marine-snow particles
+- seabed: displaced dark ground plane + glowing cable as TubeGeometry
+  along a curve (gold emissive pulse running along it)
+- cyber: existing dissolve idea in-scene — world meshes fade as gold
+  particle field + perspective grid take over
+Keep: live altimeter (drive from same scrub), captions per altitude band
+(DOM overlays as now), Voyager protagonist ideally moved INTO this scene
+(one renderer) or kept as overlay with matched beats. Reuse altitudeAt
+piecewise. Kill #alt-strip + tiles after parity. Perf: antialias false,
+DPR≤1.75, fog cheap, particles ≤2k, RAF gated by pin proximity.
+Honest note told to user: this is stylized-animated (Lusion-tier direction),
+not photoreal film VFX — that is the correct genre standard.
