@@ -5,36 +5,28 @@ import { domains } from "../data/domains";
 
 const bySlug = Object.fromEntries(domains.map((d) => [d.slug, d]));
 
-// the traverse: scroll = altitude. Cyber deliberately breaks the metaphor.
-const bands = [
+// the traverse: one continuous scene, seabed to orbit (tiles top->bottom in DOM)
+const tiles = [
+  { src: "/images/domains/orbit-limb.jpg", alt: "Earth's limb at the day-night terminator from low orbit" },
+  { src: "/images/domains/cloud-deck.jpg", alt: "A golden cloud deck at cruise altitude" },
+  { src: "/images/domains/sea-surface.jpg", alt: "Open Pacific swells at golden hour" },
+  { src: "/images/domains/water-column.jpg", alt: "Light shafts falling through deep water" },
+  { src: "/images/domains/seabed-cable.jpg", alt: "An undersea fiber-optic cable crossing the seabed" },
+];
+
+const caps = [
   {
-    ...bySlug.sea,
     name: "The seabed",
     tagline: "Almost all intercontinental data crosses the ocean floor on cables like this one — nearly undefended.",
-    image: "/images/domains/seabed-cable.jpg",
-    imageAlt: "An undersea fiber-optic cable crossing the seabed, lit faintly from the surface far above",
-    cta: false,
+    slug: null,
   },
+  { name: bySlug.sea.name, tagline: bySlug.sea.tagline, slug: "sea" },
+  { name: bySlug.air.name, tagline: bySlug.air.tagline, slug: "air" },
+  { name: bySlug.space.name, tagline: bySlug.space.tagline, slug: "space" },
   {
-    ...bySlug.sea,
-    image: "/images/domains/sea-2.jpg",
-    imageAlt: "A destroyer taking a wave over the bow at golden hour",
-  },
-  {
-    ...bySlug.air,
-    image: "/images/domains/air-1.jpg",
-    imageAlt: "An F-35 flying a night mission, seen from a tanker",
-  },
-  {
-    ...bySlug.space,
-    image: "/images/domains/space-2.jpg",
-    imageAlt: "City lights of southern Japan photographed from the ISS",
-  },
-  {
-    ...bySlug.cyber,
+    name: bySlug.cyber.name,
     tagline: "Cyber has no altitude. It’s the layer under all of the others.",
-    image: "/images/domains/cyber-2.jpg",
-    imageAlt: "Blue-lit racks inside a supercomputing facility",
+    slug: "cyber",
   },
 ];
 
@@ -177,33 +169,41 @@ const programs = [
     </div>
   </section>
 
-  <!-- the traverse — scroll is altitude, not paragraphs -->
+  <!-- the traverse — one unbroken climb from the seabed to orbit -->
   <section id="altitude" class="scheme-ink relative">
     <div id="alt-pin" class="relative h-screen overflow-hidden">
-      {bands.map((b, i) => (
-        <figure class="alt-band absolute inset-0 m-0" data-index={i}>
-          <img
-            src={b.image}
-            alt={b.imageAlt}
-            class="absolute inset-0 w-full h-full object-cover"
-            loading={i === 0 ? "eager" : "lazy"}
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/35 to-ink/30"></div>
-          <figcaption class="absolute inset-x-0 bottom-0">
-            <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-16 sm:pb-20">
-              <h3 class="t-h1 text-paper">{b.name}</h3>
-              <p class="t-lede mt-4 text-paper/75 max-w-[38ch]">{b.tagline}</p>
-              {b.cta !== false && (
-                <a
-                  href={`/domains/${b.slug}`}
-                  class="press arrow-link mt-7 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
-                >
-                  Explore {b.name} <span class="arrow" aria-hidden="true">&rarr;</span>
-                </a>
-              )}
-            </div>
-          </figcaption>
-        </figure>
+      <div id="alt-strip" class="absolute inset-x-0 top-0 will-change-transform" style="height: 500vh;">
+        {tiles.map((t) => (
+          <img src={t.src} alt={t.alt} class="block w-full h-screen object-cover" loading="eager" decoding="async" />
+        ))}
+      </div>
+
+      <figure id="alt-cyber" class="absolute inset-0 m-0" style="opacity: 0;">
+        <img
+          src="/images/domains/cyber-2.jpg"
+          alt="Blue-lit racks inside a supercomputing facility"
+          class="absolute inset-0 w-full h-full object-cover"
+          loading="lazy"
+        />
+      </figure>
+
+      <div class="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-ink/25 pointer-events-none"></div>
+
+      {caps.map((c, i) => (
+        <div class="alt-cap absolute inset-x-0 bottom-0" style={i === 0 ? "" : "opacity: 0; visibility: hidden;"}>
+          <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-16 sm:pb-20">
+            <h3 class="t-h1 text-paper">{c.name}</h3>
+            <p class="t-lede mt-4 text-paper/75 max-w-[38ch]">{c.tagline}</p>
+            {c.slug && (
+              <a
+                href={`/domains/${c.slug}`}
+                class="press arrow-link mt-7 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
+              >
+                Explore {c.name} <span class="arrow" aria-hidden="true">&rarr;</span>
+              </a>
+            )}
+          </div>
+        </div>
       ))}
 
       <!-- the altimeter: a live instrument, not decoration -->
@@ -311,28 +311,32 @@ const programs = [
       },
     });
 
-    // ── the traverse: scroll = altitude ──
-    const bands = gsap.utils.toArray<HTMLElement>(".alt-band");
+    // ── the traverse: one continuous pan, seabed to orbit ──
+    const strip = document.getElementById("alt-strip");
+    const altCaps = gsap.utils.toArray<HTMLElement>(".alt-cap");
+    const cyberFig = document.getElementById("alt-cyber");
     const readout = document.getElementById("alt-readout");
     const marker = document.getElementById("alt-marker");
 
-    gsap.set(bands, { autoAlpha: 0 });
-    gsap.set(bands[0], { autoAlpha: 1 });
+    gsap.set(altCaps, { autoAlpha: 0 });
+    gsap.set(altCaps[0], { autoAlpha: 1 });
 
-    const TAIL = 0.6;
-    const total = bands.length + TAIL;
+    const PAN = 4; // four tile transitions
+    const HOLD = 0.6; // rest at orbit
+    const CYB = 0.45; // cyber takes over
+    const TAIL2 = 0.5;
+    const total = PAN + HOLD + CYB + TAIL2;
 
-    // piecewise altitude: seabed → flight level → ISS orbit → no altitude
     const fmt = (m: number) => {
       if (m >= 20000) return `${Math.round(m / 1000)} km`;
       const v = Math.round(m / 10) * 10;
       return `${v < 0 ? "−" : ""}${Math.abs(v).toLocaleString("en-US")} m`;
     };
     const altitudeAt = (u: number) => {
-      if (u < 1) return -4000 + 3600 * u;
-      if (u < 2) return -400 + 400 * (u - 1);
-      if (u < 3) return 13700 * (u - 2);
-      if (u < 4) return 13700 + (408000 - 13700) * (u - 3);
+      if (u < 2) return -4000 + 2000 * u;
+      if (u < 3) return 11000 * (u - 2);
+      if (u < 4) return 11000 + (408000 - 11000) * (u - 3);
+      if (u < PAN + HOLD) return 408000;
       return null; // cyber
     };
 
@@ -341,43 +345,51 @@ const programs = [
       scrollTrigger: {
         trigger: "#alt-pin",
         start: "top top",
-        end: "+=" + bands.length * 110 + "%",
+        end: "+=" + (PAN + 1.5) * 110 + "%",
         pin: true,
         scrub: 0.4,
         anticipatePin: 1,
         onUpdate(self) {
           if (!readout || !marker) return;
           const u = self.progress * total;
-          const alt = altitudeAt(Math.min(u, total));
+          const alt = altitudeAt(u);
           if (alt === null) {
             readout.textContent = "no altitude";
             marker.style.top = "0%";
           } else {
             readout.textContent = fmt(alt);
-            const climb = Math.min(u / 4, 1); // fraction of the physical climb
+            const climb = Math.min(u / PAN, 1);
             marker.style.top = `${(1 - climb) * 100}%`;
           }
         },
       },
     });
 
-    bands.forEach((band, i) => {
-      const img = band.querySelector("img");
-      if (img) {
-        atl.fromTo(img, { yPercent: 6 }, { yPercent: -6, duration: 1.35 }, Math.max(i - 0.35, 0));
+    if (strip) {
+      atl.fromTo(strip, { yPercent: -80 }, { yPercent: 0, duration: PAN }, 0);
+    }
+
+    // caption windows along the climb: [in, out]
+    const windows = [
+      [0, 1.05],
+      [1.55, 2.5],
+      [2.55, 3.5],
+      [3.55, PAN + HOLD - 0.05],
+      [PAN + HOLD + 0.2, Infinity],
+    ];
+    altCaps.forEach((cap, i) => {
+      const [tin, tout] = windows[i];
+      if (i > 0) {
+        atl.fromTo(cap, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.35 }, tin);
       }
-      if (i === 0) return;
-      const prevCaption = bands[i - 1].querySelector("figcaption");
-      const caption = band.querySelector("figcaption");
-      if (prevCaption) {
-        atl.to(prevCaption, { autoAlpha: 0, y: -20, duration: 0.2 }, i - 0.05);
-      }
-      atl.to(bands[i - 1], { autoAlpha: 0, duration: 0.4 }, i);
-      atl.fromTo(band, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, i + 0.1);
-      if (caption) {
-        atl.fromTo(caption, { autoAlpha: 0, y: 44 }, { autoAlpha: 1, y: 0, duration: 0.5 }, i + 0.18);
+      if (tout !== Infinity) {
+        atl.to(cap, { autoAlpha: 0, y: -20, duration: 0.25 }, tout);
       }
     });
-    atl.to({}, { duration: TAIL });
+
+    if (cyberFig) {
+      atl.to(cyberFig, { autoAlpha: 1, duration: CYB }, PAN + HOLD);
+    }
+    atl.to({}, { duration: TAIL2 }, total - TAIL2);
   }
 </script>
