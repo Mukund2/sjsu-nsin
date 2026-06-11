@@ -9,8 +9,8 @@ interface Props {
 }
 
 const {
-  title = "SJSU National Security Innovation Network",
-  description = "Applying innovation methodologies to national security challenges. A student organization at San Jose State University.",
+  title = "NSIN at San José State — National Security Innovation Network",
+  description = "Silicon Valley's first industry was defense. NSIN at San José State connects students back to that work — real projects with the defense and intelligence community.",
   theme = "light"
 } = Astro.props;
 
@@ -31,19 +31,19 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="/images/f117.jpg" />
+    <meta property="og:image" content={new URL("/images/f117.jpg", Astro.site).toString()} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:site_name" content="SJSU NSIN" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="/images/f117.jpg" />
+    <meta name="twitter:image" content={new URL("/images/f117.jpg", Astro.site).toString()} />
     <link rel="canonical" href={canonicalURL} />
     <link rel="apple-touch-icon" href="/images/f117.jpg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Instrument+Serif&display=swap"
       rel="stylesheet"
       referrerpolicy="no-referrer"
       crossorigin="anonymous"

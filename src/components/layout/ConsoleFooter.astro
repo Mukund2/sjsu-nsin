@@ -1,39 +1,34 @@
 ---
 const year = new Date().getFullYear();
+
+const links = [
+  { label: "About", href: "/about", external: false },
+  { label: "Contact", href: "/contact", external: false },
+  { label: "Apply", href: "https://forms.gle/9MLweCMRaaTkrEkGA", external: true },
+  { label: "Instagram", href: "https://www.instagram.com/sjsu_nsin", external: true },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/sjsu-nsin", external: true },
+];
 ---
 
 <footer class="border-t border-paper/10 bg-ink">
-  <div class="max-w-7xl mx-auto px-6 py-16">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
-      <div>
-        <img src="/logo.svg" alt="SJSU NSIN" class="h-8 w-auto invert brightness-200 mb-5" />
-        <p class="text-sm text-paper/45 leading-relaxed max-w-sm">
-          The National Security Innovation Network at San Jos&eacute; State University.
-          Connecting Silicon Valley's next generation of engineers, designers, and
-          strategists with the missions that need them most.
-        </p>
-      </div>
-
-      <div>
-        <div class="flex flex-col gap-2.5">
-          <a href="/about" class="text-sm text-paper/45 hover:text-paper transition-colors">About</a>
-          <a href="/contact" class="text-sm text-paper/45 hover:text-paper transition-colors">Contact</a>
-          <a href="https://forms.gle/9MLweCMRaaTkrEkGA" target="_blank" rel="noopener noreferrer" class="text-sm text-paper/45 hover:text-paper transition-colors">Apply</a>
-        </div>
-      </div>
-
-      <div>
-        <div class="flex flex-col gap-2.5">
-          <a href="https://www.instagram.com/sjsu_nsin" target="_blank" rel="noopener noreferrer" class="text-sm text-paper/45 hover:text-paper transition-colors">Instagram</a>
-          <a href="https://www.linkedin.com/company/sjsu-nsin" target="_blank" rel="noopener noreferrer" class="text-sm text-paper/45 hover:text-paper transition-colors">LinkedIn</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="border-t border-paper/10 mt-14 pt-8">
-      <p class="text-[13px] text-paper/35">
-        &copy; {year} National Security Innovation Network at San Jos&eacute; State University
-      </p>
+  <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pt-20 pb-10">
+    <p class="t-h2 text-paper max-w-[18ch]">
+      National Security Innovation Network at San Jos&eacute; State.
+    </p>
+    <div class="mt-16 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-6">
+      <nav class="flex flex-wrap gap-x-7 gap-y-2">
+        {links.map(l => (
+          <a
+            href={l.href}
+            target={l.external ? "_blank" : undefined}
+            rel={l.external ? "noopener noreferrer" : undefined}
+            class="link t-caption text-paper/55 hover:text-paper"
+          >
+            {l.label}
+          </a>
+        ))}
+      </nav>
+      <p class="t-caption text-paper/35">&copy; {year}</p>
     </div>
   </div>
 </footer>

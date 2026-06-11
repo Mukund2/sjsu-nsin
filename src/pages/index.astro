@@ -15,17 +15,17 @@ const domainProps = domains.map(({ slug, name, accent, tagline, hero }) => ({
 const beats = [
   {
     line: "1933. The orchards came down, and Moffett Field went up.",
-    sub: "The Navy's Pacific airship base brought the first wave of engineers to the South Bay — twenty years before anyone said “silicon.”",
+    sub: "The Navy’s Pacific airship base brought the first wave of engineers to the South Bay — twenty years before anyone said “silicon.”",
     image: "/images/domains/air-3.jpg",
   },
   {
     line: "1956. Lockheed Missiles & Space moves to Sunnyvale.",
-    sub: "For three decades the Valley's largest employer wasn't a chip company. It built submarine-launched missiles and the first reconnaissance satellites.",
+    sub: "For three decades the Valley’s largest employer wasn’t a chip company. It built submarine-launched missiles and the first reconnaissance satellites.",
     image: "/images/domains/space-1.jpg",
   },
   {
     line: "By the 1990s, the Valley had moved on.",
-    sub: "Consumer software paid better and shipped faster. Defense became something the Valley's grandparents did.",
+    sub: "Consumer software paid better and shipped faster. Defense became something the Valley’s grandparents did.",
     image: "/images/mission-control.jpg",
   },
   {
@@ -34,7 +34,7 @@ const beats = [
     image: "/images/domains/sea-1.jpg",
   },
   {
-    line: "The talent never left San José. What's missing is access.",
+    line: "The talent never left San José. What’s missing is access.",
     sub: "NSIN at SJSU connects students to the people working these problems — through real projects, not career fairs.",
     image: "/images/hackathon.jpg",
   },
@@ -42,25 +42,21 @@ const beats = [
 
 const programs = [
   {
-    num: "01",
     title: "Speaker Series",
     desc: "Defense-tech founders, policymakers, and intelligence veterans on how technology is reshaping national security.",
     image: "/images/speaker-podium.jpg",
   },
   {
-    num: "02",
     title: "Build & Compete",
     desc: "Prototype sprints and DoD challenge competitions. The preparation pipeline for the National Security Hackathon.",
-    image: "/images/hackathon.jpg",
+    image: "/images/booster-catch.jpg",
   },
   {
-    num: "03",
     title: "Government & Industry Projects",
-    desc: "Paired with defense and intelligence organizations on live problems. Experiential learning, not hypotheticals.",
-    image: "/images/mission-control.jpg",
+    desc: "Paired with defense and intelligence organizations on live problems — the model Stanford built with Hacking for Defense.",
+    image: "/images/satellite.jpg",
   },
   {
-    num: "04",
     title: "Policy & Strategy",
     desc: "AI governance, export controls, and the future of deterrence — argued across engineering, business, and political science.",
     image: "/images/capitol.jpg",
@@ -83,7 +79,7 @@ const programs = [
         Lockheed was here before Google.
       </h1>
       <p class="t-lede text-paper/80 max-w-[44ch] mt-8" data-reveal>
-        Silicon Valley's first industry was defense. NSIN at San Jos&eacute;
+        Silicon Valley’s first industry was defense. NSIN at San Jos&eacute;
         State is the student club connecting engineers, designers, and policy
         minds back to that work.
       </p>
@@ -117,17 +113,16 @@ const programs = [
   </section>
 
   <!-- ACT 3 — the club: programs, domains, cohort -->
-  <div class="seam-to-paper"></div>
   <section class="scheme-paper pt-24 sm:pt-32 pb-20 px-5 sm:px-10">
     <div class="max-w-[1500px] mx-auto">
       <h2 class="t-h2 max-w-[16ch]" data-reveal>Four ways in.</h2>
       <p class="t-body mt-5 text-ink/60">
-        Whatever you study, there's a seat. Engineers build, writers argue, and
+        Whatever you study, there’s a seat. Engineers build, writers argue, and
         everyone ships something real by the end of the semester.
       </p>
       <div class="mt-14 border-t border-ink/15">
         {programs.map((p) => (
-          <div class="group grid grid-cols-1 md:grid-cols-[1fr_300px] gap-5 md:gap-10 items-center border-b border-ink/15 py-8">
+          <div class="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-5 md:gap-10 items-center border-b border-ink/15 py-8">
             <div>
               <h3 class="t-h3 text-ink">{p.title}</h3>
               <p class="t-caption mt-2 text-ink/60 max-w-xl">{p.desc}</p>
@@ -137,7 +132,7 @@ const programs = [
                 src={p.image}
                 alt={p.title}
                 loading="lazy"
-                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                class="absolute inset-0 w-full h-full object-cover"
               />
             </div>
           </div>
@@ -148,14 +143,13 @@ const programs = [
 
   <section class="scheme-paper px-5 sm:px-10 pb-24 sm:pb-32">
     <div class="max-w-[1500px] mx-auto">
-      <h2 class="t-h2 max-w-[16ch] mb-12" data-reveal>Pick where you'd start.</h2>
+      <h2 class="t-h2 max-w-[16ch] mb-12" data-reveal>Pick where you’d start.</h2>
     </div>
     <div class="max-w-[1500px] mx-auto">
       <DomainConsole client:load domains={domainProps} />
     </div>
   </section>
 
-  <div class="seam-to-ink"></div>
   <section class="scheme-ink relative overflow-hidden">
     <img
       src="/images/domains/space-3.jpg"
@@ -164,13 +158,13 @@ const programs = [
       loading="lazy"
     />
     <div class="absolute inset-0 bg-ink/55"></div>
-    <div class="relative z-10 py-32 sm:py-44 px-6">
+    <div class="relative z-10 py-32 sm:py-44 px-5 sm:px-10">
       <div class="max-w-3xl mx-auto text-center">
         <h2 class="t-h1 text-paper" data-reveal>Join the first cohort.</h2>
         <p class="t-lede text-paper/70 mt-7 mb-12 max-w-xl mx-auto">
-          Engineers, designers, and policy thinkers working on problems the
-          country can't afford to ignore. Applications open fall 2026 — no
-          experience required.
+          Cohort 01 starts fall 2026: weekly build nights, the speaker
+          series, and the first government project teams. No experience
+          required — every major has a seat.
         </p>
         <a
           href="https://forms.gle/9MLweCMRaaTkrEkGA"
@@ -178,7 +172,7 @@ const programs = [
           rel="noopener noreferrer"
           class="press inline-block bg-paper text-ink px-9 py-3.5 text-[15px] font-medium"
         >
-          Apply to Cohort 01
+          Apply to the first cohort
         </a>
       </div>
     </div>
@@ -212,12 +206,22 @@ const programs = [
     });
 
     beats.forEach((beat, i) => {
+      const img = beat.querySelector("img");
+      // slow push-in across each beat’s visible window
+      if (img) {
+        tl.fromTo(img, { scale: 1.07 }, { scale: 1, duration: 1.35 }, Math.max(i - 0.35, 0));
+      }
       if (i === 0) return;
+      const prevCaption = beats[i - 1].querySelector("figcaption");
       const caption = beat.querySelector("figcaption");
+      // text leaves before the image does — keeps the crossfade clean
+      if (prevCaption) {
+        tl.to(prevCaption, { autoAlpha: 0, y: -20, duration: 0.2 }, i - 0.05);
+      }
       tl.to(beats[i - 1], { autoAlpha: 0, duration: 0.4 }, i);
       tl.fromTo(beat, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, i + 0.1);
       if (caption) {
-        tl.fromTo(caption, { y: 48 }, { y: 0, duration: 0.55 }, i + 0.1);
+        tl.fromTo(caption, { autoAlpha: 0, y: 44 }, { autoAlpha: 1, y: 0, duration: 0.5 }, i + 0.18);
       }
     });
     // hold the thesis beat before unpinning

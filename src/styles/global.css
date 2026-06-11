@@ -55,7 +55,7 @@
      property carries the active domain's hue. */
   body[data-theme="console"] {
     background-color: var(--color-ink);
-    color: #aaa298;
+    color: rgb(242 237 227 / 0.62);
     --accent: var(--color-paper);
   }
 
@@ -69,8 +69,13 @@
   }
 
   body[data-theme="console"] ::selection {
-    background-color: var(--color-paper);
+    background-color: var(--color-gold);
     color: var(--color-ink);
+  }
+
+  body[data-theme="console"] :focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
   }
 }
 
@@ -96,6 +101,7 @@
     line-height: 0.96;
     letter-spacing: -0.035em;
     text-wrap: balance;
+    hanging-punctuation: first last;
   }
   .t-h1 {
     font-family: var(--font-display);
@@ -125,16 +131,18 @@
     font-size: clamp(1.2rem, 1rem + 0.9vw, 1.625rem);
     line-height: 1.35;
     letter-spacing: -0.005em;
-    text-wrap: balance;
+    text-wrap: pretty;
   }
   .t-body {
     font-size: clamp(1.0625rem, 1rem + 0.2vw, 1.175rem);
     line-height: 1.55;
     max-width: 65ch;
+    text-wrap: pretty;
   }
   .t-caption {
     font-size: 0.9375rem;
     line-height: 1.4;
+    text-wrap: pretty;
   }
   .t-label {
     font-family: var(--font-mono);
@@ -191,6 +199,49 @@
     transition: transform 0.125s ease-in-out, background-color 0.2s ease;
   }
   .press:hover { transform: scale(0.975); }
+
+  /* tuned text links: real underline (keeps skip-ink), fades in */
+  .link {
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: text-decoration-color 0.25s ease, color 0.25s ease;
+  }
+  .link:hover { text-decoration-color: currentColor; }
+
+  /* arrows move; asymmetric timing — snappy in, relaxed out */
+  .arrow-link .arrow {
+    display: inline-block;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .arrow-link:hover .arrow {
+    transform: translateX(5px);
+    transition-duration: 0.15s;
+  }
+
+  /* nav hides on scroll-down, returns on upward intent */
+  .nav-hidden { transform: translateY(-100%); }
+
+  /* console content fade for the domain switcher — same clock as the wipe */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-up {
+    animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
+  }
+
+  /* no-JS / reduced-motion: the essay reads as stacked full-height sections */
+  html:not(.has-motion) #essay-pin {
+    height: auto;
+    overflow: visible;
+  }
+  html:not(.has-motion) .essay-beat {
+    position: relative;
+    inset: auto;
+    min-height: 100vh;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .has-motion [data-reveal] { visibility: visible; }

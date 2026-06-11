@@ -23,13 +23,14 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
     <section class="relative min-h-screen flex flex-col justify-end overflow-hidden">
       <img
         src={domain.hero}
-        alt={`${domain.name} domain`}
+        alt={domain.heroAlt}
+        fetchpriority="high"
         class="absolute inset-0 h-full w-full object-cover"
       />
-      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/25"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/25"></div>
 
-      <div class="relative max-w-7xl mx-auto w-full px-6 pb-24 pt-40">
-        <h1 class="t-display text-paper">
+      <div class="relative max-w-[1500px] mx-auto w-full px-5 sm:px-10 pb-24 pt-40">
+        <h1 class="t-display text-paper" data-reveal>
           {domain.name}
         </h1>
         <p class="t-lede mt-6 text-paper/80 max-w-2xl">
@@ -40,19 +41,19 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
 
     <!-- intro + problems — warm paper scheme -->
     <section class="bg-paper">
-      <div class="max-w-4xl mx-auto px-6 pt-24 pb-20">
-        <p class="t-h3 text-ink">
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pt-24 pb-20">
+        <p class="t-lede text-ink max-w-[52rem]">
           {domain.intro}
         </p>
       </div>
-      <div class="max-w-7xl mx-auto px-6 pb-24">
-        <h2 class="t-h2 text-ink mb-14">
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-24">
+        <h2 class="t-h2 text-ink mb-12">
           What&rsquo;s actually broken
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
           {domain.problems.map((problem) => (
             <div class="border-t border-ink/20 pt-6">
-              <h3 class="text-xl font-display font-normal text-ink mb-3">{problem.title}</h3>
+              <h3 class="t-h3 text-ink mb-3">{problem.title}</h3>
               <p class="text-[15px] text-ink/65 leading-relaxed">{problem.desc}</p>
             </div>
           ))}
@@ -60,32 +61,35 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
       </div>
     </section>
 
-    <!-- what you build -->
-    <section class="py-24">
-      <div class="max-w-7xl mx-auto px-6">
-        <h2 class="t-h2 text-paper mb-16" data-reveal>
+    <!-- what you build — the page's big-breath section -->
+    <section class="py-32 sm:py-44">
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10">
+        <h2 class="t-h2 text-paper mb-12" data-reveal>
           What you&rsquo;d build here
         </h2>
         <div class="flex flex-col gap-24">
           {domain.builds.map((build, i) => (
-            <div class="grid md:grid-cols-2 gap-10 items-center">
-              <div class:list={[i % 2 === 1 && "md:order-2"]}>
-                <img
-                  src={build.image}
-                  alt={build.title}
-                  class="aspect-[4/3] w-full object-cover"
-                />
-              </div>
-              <div class:list={[i % 2 === 1 && "md:order-1"]}>
+            <div
+              class:list={[
+                "flex flex-col gap-8 md:items-end md:justify-between",
+                i % 2 === 1 ? "md:flex-row-reverse" : "md:flex-row",
+              ]}
+            >
+              <img
+                src={build.image}
+                alt={build.title}
+                class="w-full md:w-[62%] aspect-[3/2] object-cover"
+              />
+              <div class="md:w-[34%]">
                 <h3 class="t-h3 text-paper mb-5">{build.title}</h3>
                 <p class="text-paper/60 leading-relaxed mb-8">{build.desc}</p>
                 <a
                   href={APPLY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="text-[14px] text-paper border-b border-paper/40 pb-1 hover:border-paper transition-colors"
+                  class="arrow-link link t-caption text-paper"
                 >
-                  Work on this &rarr;
+                  Work on this <span class="arrow" aria-hidden="true">&rarr;</span>
                 </a>
               </div>
             </div>
@@ -96,8 +100,8 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
 
     <!-- industry -->
     <section class="py-24 border-t border-paper/10">
-      <div class="max-w-7xl mx-auto px-6">
-        <h2 class="t-h2 text-paper mb-6" data-reveal>
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10">
+        <h2 class="t-h2 text-paper mb-12" data-reveal>
           Who works on this
         </h2>
         <p class="text-paper/60 leading-relaxed max-w-2xl mb-14">{domain.companiesNote}</p>
@@ -105,9 +109,14 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
           {domain.companies.map((company, i) => (
             <>
               {i > 0 && <span class="mx-3 sm:mx-5 align-middle text-2xl sm:text-3xl font-display" style={`color: ${domain.accent};`}>/</span>}
-              <span class="text-2xl sm:text-4xl font-display text-paper/40 hover:text-paper transition-colors">
-                {company}
-              </span>
+              <a
+                href={company.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="link text-2xl sm:text-4xl font-display text-paper/40 hover:text-paper"
+              >
+                {company.name}
+              </a>
             </>
           ))}
         </p>
@@ -117,43 +126,45 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
     <!-- next domain -->
     <a
       href={`/domains/${next.slug}`}
-      class="next-domain-band block border-y border-paper/10 transition-colors duration-300"
-      style={`--next-accent: ${next.accent}; --next-accent-soft: ${next.accentSoft};`}
+      class="next-domain-band arrow-link block border-y border-paper/10 transition-colors duration-300 hover:bg-paper/5"
+      style={`--next-accent: ${next.accent};`}
     >
-      <div class="max-w-7xl mx-auto px-6 py-16 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-6">
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10 py-16 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-6">
         <span class="text-[14px] text-paper/50">Next domain</span>
         <span class="next-domain-name t-h1 text-paper transition-colors duration-300">
-          {next.name} &rarr;
+          {next.name} <span class="arrow inline-block" aria-hidden="true">&rarr;</span>
         </span>
       </div>
     </a>
 
     <!-- cohort CTA -->
     <section class="bg-paper py-28">
-      <div class="max-w-4xl mx-auto px-6 text-center">
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10 text-center">
         <h2 class="t-h1 text-ink mb-6">
           Join the first cohort.
         </h2>
         <p class="text-ink/60 mb-12 max-w-xl mx-auto">
           Applications open fall 2026. No experience required &mdash; whatever you
-          study, there's a seat.
+          study, there’s a seat.
         </p>
         <a
           href={APPLY_URL}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block bg-ink text-paper px-9 py-3.5 text-[14px] font-medium hover:bg-ink-deep transition-colors"
+          class="press inline-block bg-ink text-paper px-9 py-3.5 text-[15px] font-medium hover:bg-ink-deep transition-colors"
         >
-          Apply to Cohort 01
+          Apply to the first cohort
         </a>
       </div>
     </section>
 
-    <!-- closing slogan -->
-    <section class="py-24 px-6 overflow-hidden">
-      <p class="font-display text-[10vw] leading-none tracking-[-0.03em] text-center text-balance" style={`color: ${domain.accent};`}>
-        {domain.slogan}
-      </p>
+    <!-- closing claim -->
+    <section class="py-24">
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10">
+        <p class="t-h1 text-paper" data-reveal>
+          {domain.closing}
+        </p>
+      </div>
     </section>
 
     <ConsoleFooter />
@@ -161,9 +172,6 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
 </BaseLayout>
 
 <style>
-  .next-domain-band:hover {
-    background-color: var(--next-accent-soft);
-  }
   .next-domain-band:hover .next-domain-name {
     color: var(--next-accent);
   }

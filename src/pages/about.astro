@@ -1,8 +1,166 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Mission from "../components/about/Mission.astro";
+import ConsoleFooter from "../components/layout/ConsoleFooter.astro";
+
+const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
+
+const roadmap = [
+  {
+    semester: "Fall 2026",
+    items: [
+      {
+        title: "Speaker series",
+        desc: "Defense-tech founders, intelligence community veterans, and policymakers on how technology is reshaping national security. Runs through the fall semester.",
+      },
+      {
+        title: "Government & industry projects",
+        desc: "Students paired with defense companies and government agencies for hands-on project work, modeled on Stanford’s Gordian Knot Center programs. Runs fall and spring.",
+      },
+    ],
+  },
+  {
+    semester: "Year-round",
+    items: [
+      {
+        title: "Policy & strategy discussions",
+        desc: "Interdisciplinary forums on AI governance, export controls, and national security strategy. Open to every major — engineering, political science, business.",
+      },
+    ],
+  },
+  {
+    semester: "Spring 2027",
+    items: [
+      {
+        title: "Hackathon",
+        desc: "Working prototypes for real Department of Defense challenge problems — and preparation for Stanford’s Hacking for Defense, which runs every spring.",
+      },
+      {
+        title: "Speaker series, second run",
+        desc: "The focus shifts to defense innovation, venture capital in defense tech, and career paths in national security.",
+      },
+    ],
+  },
+];
 ---
 
-<BaseLayout title="About — SJSU NSIN">
-  <Mission />
+<BaseLayout
+  title="About — SJSU NSIN"
+  description="NSIN at San José State connects students from engineering, computer science, policy, and business to the missions reshaping national defense."
+  theme="console"
+>
+  <!-- hero — the mission, in its own words -->
+  <section class="relative min-h-screen flex flex-col justify-end overflow-hidden bg-ink">
+    <img
+      src="/images/fighter-jets.jpg"
+      alt="Fighter jets in formation at dusk"
+      class="absolute inset-0 w-full h-full object-cover"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/25"></div>
+    <div class="relative max-w-[1500px] w-full mx-auto px-5 sm:px-10 pb-14 sm:pb-20">
+      <h1 class="t-display text-paper max-w-[13ch]" data-reveal>
+        The talent is here. The pipeline wasn’t.
+      </h1>
+      <p class="t-lede text-paper/80 max-w-[46ch] mt-8">
+        San José State sits at the center of Silicon Valley, surrounded by the
+        companies and technologies reshaping national defense. NSIN at SJSU
+        was founded to connect that talent to the missions that need it most.
+      </p>
+    </div>
+  </section>
+
+  <!-- mission body -->
+  <section class="scheme-paper pt-24 sm:pt-32 pb-24 sm:pb-32 px-5 sm:px-10">
+    <div class="max-w-[1500px] mx-auto">
+      <div class="max-w-4xl">
+        <p class="t-h3 text-ink">
+          We bring together students from engineering, computer science,
+          policy, and business to work on the problems the country can’t
+          afford to ignore.
+        </p>
+        <p class="t-body mt-8 text-ink/65">
+          Supply chain vulnerabilities. Emerging threats. Critical
+          infrastructure. Strategic competition. None of these is a purely
+          technical problem, and none is purely political — they demand
+          people from every discipline working together. We’re building that
+          team at SJSU.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- the case for the work — Palmer Luckey, verbatim -->
+  <section class="scheme-ink relative overflow-hidden">
+    <img
+      src="/images/reaper-drone.jpg"
+      alt="Reaper drone on a runway at golden hour"
+      class="absolute inset-0 w-full h-full object-cover opacity-80"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-ink/60"></div>
+    <div class="relative z-10 py-32 sm:py-44 px-5 sm:px-10">
+      <div class="max-w-[1500px] mx-auto">
+        <blockquote class="max-w-3xl">
+          <p class="t-h3 text-paper">
+            “What would it look like to take those bright people out of the
+            search engine optimization industry, out of the augmented reality
+            mustache emoji industry, and put them to work on things that were
+            more important.”
+          </p>
+          <footer class="t-caption text-paper/55 mt-7">
+            Palmer Luckey, founder of Anduril Industries
+          </footer>
+        </blockquote>
+      </div>
+    </div>
+  </section>
+
+  <!-- the first year, semester by semester -->
+  <section class="scheme-paper pt-24 sm:pt-32 pb-24 sm:pb-32 px-5 sm:px-10">
+    <div class="max-w-[1500px] mx-auto">
+      <h2 class="t-h2 max-w-[18ch]" data-reveal>
+        The first year, semester by semester.
+      </h2>
+      <div class="mt-14 border-t border-ink/15">
+        {roadmap.map((block) => (
+          <div class="grid grid-cols-1 md:grid-cols-[260px_1fr] gap-5 md:gap-10 border-b border-ink/15 py-10">
+            <h3 class="t-h3 text-ink">{block.semester}</h3>
+            <div class="flex flex-col gap-8">
+              {block.items.map((item) => (
+                <div>
+                  <p class="text-xl font-display text-ink">{item.title}</p>
+                  <p class="t-caption mt-2 text-ink/60 max-w-[65ch]">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- cohort CTA -->
+  <div class="seam-to-ink"></div>
+  <section class="scheme-ink py-32 sm:py-40 px-6">
+    <div class="max-w-3xl mx-auto text-center">
+      <h2 class="t-h1 text-paper" data-reveal>Join the first cohort.</h2>
+      <p class="t-lede text-paper/70 mt-7 mb-12 max-w-xl mx-auto">
+        Applications open fall 2026. No experience required — whatever you
+        study, there’s a seat.
+      </p>
+      <a
+        href={APPLY_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="press inline-block bg-paper text-ink px-9 py-3.5 text-[15px] font-medium"
+      >
+        Apply to Cohort 01
+      </a>
+      <p class="t-caption text-paper/50 mt-8">
+        Questions first? <a href="/contact" class="text-paper/80 border-b border-paper/40 pb-0.5 hover:border-paper transition-colors">Get in touch</a>.
+      </p>
+    </div>
+  </section>
+
+  <ConsoleFooter />
 </BaseLayout>

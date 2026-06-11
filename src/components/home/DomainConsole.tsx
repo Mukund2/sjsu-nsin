@@ -33,12 +33,19 @@ export default function DomainConsole({ domains }: { domains: DomainLite[] }) {
     }, WIPE_MS + 60);
   };
 
-  useEffect(() => () => {
-    if (wipeTimer.current) clearTimeout(wipeTimer.current);
-  }, []);
+  // all four heroes preloaded so the first wipe never reveals a blank frame
+  useEffect(() => {
+    domains.forEach((d) => {
+      const img = new Image();
+      img.src = d.hero;
+    });
+    return () => {
+      if (wipeTimer.current) clearTimeout(wipeTimer.current);
+    };
+  }, [domains]);
 
   return (
-    <div className="relative min-h-[88vh] w-full overflow-hidden bg-ink flex flex-col">
+    <div className="relative min-h-screen w-full overflow-hidden bg-ink flex flex-col">
       {/* committed domain */}
       <img src={committed.hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
 
@@ -72,14 +79,14 @@ export default function DomainConsole({ domains }: { domains: DomainLite[] }) {
 
       {/* content */}
       <div className="relative z-10 flex-1 flex flex-col px-5 sm:px-10 pt-16 pb-8 max-w-[1500px] w-full mx-auto">
-        <div className="flex-1 flex flex-col justify-end pb-10" key={active.slug}>
+        <div className="fade-up flex-1 flex flex-col justify-end pb-10" key={active.slug}>
           <h3 className="t-h1 text-paper">{active.name}</h3>
           <p className="t-lede mt-4 text-paper/80 max-w-[36ch]">{active.tagline}</p>
           <a
             href={`/domains/${active.slug}`}
-            className="press mt-8 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
+            className="press arrow-link mt-8 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
           >
-            Explore {active.name} &rarr;
+            Explore {active.name} <span className="arrow" aria-hidden="true">&rarr;</span>
           </a>
         </div>
 
@@ -91,6 +98,7 @@ export default function DomainConsole({ domains }: { domains: DomainLite[] }) {
               <button
                 key={d.slug}
                 onClick={() => select(d)}
+                aria-pressed={isActive}
                 className="group relative text-left pr-4 pt-4 pb-5 cursor-pointer"
               >
                 <span
@@ -103,7 +111,10 @@ export default function DomainConsole({ domains }: { domains: DomainLite[] }) {
                 >
                   {d.name}
                 </span>
-                <span className="t-caption mt-1 text-paper/45 group-hover:text-paper/70 transition-colors leading-snug hidden sm:block">
+                <span
+                  className="t-caption mt-1 text-paper/50 group-hover:text-paper/75 transition-colors leading-snug hidden sm:block"
+                  style={{ visibility: isActive ? "hidden" : "visible" }}
+                >
                   {d.tagline}
                 </span>
               </button>

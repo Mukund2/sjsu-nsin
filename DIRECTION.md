@@ -23,8 +23,8 @@ graded to a single curve, editorial asymmetry, specific copy.
 | (no CSS gradients) | — | golden-hour light comes from PHOTOGRAPHS, never from naked CSS gradients. Scrims for text legibility only. |
 
 Rules: accents are ink or section floods, never button decoration. At most one
-gold-flooded element per page. Sections bleed into each other through gradient
-seams, never hard cuts. Domain accents (steel/sea/ember/olive in
+gold-flooded element per page. Gradient seams join FLAT-color sections only;
+against photographs, cut hard — seams over images read as smears. Domain accents (steel/sea/ember/olive in
 `src/data/domains.ts`) exist only inside their domain's context. Film grain
 overlays everything at low opacity — it is the material that makes flat color
 and photography one substance.
@@ -82,7 +82,8 @@ width and anchor bottom-left, leaving deliberate emptiness. Display headlines
 may go full-bleed. Sticky mono section markers in margins. Spacing scale on a
 1.5rem gutter with xl sections (~6–7.5rem block padding) and deliberate
 irregularity — one section per page gets extra air. Square corners on
-structure; hairline rules (1px, 50% alpha) are the only ornament.
+structure; hairline rules (1px, currentColor at 10–25% alpha) are the only
+ornament.
 
 ## 6. Voice
 
