@@ -3,7 +3,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import ConsoleFooter from "../components/layout/ConsoleFooter.astro";
 import EarthDive from "../components/home/EarthDive.astro";
 import Protagonist from "../components/home/Protagonist.astro";
-import ValleyTimeline from "../components/home/ValleyTimeline.astro";
+import MapScene from "../components/home/MapScene.astro";
 import { domains } from "../data/domains";
 
 const bySlug = Object.fromEntries(domains.map((d) => [d.slug, d]));
@@ -53,9 +53,7 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
 
   <EarthDive />
 
-  <div class="seam-to-paper"></div>
-
-  <ValleyTimeline />
+  <MapScene />
 
   <!-- the traverse — one unbroken climb from the seabed to orbit -->
   <section id="altitude" class="scheme-ink relative">

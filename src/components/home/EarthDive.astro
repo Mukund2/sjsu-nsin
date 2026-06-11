@@ -1,9 +1,9 @@
 ---
 // EarthDive — the signature sequence. A golden-hour Earth hangs in orbit;
-// scroll scrubs a dive toward the San Francisco Bay, a paper flash cuts,
-// and the page's poster headline lands. Vanilla three.js + GSAP ScrollTrigger.
-// Reduced-motion / no-JS: the title simply shows (see <style> below — the
-// BaseLayout only adds .has-motion to <html> when motion is allowed).
+// scroll scrubs a dive toward the San Francisco Bay, and a white paper flash
+// cuts — the cloud-deck match — straight into the MapScene aerial that
+// follows. Vanilla three.js + GSAP ScrollTrigger. Reduced-motion / no-JS:
+// the canvas hides and MapScene carries the headline statically.
 ---
 
 <section id="dive" class="scheme-ink relative">
@@ -15,31 +15,11 @@
       style="background: var(--color-paper); opacity: 0;"
     >
     </div>
-    <div
-      id="dive-title"
-      class="absolute inset-0 flex flex-col justify-end"
-      style="opacity: 0; visibility: hidden;"
-    >
-      <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-14 sm:pb-20 w-full">
-        <h1 class="t-display text-paper max-w-[13ch]">
-          Lockheed was here before Google.
-        </h1>
-        <p class="t-lede text-paper/80 max-w-[44ch] mt-8">
-          Silicon Valley’s first industry was defense. NSIN at San José State
-          is the student club connecting engineers, designers, and policy
-          minds back to that work.
-        </p>
-      </div>
-    </div>
   </div>
 </section>
 
 <style is:global>
-  /* no-JS / reduced-motion fallback: poster headline shows, canvas doesn't */
-  html:not(.has-motion) #dive-title {
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
+  /* no-JS / reduced-motion fallback: the canvas hides; MapScene carries the headline */
   html:not(.has-motion) #earth-canvas {
     display: none;
   }
@@ -52,13 +32,10 @@
 
   function init() {
     const canvas = document.getElementById("earth-canvas") as HTMLCanvasElement | null;
-    const title = document.getElementById("dive-title");
-    if (!canvas || !title) return;
+    if (!canvas) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduced) {
-      title.style.opacity = "1";
-      title.style.visibility = "visible";
       canvas.style.display = "none";
       return;
     }
@@ -242,17 +219,13 @@
       },
     });
 
+    // the white-cloud cut: clouds whiten the frame, paper flashes over, the
+    // canvas drops away, and the flash thins out onto the MapScene aerial
     tl.to(proxy, { dist: 1.13, rotY: TARGET_ROT_Y, tilt: TILT_X, clouds: 1, duration: 0.75 }, 0);
     tl.to("#dive-flash", { opacity: 1, duration: 0.08 }, 0.74);
     tl.set("#earth-canvas", { autoAlpha: 0 }, 0.82);
-    tl.fromTo(
-      "#dive-title",
-      { autoAlpha: 0, y: 36 },
-      { autoAlpha: 1, y: 0, duration: 0.14, ease: "none" },
-      0.83
-    );
     tl.to("#dive-flash", { opacity: 0, duration: 0.1 }, 0.84);
-    tl.to({}, { duration: 0.03 }, 0.97); // hold the title to the end of the pin
+    tl.to({}, { duration: 0.06 }, 0.94); // breathe on the dark frame before the map
   }
 
   init();

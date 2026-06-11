@@ -1,0 +1,253 @@
+---
+// ── MapScene — the timeline as places on the ground ──
+// The dive lands here: a real aerial of the South Bay (NASA Goddard,
+// Landsat 7, public domain — "NASA Satellite Captures Super Bowl Cities,
+// Santa Clara, CA", graded with the house curve). A pinned scrub pans and
+// pulls back over the valley while gold pins light up in scroll order —
+// ninety years of the Valley, plotted where they actually happened.
+//
+// Pin coordinates are percent positions on /images/valley-aerial.jpg
+// (a crop of the full Landsat frame: x 18–98%, y 28–78%), estimated from
+// the visible geography — Moffett's runways, the Alviso salt ponds, the
+// SJC runway diagonal, downtown San José, the Cupertino foothills:
+//   Moffett Field      full (49.5, 51.1) → crop (39.4, 46.0)
+//   Lockheed Sunnyvale full (51.5, 50.0) → crop (41.9, 44.0)
+//   Fairchild Mtn View full (45.8, 49.5) → crop (34.8, 43.0)
+//   Apple Cupertino    full (48.8, 63.0) → crop (38.5, 70.0)
+//   Googleplex         full (47.2, 50.2) → crop (36.5, 44.4)
+//   SJSU (downtown SJ) full (64.0, 61.5) → crop (57.5, 67.0)
+
+interface Pin {
+  year: string;
+  name: string;
+  x: number; // % across the aerial
+  y: number; // % down the aerial
+  dir: "up" | "down"; // which way the hairline + label leave the dot
+  align: "left" | "center" | "right"; // which way the label extends
+  major?: boolean; // the club pin: bigger dot, gold label
+}
+
+const pins: Pin[] = [
+  { year: "1933", name: "Moffett Field", x: 39.4, y: 46.0, dir: "down", align: "left" },
+  { year: "1956", name: "Lockheed Missiles & Space", x: 41.9, y: 44.0, dir: "up", align: "left" },
+  { year: "1957", name: "Fairchild Semiconductor", x: 34.8, y: 43.0, dir: "up", align: "right" },
+  { year: "1976", name: "Apple", x: 38.5, y: 70.0, dir: "down", align: "center" },
+  { year: "1998", name: "Google", x: 36.5, y: 44.4, dir: "down", align: "right" },
+  { year: "2026", name: "NSIN at SJSU", x: 57.5, y: 67.0, dir: "up", align: "center", major: true },
+];
+---
+
+<section id="map" class="scheme-ink relative">
+  <div id="map-pin" class="relative h-screen overflow-hidden">
+    <!-- cover box: keeps the aerial's exact aspect so pin percents stay
+         geographically true at any viewport; GSAP transforms the inner layer -->
+    <div id="map-cover">
+      <div id="map-zoom" class="absolute inset-0 will-change-transform">
+        <img
+          src="/images/valley-aerial.jpg"
+          alt="Satellite view of the southern San Francisco Bay and the Santa Clara Valley"
+          class="absolute inset-0 w-full h-full"
+          loading="eager"
+          decoding="async"
+        />
+
+        {pins.map((p) => (
+          <div
+            class:list={["map-pin-el absolute", p.major && "is-major"]}
+            style={`left: ${p.x}%; top: ${p.y}%;`}
+            data-dir={p.dir}
+            data-align={p.align}
+          >
+            <span class="mp-dot" aria-hidden="true"></span>
+            <div class="mp-inner">
+              <span class="mp-stem" aria-hidden="true"></span>
+              <div class="mp-label">
+                <div class:list={["t-h3", p.major ? "text-gold" : "text-paper"]}>{p.year}</div>
+                <p class:list={["t-caption mt-1", p.major ? "text-gold" : "text-paper/70"]}>
+                  {p.name}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- subtle ink scrim for type legibility over the aerial -->
+    <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-ink/30 pointer-events-none"></div>
+
+    <!-- the poster line lands with the 1956 pin, lifts before 2026 -->
+    <div id="map-headline" class="absolute inset-x-0 bottom-0 pointer-events-none">
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-14 sm:pb-20">
+        <h2 class="t-h1 text-paper max-w-[15ch]">Lockheed was here before Google.</h2>
+      </div>
+    </div>
+
+    <!-- the 2026 pin gets the closing line alone -->
+    <div id="map-closer" class="absolute inset-x-0 bottom-0 pointer-events-none">
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-14 sm:pb-20">
+        <p class="t-caption text-gold">NSIN at SJSU — 2026</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* the cover box: viewport-covering, aspect-locked to the 2600×1569 aerial */
+  #map-cover {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: max(100vw, 165.71vh);
+    height: max(100vh, 60.35vw);
+  }
+  #map-zoom {
+    transform-origin: 44% 54%; /* the pin cluster's visual centroid */
+  }
+
+  .map-pin-el {
+    width: 0;
+    height: 0;
+    transform-origin: 0 0; /* counter-scale pivots on the geographic point */
+  }
+  .mp-dot {
+    position: absolute;
+    left: -4px;
+    top: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: var(--color-gold);
+  }
+  .is-major .mp-dot {
+    left: -5.5px;
+    top: -5.5px;
+    width: 11px;
+    height: 11px;
+  }
+  .mp-stem {
+    position: absolute;
+    left: -0.5px;
+    width: 1px;
+    height: 28px;
+    background-color: rgb(242 237 227 / 0.55);
+  }
+  [data-dir="up"] .mp-stem { bottom: 6px; }
+  [data-dir="down"] .mp-stem { top: 6px; }
+  .mp-label { position: absolute; }
+  [data-dir="up"] .mp-label { bottom: 40px; }
+  [data-dir="down"] .mp-label { top: 40px; }
+  [data-align="left"] .mp-label { left: -2px; text-align: left; }
+  [data-align="right"] .mp-label { right: 2px; text-align: right; }
+  [data-align="center"] .mp-label {
+    left: 0;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .mp-label > * { white-space: nowrap; }
+
+  /* motion build: pins + lines start hidden only when motion will run them */
+  html.has-motion .mp-inner,
+  html.has-motion .mp-dot,
+  html.has-motion #map-headline,
+  html.has-motion #map-closer {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* no-JS / reduced-motion: a static map, every pin lit, headline set */
+  html:not(.has-motion) #map-zoom {
+    transform: none !important;
+  }
+  html:not(.has-motion) .map-pin-el,
+  html:not(.has-motion) .mp-inner,
+  html:not(.has-motion) .mp-dot {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+  html:not(.has-motion) #map-headline {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  html:not(.has-motion) #map-closer {
+    display: none; /* the 2026 pin label already carries it */
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduced) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const zoom = document.getElementById("map-zoom");
+    const pinEls = gsap.utils.toArray<HTMLElement>(".map-pin-el");
+
+    if (zoom && pinEls.length) {
+      // one proxy drives the zoom and the pins' counter-scale, so labels keep
+      // their set size while the ground moves beneath them
+      const Z = { s: 1.9, x: 32, y: 47 };
+      const apply = () => {
+        gsap.set(zoom, { scale: Z.s, xPercent: Z.x, yPercent: Z.y });
+        const inv = 1 / Z.s;
+        for (const el of pinEls) gsap.set(el, { scale: inv });
+      };
+      apply();
+
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: "#map-pin",
+          start: "top top",
+          end: "+=420%",
+          pin: true,
+          scrub: 0.4,
+          anticipatePin: 1,
+        },
+      });
+
+      // the landing pan: tight on the bay water, pulling back over the valley
+      tl.to(Z, { s: 1.05, x: 0, y: 0, duration: 1, onUpdate: apply }, 0);
+
+      // pins pop in order, evenly across the middle 70% of the pin
+      const tIn = (i: number) => 0.15 + i * 0.14;
+      pinEls.forEach((el, i) => {
+        const dot = el.querySelector(".mp-dot");
+        const inner = el.querySelector(".mp-inner");
+        tl.fromTo(
+          dot,
+          { autoAlpha: 0, scale: 0.3 },
+          { autoAlpha: 1, scale: 1, duration: 0.05, ease: "back.out(2.5)" },
+          tIn(i)
+        );
+        tl.fromTo(
+          inner,
+          { autoAlpha: 0, y: 8 },
+          { autoAlpha: 1, y: 0, duration: 0.06 },
+          tIn(i) + 0.01
+        );
+      });
+
+      // headline rides with Lockheed (1956), lifts after Google (1998)
+      tl.fromTo(
+        "#map-headline",
+        { autoAlpha: 0, y: 24 },
+        { autoAlpha: 1, y: 0, duration: 0.07 },
+        tIn(1)
+      );
+      tl.to("#map-headline", { autoAlpha: 0, y: -16, duration: 0.05 }, 0.78);
+
+      // the 2026 pin gets the closing line to itself
+      tl.fromTo(
+        "#map-closer",
+        { autoAlpha: 0, y: 12 },
+        { autoAlpha: 1, y: 0, duration: 0.06 },
+        tIn(5) + 0.01
+      );
+    }
+  }
+</script>
