@@ -101,3 +101,13 @@ Domain pages /domains/{air,sea,space,cyber}, /about, /contact, /404,
 - npm scripts: build = `npx astro build` (CSP warnings about dev are normal).
   GSAP + Lenis init lives in BaseLayout (console theme only) with [data-reveal]
   SplitText line masks; .has-motion gates all motion CSS.
+
+## PROTAGONIST (user requirement, locked 2026-06-11)
+ONE persistent hero object through the WHOLE homepage, like Terminal's truck:
+REAL rendered Three.js object (procedural PBR satellite, golden-hour lit, own
+transparent fixed canvas above the page) — NOT flat SVG line art. Beats: drifts
+past Earth in orbit intro → flies the timeline axis → parks and pitches down
+through the descent → disperses into particles at the cyber dissolve →
+resolves into the gold paper-plane logo (SVG) above "Join the first cohort."
+Built in src/components/home/Protagonist.astro (agent in flight; trigger table
+in its report). User explicitly wants "the technology" — Three.js — used.
