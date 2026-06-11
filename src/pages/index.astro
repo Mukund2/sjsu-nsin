@@ -1,16 +1,34 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ConsoleFooter from "../components/layout/ConsoleFooter.astro";
-import DomainConsole from "../components/home/DomainConsole";
 import { domains } from "../data/domains";
 
-const domainProps = domains.map(({ slug, name, accent, tagline, hero }) => ({
-  slug,
-  name,
-  accent,
-  tagline,
-  hero,
-}));
+const bySlug = Object.fromEntries(domains.map((d) => [d.slug, d]));
+
+// the traverse: scroll = altitude. Cyber deliberately breaks the metaphor.
+const bands = [
+  {
+    ...bySlug.sea,
+    image: "/images/domains/sea-2.jpg",
+    imageAlt: "A destroyer taking a wave over the bow at golden hour",
+  },
+  {
+    ...bySlug.air,
+    image: "/images/domains/air-1.jpg",
+    imageAlt: "An F-35 flying a night mission, seen from a tanker",
+  },
+  {
+    ...bySlug.space,
+    image: "/images/domains/space-2.jpg",
+    imageAlt: "City lights of southern Japan photographed from the ISS",
+  },
+  {
+    ...bySlug.cyber,
+    tagline: "Cyber has no altitude. It’s the layer under all of the others.",
+    image: "/images/domains/cyber-2.jpg",
+    imageAlt: "Blue-lit racks inside a supercomputing facility",
+  },
+];
 
 const beats = [
   {
@@ -141,12 +159,57 @@ const programs = [
     </div>
   </section>
 
-  <section class="scheme-paper px-5 sm:px-10 pb-24 sm:pb-32">
+  <section class="scheme-paper px-5 sm:px-10 pb-20">
     <div class="max-w-[1500px] mx-auto">
-      <h2 class="t-h2 max-w-[16ch] mb-12" data-reveal>Pick where you’d start.</h2>
+      <h2 class="t-h2 max-w-[16ch]" data-reveal>Pick your altitude.</h2>
+      <p class="t-body mt-5 text-ink/60">
+        The club works in four domains. Scroll to climb through them — from the
+        cables on the seabed to low Earth orbit.
+      </p>
     </div>
-    <div class="max-w-[1500px] mx-auto">
-      <DomainConsole client:load domains={domainProps} />
+  </section>
+
+  <!-- the traverse — scroll is altitude, not paragraphs -->
+  <section id="altitude" class="scheme-ink relative">
+    <div id="alt-pin" class="relative h-screen overflow-hidden">
+      {bands.map((b, i) => (
+        <figure class="alt-band absolute inset-0 m-0" data-index={i}>
+          <img
+            src={b.image}
+            alt={b.imageAlt}
+            class="absolute inset-0 w-full h-full object-cover"
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/35 to-ink/30"></div>
+          <figcaption class="absolute inset-x-0 bottom-0">
+            <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-16 sm:pb-20">
+              <h3 class="t-h1 text-paper">{b.name}</h3>
+              <p class="t-lede mt-4 text-paper/75 max-w-[38ch]">{b.tagline}</p>
+              <a
+                href={`/domains/${b.slug}`}
+                class="press arrow-link mt-7 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
+              >
+                Explore {b.name} <span class="arrow" aria-hidden="true">&rarr;</span>
+              </a>
+            </div>
+          </figcaption>
+        </figure>
+      ))}
+
+      <!-- the altimeter: a live instrument, not decoration -->
+      <div class="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 h-[58vh] hidden sm:flex items-stretch gap-5 pointer-events-none">
+        <div class="flex flex-col justify-between items-end text-right">
+          <p id="alt-readout" class="t-h3 text-paper" style="font-variant-numeric: tabular-nums;">&minus;4,000 m</p>
+          <p class="t-caption text-paper/45">altitude</p>
+        </div>
+        <div class="relative w-px bg-paper/25">
+          <div
+            id="alt-marker"
+            class="absolute right-0 w-5 h-px"
+            style="background-color: var(--color-gold); top: 100%;"
+          ></div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -200,7 +263,7 @@ const programs = [
         start: "top top",
         end: "+=" + beats.length * 110 + "%",
         pin: true,
-        scrub: true,
+        scrub: 0.4,
         anticipatePin: 1,
       },
     });
@@ -237,5 +300,73 @@ const programs = [
         scrub: true,
       },
     });
+
+    // ── the traverse: scroll = altitude ──
+    const bands = gsap.utils.toArray<HTMLElement>(".alt-band");
+    const readout = document.getElementById("alt-readout");
+    const marker = document.getElementById("alt-marker");
+
+    gsap.set(bands, { autoAlpha: 0 });
+    gsap.set(bands[0], { autoAlpha: 1 });
+
+    const TAIL = 0.6;
+    const total = bands.length + TAIL;
+
+    // piecewise altitude: seabed → flight level → ISS orbit → no altitude
+    const fmt = (m: number) => {
+      if (m >= 20000) return `${Math.round(m / 1000)} km`;
+      const v = Math.round(m / 10) * 10;
+      return `${v < 0 ? "−" : ""}${Math.abs(v).toLocaleString("en-US")} m`;
+    };
+    const altitudeAt = (u: number) => {
+      if (u < 1) return -4000 + 4000 * u;
+      if (u < 2) return 13700 * (u - 1);
+      if (u < 3) return 13700 + (408000 - 13700) * (u - 2);
+      return null; // cyber
+    };
+
+    const atl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: "#alt-pin",
+        start: "top top",
+        end: "+=" + bands.length * 110 + "%",
+        pin: true,
+        scrub: 0.4,
+        anticipatePin: 1,
+        onUpdate(self) {
+          if (!readout || !marker) return;
+          const u = self.progress * total;
+          const alt = altitudeAt(Math.min(u, total));
+          if (alt === null) {
+            readout.textContent = "no altitude";
+            marker.style.top = "0%";
+          } else {
+            readout.textContent = fmt(alt);
+            const climb = Math.min(u / 3, 1); // fraction of the physical climb
+            marker.style.top = `${(1 - climb) * 100}%`;
+          }
+        },
+      },
+    });
+
+    bands.forEach((band, i) => {
+      const img = band.querySelector("img");
+      if (img) {
+        atl.fromTo(img, { yPercent: 6 }, { yPercent: -6, duration: 1.35 }, Math.max(i - 0.35, 0));
+      }
+      if (i === 0) return;
+      const prevCaption = bands[i - 1].querySelector("figcaption");
+      const caption = band.querySelector("figcaption");
+      if (prevCaption) {
+        atl.to(prevCaption, { autoAlpha: 0, y: -20, duration: 0.2 }, i - 0.05);
+      }
+      atl.to(bands[i - 1], { autoAlpha: 0, duration: 0.4 }, i);
+      atl.fromTo(band, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, i + 0.1);
+      if (caption) {
+        atl.fromTo(caption, { autoAlpha: 0, y: 44 }, { autoAlpha: 1, y: 0, duration: 0.5 }, i + 0.18);
+      }
+    });
+    atl.to({}, { duration: TAIL });
   }
 </script>

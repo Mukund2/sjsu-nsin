@@ -232,12 +232,14 @@
     animation: fade-up 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.25s both;
   }
 
-  /* no-JS / reduced-motion: the essay reads as stacked full-height sections */
-  html:not(.has-motion) #essay-pin {
+  /* no-JS / reduced-motion: pinned sequences read as stacked full-height sections */
+  html:not(.has-motion) #essay-pin,
+  html:not(.has-motion) #alt-pin {
     height: auto;
     overflow: visible;
   }
-  html:not(.has-motion) .essay-beat {
+  html:not(.has-motion) .essay-beat,
+  html:not(.has-motion) .alt-band {
     position: relative;
     inset: auto;
     min-height: 100vh;
