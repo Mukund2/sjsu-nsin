@@ -1,10 +1,24 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
-import Hero from "../components/home/Hero.astro";
-import Sections from "../components/home/Sections";
+import ConsoleFooter from "../components/layout/ConsoleFooter.astro";
+import DomainConsole from "../components/home/DomainConsole";
+import ConsoleSections from "../components/home/ConsoleSections";
+import { domains } from "../data/domains";
+
+const domainProps = domains.map(({ slug, name, designator, index, accent, accentSoft, tagline, hero }) => ({
+  slug,
+  name,
+  designator,
+  index,
+  accent,
+  accentSoft,
+  tagline,
+  hero,
+}));
 ---
 
-<BaseLayout>
-  <Hero />
-  <Sections client:load />
+<BaseLayout theme="console">
+  <DomainConsole client:load domains={domainProps} />
+  <ConsoleSections client:load domains={domainProps} />
+  <ConsoleFooter />
 </BaseLayout>

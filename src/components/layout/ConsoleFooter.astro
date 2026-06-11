@@ -1,0 +1,54 @@
+---
+import { domains } from "../../data/domains";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-white/10 bg-near-black">
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-3 mb-5">
+          <img src="/logo.svg" alt="SJSU NSIN" class="h-8 w-auto invert brightness-200" />
+        </div>
+        <p class="text-sm text-white/40 leading-relaxed max-w-sm">
+          The National Security Innovation Network at San Jos&eacute; State University.
+          Connecting Silicon Valley's next generation of engineers, designers, and
+          strategists with the missions that need them most.
+        </p>
+      </div>
+
+      <div>
+        <h4 class="decal text-white/60 mb-5">[ Domains ]</h4>
+        <div class="flex flex-col gap-2.5">
+          {domains.map(d => (
+            <a href={`/domains/${d.slug}`} class="decal text-white/40 hover:text-white transition-colors flex items-center gap-2">
+              <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background-color: ${d.accent}`}></span>
+              {d.designator} &mdash; {d.name}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <h4 class="decal text-white/60 mb-5">[ Connect ]</h4>
+        <div class="flex flex-col gap-2.5">
+          <a href="/about" class="text-sm text-white/40 hover:text-white transition-colors">About</a>
+          <a href="/contact" class="text-sm text-white/40 hover:text-white transition-colors">Contact</a>
+          <a href="https://forms.gle/9MLweCMRaaTkrEkGA" target="_blank" rel="noopener noreferrer" class="text-sm text-white/40 hover:text-white transition-colors">Apply &mdash; Cohort 01</a>
+          <a href="https://www.instagram.com/sjsu_nsin" target="_blank" rel="noopener noreferrer" class="text-sm text-white/40 hover:text-white transition-colors">Instagram</a>
+          <a href="https://www.linkedin.com/company/sjsu-nsin" target="_blank" rel="noopener noreferrer" class="text-sm text-white/40 hover:text-white transition-colors">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="border-t border-white/10 mt-14 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="decal text-white/30">
+        &copy; {year} NSIN at SJSU &mdash; San Jos&eacute; State University
+      </p>
+      <p class="decal text-white/30">
+        [ SJC // 37.3352&deg;N, 121.8811&deg;W ]
+      </p>
+    </div>
+  </div>
+</footer>

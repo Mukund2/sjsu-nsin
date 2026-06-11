@@ -42,4 +42,55 @@
     background-color: var(--color-near-black);
     color: var(--color-white);
   }
+
+  /* Console (dark) theme — homepage + domain pages.
+     The brand shell stays monochrome; color only ever comes from
+     the active domain's accent via the --accent custom property. */
+  body[data-theme="console"] {
+    background-color: var(--color-near-black);
+    color: #a3a3a3;
+    --accent: #ffffff;
+  }
+
+  body[data-theme="console"] h1,
+  body[data-theme="console"] h2,
+  body[data-theme="console"] h3,
+  body[data-theme="console"] h4,
+  body[data-theme="console"] h5,
+  body[data-theme="console"] h6 {
+    color: var(--color-white);
+  }
+
+  body[data-theme="console"] ::selection {
+    background-color: var(--accent);
+    color: var(--color-near-black);
+  }
+}
+
+@layer utilities {
+  .text-accent {
+    color: var(--accent);
+  }
+  .bg-accent {
+    background-color: var(--accent);
+  }
+  .border-accent {
+    border-color: var(--accent);
+  }
+  /* mono eyebrow label: [LIKE-THIS] */
+  .decal {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  /* grayscale until interacted with — color belongs to the domain */
+  .mono-img {
+    filter: grayscale(1) contrast(1.05);
+    transition: filter 0.6s ease;
+  }
+  .group:hover .mono-img,
+  .mono-img:hover {
+    filter: grayscale(0) contrast(1);
+  }
 }

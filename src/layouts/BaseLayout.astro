@@ -5,11 +5,13 @@ import Navbar from '../components/layout/Navbar.astro';
 interface Props {
   title?: string;
   description?: string;
+  theme?: "light" | "console";
 }
 
 const {
   title = "SJSU National Security Innovation Network",
-  description = "Applying innovation methodologies to national security challenges. A student organization at San Jose State University."
+  description = "Applying innovation methodologies to national security challenges. A student organization at San Jose State University.",
+  theme = "light"
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
@@ -48,8 +50,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen bg-white">
-    <Navbar />
+  <body class="min-h-screen" class:list={[theme === "console" ? "bg-near-black" : "bg-white"]} data-theme={theme === "console" ? "console" : undefined}>
+    <Navbar theme={theme} />
     <main>
       <slot />
     </main>
