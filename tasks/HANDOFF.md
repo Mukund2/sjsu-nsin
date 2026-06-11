@@ -111,3 +111,19 @@ through the descent → disperses into particles at the cyber dissolve →
 resolves into the gold paper-plane logo (SVG) above "Join the first cohort."
 Built in src/components/home/Protagonist.astro (agent in flight; trigger table
 in its report). User explicitly wants "the technology" — Three.js — used.
+
+## THE SHOT LIST (user's definitive description, 2026-06-11 — supersedes section structure)
+One unbroken scroll-jacked journey, no ordinary sections until the CTA:
+1) Globe spinning (exists: EarthDive idle).
+2) Zoom lands on an AERIAL MAP of Silicon Valley (new MapScene replaces
+   ValleyTimeline): real PD satellite/aerial image of the South Bay, graded;
+   scrubbed pan/zoom; gold pins + serif year labels light up in scroll order:
+   Moffett 1933, Lockheed Sunnyvale 1956, Fairchild MV 1957, Apple Cupertino
+   1976, Google MV 1998, SJSU 2026. "Lockheed was here before Google." lands
+   with the Lockheed pin. Timeline = places on the ground, not a section.
+3) Lift off the map, up through sky to space (traverse gains an ascent
+   pre-roll: strip starts at cloud-deck, rises to orbit), then plunge:
+   air → sea → seabed → cyber dissolve (existing descent).
+4) World dissolves → "Join the first cohort." CTA → footer.
+Voyager protagonist rides the whole journey (beats need re-mapping to the
+new structure: over the map it should fly across like the timeline beat).
