@@ -38,6 +38,7 @@ const GAP = 12; // px between stem tip and content
   <div id="valley-pin" class="relative h-[70vh] sm:h-[80vh] overflow-hidden">
     <!-- fixed gold marker the track slides beneath -->
     <div
+      id="valley-marker"
       class="absolute left-[38vw] top-1/2 -translate-y-1/2 z-10 h-2 w-2 rounded-full bg-gold"
       aria-hidden="true"
     >
@@ -152,6 +153,13 @@ const GAP = 12; // px between stem tip and content
       tl.to(track, { x: () => -endX() }, 0);
       // the gold line draws left → right in lockstep with the slide
       tl.to("#valley-progress", { width: () => track.scrollWidth + "px" }, 0);
+
+      // final ~15%: the lights go down. The drawn world fades first, then the
+      // ground itself goes ink — so the pin releases on a near-black frame and
+      // the traverse's orbit tile reads as the same continuous shot, not a cut.
+      const D = tl.duration();
+      tl.to([track, "#valley-marker"], { autoAlpha: 0, duration: D * 0.08 }, D * 0.84);
+      tl.to("#valley", { backgroundColor: "#232020", duration: D * 0.15 }, D * 0.85);
 
       // per-milestone pop as the marker passes each stem
       gsap.utils.toArray<HTMLElement>(".vt-content").forEach((el) => {

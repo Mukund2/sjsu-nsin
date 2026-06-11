@@ -32,27 +32,27 @@ const caps = [
   },
 ];
 
-
-
-
+// cyber dissolve: a one-point-perspective wireframe the photo resolves through
+const VP = { x: 800, y: 430 };
+const wireRays = [
+  [133, 0], [533, 0], [1066, 0], [1466, 0],
+  [0, 143], [1600, 143], [0, 716], [1600, 716],
+  [133, 900], [533, 900], [1066, 900], [1466, 900],
+];
+const wireDepths = [460, 500, 555, 625, 715, 825];
+const wireDots = Array.from({ length: 40 }, (_, i) => ({
+  x: Math.round(((i * 397.7 + 60) % 1600) * 10) / 10,
+  y: Math.round(((i * 233.3 + 120) % 900) * 10) / 10,
+  r: 1.2 + ((i * 7) % 11) / 10,
+}));
 ---
 
 <BaseLayout theme="console">
   <EarthDive />
 
+  <div class="seam-to-paper"></div>
+
   <ValleyTimeline />
-
-
-
-  <section class="scheme-paper px-5 sm:px-10 pb-20">
-    <div class="max-w-[1500px] mx-auto">
-      <h2 class="t-h2 max-w-[16ch]" data-reveal>Pick your altitude.</h2>
-      <p class="t-body mt-5 text-ink/60">
-        The club works in four domains. You start in orbit — scroll to descend
-        through all of them, down to the cables on the seabed.
-      </p>
-    </div>
-  </section>
 
   <!-- the traverse — one unbroken climb from the seabed to orbit -->
   <section id="altitude" class="scheme-ink relative">
@@ -61,6 +61,47 @@ const caps = [
         {tiles.map((t) => (
           <img src={t.src} alt={t.alt} class="block w-full h-screen object-cover" loading="eager" decoding="async" />
         ))}
+      </div>
+
+      <!-- the digital layer: drawn instrument world the cyber photo resolves through -->
+      <div id="alt-wire" class="absolute inset-0 pointer-events-none" style="opacity:0">
+        <svg
+          width="100%"
+          height="100%"
+          viewBox="0 0 1600 900"
+          preserveAspectRatio="xMidYMid slice"
+          aria-hidden="true"
+        >
+          {wireRays.map(([x, y]) => (
+            <line
+              class="wl"
+              x1={VP.x}
+              y1={VP.y}
+              x2={x}
+              y2={y}
+              stroke="#F2EDE3"
+              stroke-opacity="0.45"
+              stroke-width="1"
+              vector-effect="non-scaling-stroke"
+            />
+          ))}
+          {wireDepths.map((y) => (
+            <line
+              class="wl"
+              x1="0"
+              y1={y}
+              x2="1600"
+              y2={y}
+              stroke="#F2EDE3"
+              stroke-opacity="0.45"
+              stroke-width="1"
+              vector-effect="non-scaling-stroke"
+            />
+          ))}
+          {wireDots.map((d) => (
+            <circle class="wd" cx={d.x} cy={d.y} r={d.r} fill="#C9A958" opacity="0.8" />
+          ))}
+        </svg>
       </div>
 
       <figure id="alt-cyber" class="absolute inset-0 m-0" style="opacity: 0;">
@@ -90,6 +131,17 @@ const caps = [
           </div>
         </div>
       ))}
+
+      <!-- the brief, laid over orbit — fades as the descent begins -->
+      <div id="alt-intro" class="absolute inset-x-0 top-0">
+        <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pt-24">
+          <h2 class="t-h2 text-paper max-w-[16ch]">Pick your altitude.</h2>
+          <p class="t-caption text-paper/60 mt-3 max-w-[40ch]">
+            You start in orbit. Scroll to descend through all four domains,
+            down to the cables on the seabed.
+          </p>
+        </div>
+      </div>
 
       <!-- the altimeter: a live instrument, not decoration -->
       <div class="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 h-[58vh] hidden sm:flex items-stretch gap-5 pointer-events-none">
@@ -150,18 +202,25 @@ const caps = [
 // ── the traverse: one continuous pan, seabed to orbit ──
     const strip = document.getElementById("alt-strip");
     const altCaps = gsap.utils.toArray<HTMLElement>(".alt-cap");
-    const cyberFig = document.getElementById("alt-cyber");
     const readout = document.getElementById("alt-readout");
     const marker = document.getElementById("alt-marker");
 
     gsap.set(altCaps, { autoAlpha: 0 });
     gsap.set(altCaps[0], { autoAlpha: 1 });
 
+    // the wireframe draws itself: each line carries its own length as dash
+    const wireLines = gsap.utils.toArray<SVGLineElement>(".wl");
+    wireLines.forEach((l) => {
+      const len = l.getTotalLength();
+      gsap.set(l, { strokeDasharray: len, strokeDashoffset: len });
+    });
+    gsap.set(".wd", { autoAlpha: 0 });
+
     const PAN = 4; // four tile transitions
     const HOLD = 0.6; // rest at orbit
-    const CYB = 0.45; // cyber takes over
-    const TAIL2 = 0.5;
-    const total = PAN + HOLD + CYB + TAIL2;
+    const CYB = 0.6; // the dissolve: photo world -> drawn layer -> cyber
+    const TAIL2 = 0.55;
+    const total = PAN + HOLD + CYB + TAIL2; // 5.75
 
     const fmt = (m: number) => {
       if (m >= 20000) return `${Math.round(m / 1000)} km`;
@@ -205,13 +264,16 @@ const caps = [
       atl.fromTo(strip, { yPercent: 0 }, { yPercent: -80, duration: PAN }, 0);
     }
 
+    // the brief lifts away as the descent gets going
+    atl.to("#alt-intro", { autoAlpha: 0, y: -24, duration: 0.3 }, 0.25);
+
     // caption windows along the climb: [in, out]
     const windows = [
       [0, 1.05],
       [1.55, 2.5],
       [2.55, 3.5],
       [3.55, PAN + HOLD - 0.05],
-      [PAN + HOLD + 0.2, Infinity],
+      [5.0, Infinity],
     ];
     altCaps.forEach((cap, i) => {
       const [tin, tout] = windows[i];
@@ -223,9 +285,22 @@ const caps = [
       }
     });
 
-    if (cyberFig) {
-      atl.to(cyberFig, { autoAlpha: 1, duration: CYB }, PAN + HOLD);
-    }
+    // ── the cyber dissolve: the physical world gives way to the digital layer ──
+    // a. the seabed dims while the wireframe draws itself over it
+    atl.to("#alt-strip", { filter: "brightness(0.18)", duration: 0.25 }, 4.6);
+    atl.to("#alt-wire", { opacity: 1, duration: 0.08 }, 4.6);
+    atl.to(".wl", { strokeDashoffset: 0, duration: 0.3, stagger: 0.012 }, 4.62);
+    atl.fromTo(".wd", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.2, stagger: 0.004 }, 4.7);
+
+    // b. the cyber photo resolves through the wire, which settles underneath
+    atl.fromTo(
+      "#alt-cyber",
+      { autoAlpha: 0, scale: 1.05 },
+      { autoAlpha: 1, scale: 1, duration: 0.35 },
+      4.95
+    );
+    atl.to("#alt-wire", { opacity: 0.35, duration: 0.2 }, 5.05);
+
     atl.to({}, { duration: TAIL2 }, total - TAIL2);
   }
 </script>
