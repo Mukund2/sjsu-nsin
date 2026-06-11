@@ -15,14 +15,14 @@ const tiles = [
 ];
 
 const caps = [
+  { name: bySlug.space.name, tagline: bySlug.space.tagline, slug: "space" },
+  { name: bySlug.air.name, tagline: bySlug.air.tagline, slug: "air" },
+  { name: bySlug.sea.name, tagline: bySlug.sea.tagline, slug: "sea" },
   {
     name: "The seabed",
     tagline: "Almost all intercontinental data crosses the ocean floor on cables like this one — nearly undefended.",
     slug: null,
   },
-  { name: bySlug.sea.name, tagline: bySlug.sea.tagline, slug: "sea" },
-  { name: bySlug.air.name, tagline: bySlug.air.tagline, slug: "air" },
-  { name: bySlug.space.name, tagline: bySlug.space.tagline, slug: "space" },
   {
     name: bySlug.cyber.name,
     tagline: "Cyber has no altitude. It’s the layer under all of the others.",
@@ -163,8 +163,8 @@ const programs = [
     <div class="max-w-[1500px] mx-auto">
       <h2 class="t-h2 max-w-[16ch]" data-reveal>Pick your altitude.</h2>
       <p class="t-body mt-5 text-ink/60">
-        The club works in four domains. Scroll to climb through them — from the
-        cables on the seabed to low Earth orbit.
+        The club works in four domains. You start in orbit — scroll to descend
+        through all of them, down to the cables on the seabed.
       </p>
     </div>
   </section>
@@ -209,14 +209,14 @@ const programs = [
       <!-- the altimeter: a live instrument, not decoration -->
       <div class="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 h-[58vh] hidden sm:flex items-stretch gap-5 pointer-events-none">
         <div class="flex flex-col justify-between items-end text-right">
-          <p id="alt-readout" class="t-h3 text-paper" style="font-variant-numeric: tabular-nums;">&minus;4,000 m</p>
+          <p id="alt-readout" class="t-h3 text-paper" style="font-variant-numeric: tabular-nums;">408 km</p>
           <p class="t-caption text-paper/45">altitude</p>
         </div>
         <div class="relative w-px bg-paper/25">
           <div
             id="alt-marker"
             class="absolute right-0 w-5 h-px"
-            style="background-color: var(--color-gold); top: 100%;"
+            style="background-color: var(--color-gold); top: 0%;"
           ></div>
         </div>
       </div>
@@ -333,11 +333,11 @@ const programs = [
       return `${v < 0 ? "−" : ""}${Math.abs(v).toLocaleString("en-US")} m`;
     };
     const altitudeAt = (u: number) => {
-      if (u < 2) return -4000 + 2000 * u;
-      if (u < 3) return 11000 * (u - 2);
-      if (u < 4) return 11000 + (408000 - 11000) * (u - 3);
-      if (u < PAN + HOLD) return 408000;
-      return null; // cyber
+      if (u < 1) return 408000 - (408000 - 11000) * u;
+      if (u < 2) return 11000 * (2 - u);
+      if (u < 4) return -2000 * (u - 2);
+      if (u < PAN + HOLD) return -4000;
+      return null; // cyber, the layer underneath
     };
 
     const atl = gsap.timeline({
@@ -355,18 +355,18 @@ const programs = [
           const alt = altitudeAt(u);
           if (alt === null) {
             readout.textContent = "no altitude";
-            marker.style.top = "0%";
+            marker.style.top = "100%";
           } else {
             readout.textContent = fmt(alt);
-            const climb = Math.min(u / PAN, 1);
-            marker.style.top = `${(1 - climb) * 100}%`;
+            const descent = Math.min(u / PAN, 1);
+            marker.style.top = `${descent * 100}%`;
           }
         },
       },
     });
 
     if (strip) {
-      atl.fromTo(strip, { yPercent: -80 }, { yPercent: 0, duration: PAN }, 0);
+      atl.fromTo(strip, { yPercent: 0 }, { yPercent: -80, duration: PAN }, 0);
     }
 
     // caption windows along the climb: [in, out]
