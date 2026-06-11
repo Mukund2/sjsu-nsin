@@ -20,7 +20,7 @@ graded to a single curve, editorial asymmetry, specific copy.
 | `--color-paper` | `#F2EDE3` | fog paper — light ground |
 | `--color-paper-dim` | `#E5DECF` | paper hover/secondary surface |
 | `--color-gold` | `#C9A958` | aerospace brass. THE accent. |
-| dusk gradient | `#C9A958 → #C98C72 → #6E7B8C` | gold → smog rose → steel. Hero only. Used once. |
+| (no CSS gradients) | — | golden-hour light comes from PHOTOGRAPHS, never from naked CSS gradients. Scrims for text legibility only. |
 
 Rules: accents are ink or section floods, never button decoration. At most one
 gold-flooded element per page. Sections bleed into each other through gradient

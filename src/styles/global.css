@@ -171,11 +171,6 @@
     background: linear-gradient(to top, var(--color-ink), transparent);
   }
 
-  /* the dusk gradient — hero only, used once */
-  .dusk {
-    background: linear-gradient(178deg, #1B1918 0%, #3A3330 28%, #6E5A40 55%, #C9A958 88%, #C98C72 100%);
-  }
-
   /* film grain — the material that unifies photo and flat color */
   .grain {
     position: fixed;

@@ -14,32 +14,27 @@ const domainProps = domains.map(({ slug, name, accent, tagline, hero }) => ({
 
 const beats = [
   {
-    year: "1933",
-    line: "The orchards came down, and Moffett Field went up.",
+    line: "1933. The orchards came down, and Moffett Field went up.",
     sub: "The Navy's Pacific airship base brought the first wave of engineers to the South Bay — twenty years before anyone said “silicon.”",
     image: "/images/domains/air-3.jpg",
   },
   {
-    year: "1956",
-    line: "Lockheed Missiles & Space moves to Sunnyvale.",
+    line: "1956. Lockheed Missiles & Space moves to Sunnyvale.",
     sub: "For three decades the Valley's largest employer wasn't a chip company. It built submarine-launched missiles and the first reconnaissance satellites.",
     image: "/images/domains/space-1.jpg",
   },
   {
-    year: "1990s",
-    line: "Then the Valley moved on.",
+    line: "By the 1990s, the Valley had moved on.",
     sub: "Consumer software paid better and shipped faster. Defense became something the Valley's grandparents did.",
     image: "/images/mission-control.jpg",
   },
   {
-    year: "Today",
-    line: "The hard problems are back.",
+    line: "Now the hard problems are back.",
     sub: "Autonomy over every front line. Contested orbit. Cables on the seabed. Infrastructure attacked at machine speed.",
     image: "/images/domains/sea-1.jpg",
   },
   {
-    year: "San José",
-    line: "The talent is still here. What's missing is access.",
+    line: "The talent never left San José. What's missing is access.",
     sub: "NSIN at SJSU connects students to the people working these problems — through real projects, not career fairs.",
     image: "/images/hackathon.jpg",
   },
@@ -74,19 +69,24 @@ const programs = [
 ---
 
 <BaseLayout theme="console">
-  <!-- ACT 1 — dusk hero. The one display moment, the one gradient. -->
-  <section class="dusk relative min-h-screen flex flex-col justify-end overflow-hidden">
+  <!-- ACT 1 — hero. Real golden-hour sky, not a CSS gradient. -->
+  <section class="relative min-h-screen flex flex-col justify-end overflow-hidden bg-ink">
+    <img
+      src="/images/falcon9.jpg"
+      alt=""
+      class="absolute inset-0 w-full h-full object-cover"
+      fetchpriority="high"
+    />
+    <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/25"></div>
     <div class="relative max-w-[1500px] w-full mx-auto px-5 sm:px-10 pb-14 sm:pb-20">
-      <h1 class="t-display text-ink max-w-[10ch]" data-reveal>
-        The Valley was built for this.
+      <h1 class="t-display text-paper max-w-[13ch]" data-reveal>
+        Lockheed was here before Google.
       </h1>
-      <div class="mt-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8">
-        <p class="t-lede text-ink/75 max-w-[38ch]" data-reveal>
-          NSIN at San Jos&eacute; State connects students with the national
-          security work Silicon Valley was founded on.
-        </p>
-        <p class="t-caption text-ink/55 shrink-0">Scroll &darr;</p>
-      </div>
+      <p class="t-lede text-paper/80 max-w-[44ch] mt-8" data-reveal>
+        Silicon Valley's first industry was defense. NSIN at San Jos&eacute;
+        State is the student club connecting engineers, designers, and policy
+        minds back to that work.
+      </p>
     </div>
   </section>
 
@@ -104,8 +104,7 @@ const programs = [
           <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/45 to-ink/25"></div>
           <figcaption class="absolute inset-x-0 bottom-0">
             <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-20 sm:pb-24">
-              <p class="t-label mb-5" style="color: var(--color-gold)">{b.year}</p>
-              <h2 class="t-h1 text-paper max-w-[16ch]">{b.line}</h2>
+              <h2 class="t-h1 text-paper max-w-[17ch]">{b.line}</h2>
               <p class="t-lede mt-5 max-w-[46ch] text-paper/70">{b.sub}</p>
             </div>
           </figcaption>
@@ -128,8 +127,7 @@ const programs = [
       </p>
       <div class="mt-14 border-t border-ink/15">
         {programs.map((p) => (
-          <div class="group grid grid-cols-1 md:grid-cols-[64px_1fr_300px] gap-5 md:gap-10 items-center border-b border-ink/15 py-8">
-            <p class="t-h3 text-ink/30">{p.num}</p>
+          <div class="group grid grid-cols-1 md:grid-cols-[1fr_300px] gap-5 md:gap-10 items-center border-b border-ink/15 py-8">
             <div>
               <h3 class="t-h3 text-ink">{p.title}</h3>
               <p class="t-caption mt-2 text-ink/60 max-w-xl">{p.desc}</p>
@@ -160,7 +158,7 @@ const programs = [
   <div class="seam-to-ink"></div>
   <section class="scheme-ink relative overflow-hidden">
     <img
-      src="/images/falcon9.jpg"
+      src="/images/domains/space-3.jpg"
       alt=""
       class="absolute inset-0 w-full h-full object-cover opacity-80"
       loading="lazy"
