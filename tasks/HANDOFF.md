@@ -1,5 +1,28 @@
 # HANDOFF — current state & next actions
 
+## NORTH STAR (user's reference, decoded 2026-06-11)
+
+terminal-industries.com (via TikTok @wearebrand.io). The genre the user wants:
+ONE cinematic world where scroll drives seamless scene continuity — their
+truck: golden-hour hero → SAME truck in a rendered yard → dissolves into a
+wireframe/particle "digital twin" → particle scenes → clean type sections.
+Tech (from the video credits + inspection): Webflow + Osmo (GSAP toolkit),
+React/Three.js/R3F, Lenis, Barba, and **webP image sequences scrubbed on
+canvas** for the cinematic shots (pre-rendered in 3D software, NOT realtime).
+Their nav is a floating glass pill that persists over everything.
+
+What we can't do: Blender-quality pre-rendered sequences. What we CAN do:
+1. Keep the realtime three.js Earth (built, works, looks great).
+2. SEAMLESS transitions between all movements — no hard section cuts. The
+   cloud→paper-flash match-cut pattern (built) is the template; apply it at
+   timeline→traverse and traverse→CTA. Overlap, don't stack.
+3. Our "truck→wireframe" equivalent: the photographic world dissolving into
+   the drawn instrument language (hairlines + gold + particles) at the cyber
+   beat of the descent — photo → particle/wireframe dissolve (canvas or
+   shader on the cyber tile). This is the missing signature transform.
+4. Optional: generate short FLUX frame *sequences* (4-8 frames) and scrub
+   them for micro-moments if a true pre-rendered shot is ever needed.
+
 Branch: `redesign/domain-console` (pushed). Do NOT push/merge to `main` — that deploys.
 Dev server: `npm run dev` → localhost:4321 (often already running in background).
 Verify visually with Chrome MCP tools; build with `npx astro build`.
