@@ -1,9 +1,13 @@
 ---
-// The site's persistent protagonist: ONE rendered 3D satellite (three.js
-// primitives, no external models) that rides the whole homepage scroll —
-// drifting past the Earth dive, flying the timeline, pitching down through
-// the descent, dispersing into particles at the cyber dissolve — until the
-// club's paper-plane mark lands above the CTA. The brand resolves out of it.
+// The site's persistent protagonist: ONE rendered 3D satellite that rides the
+// whole homepage scroll — drifting past the Earth dive, flying the timeline,
+// pitching down through the descent, dispersing into particles at the cyber
+// dissolve — until the club's paper-plane mark lands above the CTA.
+//
+// Model: NASA "Voyager Probe (A)" from github.com/nasa/NASA-3D-Resources
+// (public domain — "free and without copyright"), Draco-decoded offline to a
+// plain GLB at /public/models/satellite.glb so the runtime loader is pure JS.
+// If the GLB fails to load, a procedural primitives satellite is built instead.
 ---
 
 <div id="hero-object" class="fixed inset-0 pointer-events-none" style="z-index: 45; opacity: 0;" aria-hidden="true">
@@ -33,6 +37,7 @@
 
 <script>
   import * as THREE from "three";
+  import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
   import gsap from "gsap";
   import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -59,59 +64,113 @@
     const rim = new THREE.DirectionalLight(0xf2ede3, 0.8);
     rim.position.set(-2, 1, -4);
     const amb = new THREE.AmbientLight(0xf2ede3, 0.18);
-    scene.add(key, rim, amb);
+    const goldFill = new THREE.DirectionalLight(0xc9a958, 0.6); // golden-hour fill
+    goldFill.position.set(-1, -2, 3);
+    scene.add(key, rim, amb, goldFill);
 
-    // ── the satellite, primitives only ──
+    // ── the satellite ──
     const rig = new THREE.Group(); // scroll-driven orientation
     const sat = new THREE.Group(); // continuous tumble
     rig.add(sat);
     scene.add(rig);
 
-    const mat = (o: THREE.MeshStandardMaterialParameters) =>
-      new THREE.MeshStandardMaterial({ transparent: true, ...o });
-    const foil = () => mat({ color: 0xc9a958, metalness: 0.95, roughness: 0.3 });
-    const gun = () => mat({ color: 0x3a3a3a, metalness: 0.9, roughness: 0.4 });
-    const cell = () => mat({ color: 0x1c2430, metalness: 0.6, roughness: 0.35 });
+    const TARGET = 1.6; // largest model dimension, world units
+    let beaconMat: THREE.MeshStandardMaterial | null = null;
+    let scatter: { mesh: THREE.Mesh; home: THREE.Vector3; dir: THREE.Vector3 }[] = [];
 
-    const add = (geo: THREE.BufferGeometry, m: THREE.MeshStandardMaterial, x = 0, y = 0, z = 0) => {
-      const mesh = new THREE.Mesh(geo, m);
-      mesh.position.set(x, y, z);
-      sat.add(mesh);
-      return mesh;
+    // recenter to origin + uniform-scale so the largest dimension ≈ TARGET,
+    // then build the dissolve bookkeeping (home position + scatter vector,
+    // sized so the world-space scatter distance is consistent at any scale)
+    const adopt = (model: THREE.Object3D) => {
+      const box = new THREE.Box3().setFromObject(model);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      const s = TARGET / (Math.max(size.x, size.y, size.z) || 1);
+      model.scale.setScalar(s);
+      model.position.copy(center).multiplyScalar(-s);
+      const meshes: THREE.Mesh[] = [];
+      model.traverse((o) => {
+        if ((o as THREE.Mesh).isMesh) meshes.push(o as THREE.Mesh);
+      });
+      scatter = meshes.map((m) => ({
+        mesh: m,
+        home: m.position.clone(),
+        dir: new THREE.Vector3().randomDirection().multiplyScalar((3 + Math.random() * 3) / s),
+      }));
+      sat.add(model);
     };
 
-    add(new THREE.BoxGeometry(0.5, 0.42, 0.42), foil()); // gold-foil bus
-    add(new THREE.BoxGeometry(0.1, 0.46, 0.46), gun(), 0.3); // gunmetal end-cap
-    const boomG = new THREE.CylinderGeometry(0.016, 0.016, 0.5, 8);
-    boomG.rotateZ(Math.PI / 2);
-    add(boomG, gun(), -0.5);
-    add(boomG.clone(), gun(), 0.5); // mirrored boom
-    for (const side of [-1, 1]) {
-      add(new THREE.BoxGeometry(0.85, 0.02, 0.42), cell(), side * 1.15); // panel wing
-      for (const dx of [-0.22, 0, 0.22])
-        add(new THREE.BoxGeometry(0.025, 0.026, 0.42), foil(), side * 1.15 + dx); // gold dividers
-    }
-    const dishG = new THREE.SphereGeometry(0.16, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2.6);
-    const dish = add(dishG, foil(), -0.18, 0.36);
-    dish.rotation.x = Math.PI; // open face up
-    add(new THREE.CylinderGeometry(0.014, 0.014, 0.18, 8), gun(), -0.18, 0.24); // dish arm
-    add(new THREE.CylinderGeometry(0.008, 0.008, 0.42, 6), gun(), 0.12, 0.42); // antenna rod
-    const beaconMat = mat({
-      color: 0xc9a958,
-      emissive: 0xc9a958,
-      emissiveIntensity: 1.5,
-      metalness: 0.2,
-      roughness: 0.5,
-    });
-    add(new THREE.SphereGeometry(0.03, 10, 10), beaconMat, 0.12, 0.64);
+    // FALLBACK: the original procedural primitives satellite
+    const buildProcedural = () => {
+      const group = new THREE.Group();
+      const mat = (o: THREE.MeshStandardMaterialParameters) =>
+        new THREE.MeshStandardMaterial({ transparent: true, ...o });
+      const foil = () => mat({ color: 0xc9a958, metalness: 0.95, roughness: 0.3 });
+      const gun = () => mat({ color: 0x3a3a3a, metalness: 0.9, roughness: 0.4 });
+      const cell = () => mat({ color: 0x1c2430, metalness: 0.6, roughness: 0.35 });
 
-    // dissolve bookkeeping: original position + a random unit scatter vector
-    const parts = sat.children as THREE.Mesh[];
-    const scatter = parts.map((p) => ({
-      mesh: p,
-      home: p.position.clone(),
-      dir: new THREE.Vector3().randomDirection().multiplyScalar(3 + Math.random() * 3),
-    }));
+      const add = (geo: THREE.BufferGeometry, m: THREE.MeshStandardMaterial, x = 0, y = 0, z = 0) => {
+        const mesh = new THREE.Mesh(geo, m);
+        mesh.position.set(x, y, z);
+        group.add(mesh);
+        return mesh;
+      };
+
+      add(new THREE.BoxGeometry(0.5, 0.42, 0.42), foil()); // gold-foil bus
+      add(new THREE.BoxGeometry(0.1, 0.46, 0.46), gun(), 0.3); // gunmetal end-cap
+      const boomG = new THREE.CylinderGeometry(0.016, 0.016, 0.5, 8);
+      boomG.rotateZ(Math.PI / 2);
+      add(boomG, gun(), -0.5);
+      add(boomG.clone(), gun(), 0.5); // mirrored boom
+      for (const side of [-1, 1]) {
+        add(new THREE.BoxGeometry(0.85, 0.02, 0.42), cell(), side * 1.15); // panel wing
+        for (const dx of [-0.22, 0, 0.22])
+          add(new THREE.BoxGeometry(0.025, 0.026, 0.42), foil(), side * 1.15 + dx); // gold dividers
+      }
+      const dishG = new THREE.SphereGeometry(0.16, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2.6);
+      const dish = add(dishG, foil(), -0.18, 0.36);
+      dish.rotation.x = Math.PI; // open face up
+      add(new THREE.CylinderGeometry(0.014, 0.014, 0.18, 8), gun(), -0.18, 0.24); // dish arm
+      add(new THREE.CylinderGeometry(0.008, 0.008, 0.42, 6), gun(), 0.12, 0.42); // antenna rod
+      beaconMat = mat({
+        color: 0xc9a958,
+        emissive: 0xc9a958,
+        emissiveIntensity: 1.5,
+        metalness: 0.2,
+        roughness: 0.5,
+      });
+      add(new THREE.SphereGeometry(0.03, 10, 10), beaconMat, 0.12, 0.64);
+      adopt(group);
+    };
+
+    // PRIMARY: NASA Voyager Probe (A), public domain, plain (non-Draco) GLB
+    new GLTFLoader().load(
+      "/models/satellite.glb",
+      (gltf) => {
+        try {
+          const model = gltf.scene;
+          model.traverse((o) => {
+            const mesh = o as THREE.Mesh;
+            if (!mesh.isMesh) return;
+            // unique materials so the per-mesh dissolve opacity is independent
+            const m = (mesh.material as THREE.MeshStandardMaterial).clone();
+            m.transparent = true;
+            if (m.metalness !== undefined) m.metalness = Math.max(m.metalness, 0.5);
+            if (m.envMapIntensity !== undefined) m.envMapIntensity = 1.1; // gold env tint
+            mesh.material = m;
+          });
+          adopt(model);
+        } catch (e) {
+          console.warn("[protagonist] GLB setup failed, using procedural satellite", e);
+          buildProcedural();
+        }
+      },
+      undefined,
+      (err) => {
+        console.warn("[protagonist] GLB load failed, using procedural satellite", err);
+        buildProcedural();
+      }
+    );
 
     // ── beat state, applied every frame ──
     // px/py = viewport-% position (bob is an additive % offset); bank/pitch in
@@ -145,7 +204,7 @@
         s.mesh.position.copy(s.home).addScaledVector(s.dir, S.disperse);
         (s.mesh.material as THREE.MeshStandardMaterial).opacity = 1 - S.disperse;
       }
-      beaconMat.emissiveIntensity = 1.5 + Math.sin(clock.getElapsedTime() * 3.2) * 0.8;
+      if (beaconMat) beaconMat.emissiveIntensity = 1.5 + Math.sin(clock.getElapsedTime() * 3.2) * 0.8;
       renderer.render(scene, camera);
     };
     requestAnimationFrame(render);
@@ -162,7 +221,8 @@
       t1.fromTo(S, { py: 26 }, { py: 38, duration: 1, ease: "sine.inOut" }, 0); // shallow arc
       t1.to(obj, { autoAlpha: 0, duration: 0.15 }, 0.85); // falls behind during the paper flash
 
-      // 2. TIMELINE FLIGHT — left→right along the axis, slight nose-forward bank
+      // 2. TIMELINE FLIGHT — left→right just above the axis, slight nose-forward
+      // bank. Small over the paper background: scale 0.42 ≈ a 120-160px footprint.
       const t2 = gsap.timeline({
         defaults: { ease: "none" },
         scrollTrigger: { trigger: "#valley-pin", start: "top top", end: "bottom top", scrub: true },
@@ -170,8 +230,8 @@
       t2.fromTo(obj, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.05 }, 0);
       t2.fromTo(
         S,
-        { px: 20, py: 46, pitch: 0, scale: 1 },
-        { px: 78, py: 46, pitch: 0, scale: 1, duration: 1 },
+        { px: 20, py: 38, pitch: 0, scale: 0.42 },
+        { px: 78, py: 38, pitch: 0, scale: 0.42, duration: 1 },
         0
       );
       t2.fromTo(S, { bank: 0 }, { bank: -0.14, duration: 0.3, ease: "sine.out" }, 0); // nose-forward
