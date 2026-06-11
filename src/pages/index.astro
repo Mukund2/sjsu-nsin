@@ -1,6 +1,8 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ConsoleFooter from "../components/layout/ConsoleFooter.astro";
+import EarthDive from "../components/home/EarthDive.astro";
+import ValleyTimeline from "../components/home/ValleyTimeline.astro";
 import { domains } from "../data/domains";
 
 const bySlug = Object.fromEntries(domains.map((d) => [d.slug, d]));
@@ -30,134 +32,17 @@ const caps = [
   },
 ];
 
-const beats = [
-  {
-    line: "1933. The orchards came down, and Moffett Field went up.",
-    sub: "The Navy’s Pacific airship base brought the first wave of engineers to the South Bay — twenty years before anyone said “silicon.”",
-    image: "/images/domains/air-3.jpg",
-  },
-  {
-    line: "1956. Lockheed Missiles & Space moves to Sunnyvale.",
-    sub: "For three decades the Valley’s largest employer wasn’t a chip company. It built submarine-launched missiles and the first reconnaissance satellites.",
-    image: "/images/domains/space-1.jpg",
-  },
-  {
-    line: "By the 1990s, the Valley had moved on.",
-    sub: "Consumer software paid better and shipped faster. Defense became something the Valley’s grandparents did.",
-    image: "/images/mission-control.jpg",
-  },
-  {
-    line: "Now the hard problems are back.",
-    sub: "Autonomy over every front line. Contested orbit. Cables on the seabed. Infrastructure attacked at machine speed.",
-    image: "/images/domains/sea-1.jpg",
-  },
-  {
-    line: "The talent never left San José. What’s missing is access.",
-    sub: "NSIN at SJSU connects students to the people working these problems — through real projects, not career fairs.",
-    image: "/images/hackathon.jpg",
-  },
-];
 
-const programs = [
-  {
-    title: "Speaker Series",
-    desc: "Defense-tech founders, policymakers, and intelligence veterans on how technology is reshaping national security.",
-    image: "/images/speaker-podium.jpg",
-  },
-  {
-    title: "Build & Compete",
-    desc: "Prototype sprints and DoD challenge competitions. The preparation pipeline for the National Security Hackathon.",
-    image: "/images/booster-catch.jpg",
-  },
-  {
-    title: "Government & Industry Projects",
-    desc: "Paired with defense and intelligence organizations on live problems — the model Stanford built with Hacking for Defense.",
-    image: "/images/satellite.jpg",
-  },
-  {
-    title: "Policy & Strategy",
-    desc: "AI governance, export controls, and the future of deterrence — argued across engineering, business, and political science.",
-    image: "/images/capitol.jpg",
-  },
-];
+
+
 ---
 
 <BaseLayout theme="console">
-  <!-- ACT 1 — hero. Real golden-hour sky, not a CSS gradient. -->
-  <section class="relative min-h-screen flex flex-col justify-end overflow-hidden bg-ink">
-    <img
-      src="/images/falcon9.jpg"
-      alt=""
-      class="absolute inset-0 w-full h-full object-cover"
-      fetchpriority="high"
-    />
-    <div class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-ink/25"></div>
-    <div class="relative max-w-[1500px] w-full mx-auto px-5 sm:px-10 pb-14 sm:pb-20">
-      <h1 class="t-display text-paper max-w-[13ch]" data-reveal>
-        Lockheed was here before Google.
-      </h1>
-      <p class="t-lede text-paper/80 max-w-[44ch] mt-8" data-reveal>
-        Silicon Valley’s first industry was defense. NSIN at San Jos&eacute;
-        State is the student club connecting engineers, designers, and policy
-        minds back to that work.
-      </p>
-    </div>
-  </section>
+  <EarthDive />
 
-  <!-- ACT 2 — the pinned essay. One signature sequence per page. -->
-  <section id="essay" class="scheme-ink relative">
-    <div id="essay-pin" class="relative h-screen overflow-hidden">
-      {beats.map((b, i) => (
-        <figure class="essay-beat absolute inset-0 m-0" data-index={i}>
-          <img
-            src={b.image}
-            alt=""
-            class="absolute inset-0 w-full h-full object-cover"
-            loading={i === 0 ? "eager" : "lazy"}
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/45 to-ink/25"></div>
-          <figcaption class="absolute inset-x-0 bottom-0">
-            <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-20 sm:pb-24">
-              <h2 class="t-h1 text-paper max-w-[17ch]">{b.line}</h2>
-              <p class="t-lede mt-5 max-w-[46ch] text-paper/70">{b.sub}</p>
-            </div>
-          </figcaption>
-        </figure>
-      ))}
-      <div class="absolute bottom-0 left-0 right-0 h-px bg-paper/20">
-        <div id="essay-progress" class="h-full w-0" style="background-color: var(--color-gold)"></div>
-      </div>
-    </div>
-  </section>
+  <ValleyTimeline />
 
-  <!-- ACT 3 — the club: programs, domains, cohort -->
-  <section class="scheme-paper pt-24 sm:pt-32 pb-20 px-5 sm:px-10">
-    <div class="max-w-[1500px] mx-auto">
-      <h2 class="t-h2 max-w-[16ch]" data-reveal>Four ways in.</h2>
-      <p class="t-body mt-5 text-ink/60">
-        Whatever you study, there’s a seat. Engineers build, writers argue, and
-        everyone ships something real by the end of the semester.
-      </p>
-      <div class="mt-14 border-t border-ink/15">
-        {programs.map((p) => (
-          <div class="grid grid-cols-1 md:grid-cols-[1fr_300px] gap-5 md:gap-10 items-center border-b border-ink/15 py-8">
-            <div>
-              <h3 class="t-h3 text-ink">{p.title}</h3>
-              <p class="t-caption mt-2 text-ink/60 max-w-xl">{p.desc}</p>
-            </div>
-            <div class="relative overflow-hidden aspect-video md:h-[150px] md:aspect-auto">
-              <img
-                src={p.image}
-                alt={p.title}
-                loading="lazy"
-                class="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
+
 
   <section class="scheme-paper px-5 sm:px-10 pb-20">
     <div class="max-w-[1500px] mx-auto">
@@ -262,56 +147,7 @@ const programs = [
   if (!reduced) {
     gsap.registerPlugin(ScrollTrigger);
 
-    const beats = gsap.utils.toArray<HTMLElement>(".essay-beat");
-    gsap.set(beats, { autoAlpha: 0 });
-    gsap.set(beats[0], { autoAlpha: 1 });
-
-    const tl = gsap.timeline({
-      defaults: { ease: "none" },
-      scrollTrigger: {
-        trigger: "#essay-pin",
-        start: "top top",
-        end: "+=" + beats.length * 110 + "%",
-        pin: true,
-        scrub: 0.4,
-        anticipatePin: 1,
-      },
-    });
-
-    beats.forEach((beat, i) => {
-      const img = beat.querySelector("img");
-      // slow push-in across each beat’s visible window
-      if (img) {
-        tl.fromTo(img, { scale: 1.07 }, { scale: 1, duration: 1.35 }, Math.max(i - 0.35, 0));
-      }
-      if (i === 0) return;
-      const prevCaption = beats[i - 1].querySelector("figcaption");
-      const caption = beat.querySelector("figcaption");
-      // text leaves before the image does — keeps the crossfade clean
-      if (prevCaption) {
-        tl.to(prevCaption, { autoAlpha: 0, y: -20, duration: 0.2 }, i - 0.05);
-      }
-      tl.to(beats[i - 1], { autoAlpha: 0, duration: 0.4 }, i);
-      tl.fromTo(beat, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, i + 0.1);
-      if (caption) {
-        tl.fromTo(caption, { autoAlpha: 0, y: 44 }, { autoAlpha: 1, y: 0, duration: 0.5 }, i + 0.18);
-      }
-    });
-    // hold the thesis beat before unpinning
-    tl.to({}, { duration: 0.7 });
-
-    gsap.to("#essay-progress", {
-      width: "100%",
-      ease: "none",
-      scrollTrigger: {
-        trigger: "#essay-pin",
-        start: "top top",
-        end: "+=" + beats.length * 110 + "%",
-        scrub: true,
-      },
-    });
-
-    // ── the traverse: one continuous pan, seabed to orbit ──
+// ── the traverse: one continuous pan, seabed to orbit ──
     const strip = document.getElementById("alt-strip");
     const altCaps = gsap.utils.toArray<HTMLElement>(".alt-cap");
     const cyberFig = document.getElementById("alt-cyber");

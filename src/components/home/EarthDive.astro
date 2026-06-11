@@ -1,0 +1,256 @@
+---
+// EarthDive — the signature sequence. A golden-hour Earth hangs in orbit;
+// scroll scrubs a dive toward the San Francisco Bay, a paper flash cuts,
+// and the page's poster headline lands. Vanilla three.js + GSAP ScrollTrigger.
+// Reduced-motion / no-JS: the title simply shows (see <style> below — the
+// BaseLayout only adds .has-motion to <html> when motion is allowed).
+---
+
+<section id="dive" class="scheme-ink relative">
+  <div id="dive-pin" class="relative h-screen overflow-hidden">
+    <canvas id="earth-canvas" class="absolute inset-0 w-full h-full"></canvas>
+    <div
+      id="dive-flash"
+      class="absolute inset-0 pointer-events-none"
+      style="background: var(--color-paper); opacity: 0;"
+    >
+    </div>
+    <div
+      id="dive-title"
+      class="absolute inset-0 flex flex-col justify-end"
+      style="opacity: 0; visibility: hidden;"
+    >
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-14 sm:pb-20 w-full">
+        <h1 class="t-display text-paper max-w-[13ch]">
+          Lockheed was here before Google.
+        </h1>
+        <p class="t-lede text-paper/80 max-w-[44ch] mt-8">
+          Silicon Valley’s first industry was defense. NSIN at San José State
+          is the student club connecting engineers, designers, and policy
+          minds back to that work.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style is:global>
+  /* no-JS / reduced-motion fallback: poster headline shows, canvas doesn't */
+  html:not(.has-motion) #dive-title {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  html:not(.has-motion) #earth-canvas {
+    display: none;
+  }
+</style>
+
+<script>
+  import * as THREE from "three";
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  function init() {
+    const canvas = document.getElementById("earth-canvas") as HTMLCanvasElement | null;
+    const title = document.getElementById("dive-title");
+    if (!canvas || !title) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      title.style.opacity = "1";
+      title.style.visibility = "visible";
+      canvas.style.display = "none";
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── scene ──────────────────────────────────────────────────────
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+
+    const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+    camera.position.z = 3.4;
+
+    const scene = new THREE.Scene();
+
+    const loader = new THREE.TextureLoader();
+    const tex = (path: string) => {
+      const t = loader.load(path);
+      t.colorSpace = THREE.SRGBColorSpace;
+      return t;
+    };
+
+    // earth + clouds share a group so the dive rotation/tilt moves both
+    const globe = new THREE.Group();
+    scene.add(globe);
+
+    const earthMat = new THREE.MeshStandardMaterial({
+      map: tex("/images/earth/2k_earth_daymap.jpg"),
+      emissiveMap: tex("/images/earth/2k_earth_nightmap.jpg"),
+      emissive: new THREE.Color(0xffc88a),
+      emissiveIntensity: 0.55,
+      roughness: 1,
+    });
+    const earth = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 64), earthMat);
+    globe.add(earth);
+
+    const cloudsMat = new THREE.MeshStandardMaterial({
+      map: tex("/images/earth/2k_earth_clouds.jpg"),
+      transparent: true,
+      opacity: 0.5,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    });
+    const clouds = new THREE.Mesh(new THREE.SphereGeometry(1.012, 64, 64), cloudsMat);
+    globe.add(clouds);
+
+    // atmosphere rim — back-side fresnel glow in aerospace brass
+    const atmosphere = new THREE.Mesh(
+      new THREE.SphereGeometry(1.18, 64, 64),
+      new THREE.ShaderMaterial({
+        uniforms: { glowColor: { value: new THREE.Color(0xc9a958) } },
+        vertexShader: /* glsl */ `
+          varying vec3 vNormal;
+          void main() {
+            vNormal = normalize(normalMatrix * normal);
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: /* glsl */ `
+          uniform vec3 glowColor;
+          varying vec3 vNormal;
+          void main() {
+            float intensity = pow(0.62 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+            gl_FragColor = vec4(glowColor, 1.0) * intensity;
+          }
+        `,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        side: THREE.BackSide,
+        depthWrite: false,
+      })
+    );
+    scene.add(atmosphere);
+
+    // stars — 900 points on a 40–60 radius shell, paper-colored
+    const starPos = new Float32Array(900 * 3);
+    for (let i = 0; i < 900; i++) {
+      const r = 40 + Math.random() * 20;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      starPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      starPos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+      starPos[i * 3 + 2] = r * Math.cos(phi);
+    }
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+    const stars = new THREE.Points(
+      starGeo,
+      new THREE.PointsMaterial({
+        color: 0xf2ede3,
+        size: 0.14,
+        sizeAttenuation: true,
+        transparent: true,
+        opacity: 0.7,
+        depthWrite: false,
+      })
+    );
+    scene.add(stars);
+
+    // golden-hour key from upper left, behind camera; faint cool ambient fill
+    const key = new THREE.DirectionalLight(0xffd9a0, 2.2);
+    key.position.set(-3, 2, 4);
+    scene.add(key);
+    scene.add(new THREE.AmbientLight(0x222333, 0.7));
+
+    function resize() {
+      const w = canvas!.clientWidth || 1;
+      const h = canvas!.clientHeight || 1;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener("resize", resize);
+    resize();
+
+    // ── dive targets ───────────────────────────────────────────────
+    // TARGET_ROT_Y: with three's equirectangular UV layout, longitude 0°
+    // initially faces +X, so facing longitude L toward the +Z camera needs
+    // rotation.y = (−L)·π/180 + π/2. The Bay sits at L ≈ −122°, giving
+    // (122·π/180) + π/2 ≈ 3.70 rad — tuned by eye so the US west coast ends
+    // centered. TILT_X ≈ 0.25 rad pitches the globe for 37.4° N latitude.
+    const TARGET_ROT_Y = (122 * Math.PI) / 180 + Math.PI / 2; // ≈ 3.70
+    const TILT_X = 0.25;
+    const IDLE_SPIN = 0.0006; // rad / frame; clouds drift at 1.3×
+
+    const proxy = { dist: 3.4, rotY: 0, tilt: 0, clouds: 0.5 };
+    let idleRot = 0;
+
+    // ── render loop — runs only while the section is near the viewport ──
+    let running = false;
+    let rafId = 0;
+
+    function frame() {
+      rafId = running ? requestAnimationFrame(frame) : 0;
+
+      // blend 0→1 across the scrub; idle spin freezes once the dive starts
+      const blend = Math.min(Math.max(proxy.rotY / TARGET_ROT_Y, 0), 1);
+      if (blend === 0) {
+        idleRot += IDLE_SPIN;
+        clouds.rotation.y += IDLE_SPIN * 0.3; // 1.3× total drift vs earth
+      }
+      // lerp from the frozen idle angle to the Bay along the shortest arc
+      const from = idleRot % (Math.PI * 2);
+      let delta = (TARGET_ROT_Y - from) % (Math.PI * 2);
+      if (delta > Math.PI) delta -= Math.PI * 2;
+      if (delta < -Math.PI) delta += Math.PI * 2;
+      globe.rotation.y = from + delta * blend;
+      globe.rotation.x = proxy.tilt;
+
+      camera.position.z = proxy.dist;
+      cloudsMat.opacity = proxy.clouds;
+      renderer.render(scene, camera);
+    }
+
+    function setRunning(active: boolean) {
+      running = active;
+      if (running && !rafId) rafId = requestAnimationFrame(frame);
+    }
+
+    const gate = ScrollTrigger.create({
+      trigger: "#dive",
+      start: "top bottom",
+      end: "bottom top",
+      onToggle: (self) => setRunning(self.isActive),
+    });
+    setRunning(gate.isActive); // also run while above the fold initially
+
+    // ── the dive (one scrubbed timeline) ───────────────────────────
+    const tl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: "#dive-pin",
+        start: "top top",
+        end: "+=260%",
+        pin: true,
+        scrub: 0.5,
+        anticipatePin: 1,
+      },
+    });
+
+    tl.to(proxy, { dist: 1.13, rotY: TARGET_ROT_Y, tilt: TILT_X, clouds: 1, duration: 0.75 }, 0);
+    tl.to("#dive-flash", { opacity: 1, duration: 0.08 }, 0.74);
+    tl.set("#earth-canvas", { autoAlpha: 0 }, 0.82);
+    tl.fromTo(
+      "#dive-title",
+      { autoAlpha: 0, y: 36 },
+      { autoAlpha: 1, y: 0, duration: 0.14, ease: "none" },
+      0.83
+    );
+    tl.to("#dive-flash", { opacity: 0, duration: 0.1 }, 0.84);
+    tl.to({}, { duration: 0.03 }, 0.97); // hold the title to the end of the pin
+  }
+
+  init();
+</script>

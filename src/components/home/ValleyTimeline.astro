@@ -1,0 +1,182 @@
+---
+// ── The Valley timeline — ninety years on one hairline axis ──
+// Drawn, not imported: 1px ink rules, gold for the datum that matters
+// (the club), serif years, mono-quiet captions. Scroll scrubs the track
+// horizontally beneath a fixed gold marker.
+
+interface Milestone {
+  year: string;
+  label: string;
+  club: boolean;
+}
+
+const milestones: Milestone[] = [
+  { year: "1933", label: "Moffett Field opens on the orchards", club: false },
+  { year: "1956", label: "Lockheed Missiles & Space comes to Sunnyvale", club: false },
+  { year: "1957", label: "Fairchild Semiconductor — silicon arrives", club: false },
+  { year: "1976", label: "Apple. The Valley turns consumer", club: false },
+  { year: "1998", label: "Google, two miles from Moffett", club: false },
+  { year: "2020s", label: "Drones, orbit, seabed — the hard problems return", club: false },
+  { year: "2026", label: "NSIN at SJSU — Cohort 01", club: true },
+  { year: "Fall ’26", label: "Speaker series · government project teams", club: true },
+  { year: "Spring ’27", label: "National Security Hackathon · Hacking for Defense", club: true },
+];
+
+// stem geometry: hairline stems rise/fall from the axis; club stems are
+// taller and gold. Content sits just beyond the stem tip.
+const STEM = 56;
+const STEM_CLUB = 72;
+const GAP = 12; // px between stem tip and content
+---
+
+<section id="valley" class="scheme-paper relative">
+  <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pt-24 sm:pt-32 pb-10">
+    <h2 class="t-h2 max-w-[18ch]" data-reveal>The Valley was a defense town first.</h2>
+    <p class="t-body mt-6">Ninety years on one axis — and where you come in.</p>
+  </div>
+
+  <div id="valley-pin" class="relative h-[70vh] sm:h-[80vh] overflow-hidden">
+    <!-- fixed gold marker the track slides beneath -->
+    <div
+      class="absolute left-[38vw] top-1/2 -translate-y-1/2 z-10 h-2 w-2 rounded-full bg-gold"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div
+      id="valley-track"
+      class="absolute top-0 left-0 h-full flex items-center will-change-transform"
+      style="width: max-content"
+    >
+      <!-- the axis: one hairline across the whole track, gold drawn over it -->
+      <div class="absolute inset-x-0 top-1/2 h-px bg-ink/25" aria-hidden="true"></div>
+      <div
+        id="valley-progress"
+        class="absolute left-0 top-1/2 h-px w-0 bg-gold z-[1]"
+        aria-hidden="true"
+      >
+      </div>
+
+      <!-- leading pad: milestone 1 starts at the marker -->
+      <div class="shrink-0 w-[38vw] h-full" aria-hidden="true"></div>
+
+      {
+        milestones.map((m, i) => {
+          const up = i % 2 === 0;
+          const stem = m.club ? STEM_CLUB : STEM;
+          const offset = `calc(50% + ${stem + GAP}px)`;
+          return (
+            <div class="vt-cell relative shrink-0 h-full w-[42vw] sm:w-[26vw]">
+              {/* decade tick on the axis */}
+              <span
+                class="absolute left-0 top-1/2 -translate-y-1/2 h-2 w-px bg-ink/25 z-[2]"
+                aria-hidden="true"
+              />
+              {/* stem */}
+              <span
+                class:list={["absolute left-0 w-px z-[2]", m.club ? "bg-gold" : "bg-ink/30"]}
+                style={`height: ${stem}px; ${up ? "bottom: 50%;" : "top: 50%;"}`}
+                aria-hidden="true"
+              />
+              {/* content: year + label, beyond the stem tip */}
+              <div
+                class="vt-content absolute left-0 pr-4"
+                data-dir={up ? "up" : "down"}
+                style={up ? `bottom: ${offset};` : `top: ${offset};`}
+              >
+                <div class="t-h3 text-ink whitespace-nowrap">
+                  {m.club && (
+                    <span
+                      class="inline-block h-1.5 w-1.5 rounded-full bg-gold mr-2 align-middle"
+                      aria-hidden="true"
+                    />
+                  )}
+                  {m.year}
+                </div>
+                <p class="t-caption text-ink/65 max-w-[24ch] mt-2">{m.label}</p>
+              </div>
+            </div>
+          );
+        })
+      }
+
+      <!-- trailing pad -->
+      <div class="shrink-0 w-[50vw] h-full" aria-hidden="true"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* no-JS / reduced-motion: the pin reads as a horizontally scrollable strip */
+  html:not(.has-motion) #valley-pin {
+    height: auto;
+    overflow-x: auto;
+  }
+  html:not(.has-motion) #valley-track {
+    position: relative;
+    height: 70vh;
+  }
+  html:not(.has-motion) .vt-content {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduced) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const pin = document.getElementById("valley-pin");
+    const track = document.getElementById("valley-track");
+
+    if (pin && track) {
+      const endX = () => track.scrollWidth - window.innerWidth;
+
+      const tl = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: {
+          trigger: pin,
+          start: "top top",
+          end: () => "+=" + endX() * 1.1,
+          pin: true,
+          scrub: 0.5,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+      tl.to(track, { x: () => -endX() }, 0);
+      // the gold line draws left → right in lockstep with the slide
+      tl.to("#valley-progress", { width: () => track.scrollWidth + "px" }, 0);
+
+      // per-milestone pop as the marker passes each stem
+      gsap.utils.toArray<HTMLElement>(".vt-content").forEach((el) => {
+        const upward = el.dataset.dir === "up";
+        gsap.set(el, { autoAlpha: 0.25, y: upward ? 10 : -10 });
+        gsap.to(el, {
+          autoAlpha: 1,
+          y: 0,
+          duration: 0.5,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: el.closest(".vt-cell") as HTMLElement,
+            containerAnimation: tl,
+            start: "left 42%",
+            toggleActions: "play none none reverse",
+          },
+        });
+      });
+
+      // debounced refresh keeps geometry honest across resizes
+      let resizeTimer: ReturnType<typeof setTimeout>;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => ScrollTrigger.refresh(), 200);
+      });
+    }
+  }
+</script>
