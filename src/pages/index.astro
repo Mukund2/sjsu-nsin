@@ -5,11 +5,9 @@ import DomainConsole from "../components/home/DomainConsole";
 import ConsoleSections from "../components/home/ConsoleSections";
 import { domains } from "../data/domains";
 
-const domainProps = domains.map(({ slug, name, designator, index, accent, accentSoft, tagline, hero }) => ({
+const domainProps = domains.map(({ slug, name, accent, accentSoft, tagline, hero }) => ({
   slug,
   name,
-  designator,
-  index,
   accent,
   accentSoft,
   tagline,
@@ -19,6 +17,6 @@ const domainProps = domains.map(({ slug, name, designator, index, accent, accent
 
 <BaseLayout theme="console">
   <DomainConsole client:load domains={domainProps} />
-  <ConsoleSections client:load domains={domainProps} />
+  <ConsoleSections client:load />
   <ConsoleFooter />
 </BaseLayout>

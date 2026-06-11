@@ -50,7 +50,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen" class:list={[theme === "console" ? "bg-near-black" : "bg-white"]} data-theme={theme === "console" ? "console" : undefined}>
+  <body class="min-h-screen" class:list={[theme === "console" ? "bg-ink" : "bg-white"]} data-theme={theme === "console" ? "console" : undefined}>
     <Navbar theme={theme} />
     <main>
       <slot />

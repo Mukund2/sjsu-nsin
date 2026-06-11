@@ -35,8 +35,8 @@ export const domains: Domain[] = [
     name: "Air",
     designator: "DOM-AIR",
     index: "01",
-    accent: "#45D8FF",
-    accentSoft: "rgba(69, 216, 255, 0.14)",
+    accent: "#8CA8BF",
+    accentSoft: "rgba(140, 168, 191, 0.16)",
     tagline: "Contest the sky without putting a pilot in it.",
     intro:
       "Air superiority used to mean the most expensive jet. Now it means thousands of cheap, smart, autonomous things that can see, decide, and act faster than anything with a cockpit. That shift is happening right now — and it is being built by software people.",
@@ -82,8 +82,8 @@ export const domains: Domain[] = [
     name: "Sea",
     designator: "DOM-SEA",
     index: "02",
-    accent: "#2DD4BF",
-    accentSoft: "rgba(45, 212, 191, 0.14)",
+    accent: "#7FA493",
+    accentSoft: "rgba(127, 164, 147, 0.16)",
     tagline: "The Pacific is the largest chessboard on Earth.",
     intro:
       "Seventy percent of the planet is ocean, and almost everything America depends on crosses it. The next generation of seapower is unmanned, autonomous, and built in software-speed iterations — vessels that patrol for months with nobody aboard.",
@@ -129,8 +129,8 @@ export const domains: Domain[] = [
     name: "Space",
     designator: "DOM-SPC",
     index: "03",
-    accent: "#A78BFA",
-    accentSoft: "rgba(167, 139, 250, 0.14)",
+    accent: "#C98C5C",
+    accentSoft: "rgba(201, 140, 92, 0.16)",
     tagline: "Orbit is infrastructure now. Someone has to defend it.",
     intro:
       "GPS, weather, banking, communications — modern life runs through orbit, and so does modern defense. Space went from a science project to contested infrastructure in a decade, and the people securing it are launching from the West Coast.",
@@ -176,8 +176,8 @@ export const domains: Domain[] = [
     name: "Cyber",
     designator: "DOM-CYB",
     index: "04",
-    accent: "#B6FF2E",
-    accentSoft: "rgba(182, 255, 46, 0.12)",
+    accent: "#A8A06A",
+    accentSoft: "rgba(168, 160, 106, 0.16)",
     tagline: "The first shots of the next conflict will be fired in milliseconds.",
     intro:
       "Power grids, water systems, hospitals, and ports run on decades-old software that was never meant to face a nation-state. Cyber is the one domain where a student with a laptop is already holding operational-grade equipment.",

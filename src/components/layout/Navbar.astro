@@ -1,6 +1,4 @@
 ---
-import { domains } from "../../data/domains";
-
 interface Props {
   theme?: "light" | "console";
 }
@@ -33,44 +31,21 @@ const currentPath = Astro.url.pathname;
       />
       <span class:list={[
         "text-[12px] uppercase tracking-[0.12em] font-medium hidden lg:block leading-tight",
-        isConsole ? "text-white" : "text-near-black"
+        isConsole ? "text-paper" : "text-near-black"
       ]}>
         National Security Innovation Network<br />
-        <span class:list={[isConsole ? "text-white/50" : "text-mid-gray"]}>at San Jos&eacute; State University</span>
+        <span class:list={[isConsole ? "text-paper/50" : "text-mid-gray"]}>at San Jos&eacute; State University</span>
       </span>
     </a>
 
-    <div class="hidden md:flex items-center gap-7 pr-2">
-      {isConsole && (
-        <div class="flex items-center gap-5 border-r border-white/15 pr-7">
-          {domains.map(d => {
-            const href = `/domains/${d.slug}`;
-            const active = currentPath === href || currentPath === href + "/";
-            return (
-              <a
-                href={href}
-                class:list={[
-                  "decal transition-colors duration-200 flex items-center gap-1.5",
-                  active ? "text-white" : "text-white/50 hover:text-white"
-                ]}
-              >
-                <span
-                  class="inline-block w-1.5 h-1.5 rounded-full"
-                  style={`background-color: ${active ? d.accent : "rgba(255,255,255,0.25)"}`}
-                ></span>
-                {d.name}
-              </a>
-            );
-          })}
-        </div>
-      )}
+    <div class="hidden md:flex items-center gap-8 pr-2">
       {navLinks.map(link => (
         <a
           href={link.href}
           class:list={[
-            "text-[13px] uppercase tracking-[0.15em] transition-colors duration-300",
+            "text-[14px] transition-colors duration-300",
             isConsole
-              ? (currentPath === link.href ? "text-white font-medium" : "text-white/60 hover:text-white")
+              ? (currentPath === link.href ? "text-paper font-medium" : "text-paper/60 hover:text-paper")
               : (currentPath === link.href || currentPath === link.href + "/" ? "text-near-black font-medium" : "text-mid-gray hover:text-near-black")
           ]}
         >
@@ -82,13 +57,13 @@ const currentPath = Astro.url.pathname;
         target="_blank"
         rel="noopener noreferrer"
         class:list={[
-          "text-[12px] uppercase tracking-[0.15em] font-medium px-4 py-2 transition-colors duration-200",
+          "text-[14px] font-medium px-4 py-2 transition-colors duration-200",
           isConsole
-            ? "bg-white text-near-black hover:bg-light-gray"
+            ? "bg-paper text-ink hover:bg-paper-dim"
             : "bg-near-black text-white hover:bg-dark-gray"
         ]}
       >
-        Apply &mdash; Cohort 01
+        Apply
       </a>
     </div>
 
@@ -96,7 +71,7 @@ const currentPath = Astro.url.pathname;
       id="mobile-menu-btn"
       class:list={[
         "md:hidden p-2 transition-colors duration-300",
-        isConsole ? "text-white" : "text-near-black"
+        isConsole ? "text-paper" : "text-near-black"
       ]}
       aria-label="Toggle menu"
     >
@@ -108,24 +83,15 @@ const currentPath = Astro.url.pathname;
 
   <div id="mobile-menu" class:list={[
     "hidden md:hidden border-t",
-    isConsole ? "border-white/10 bg-near-black" : "border-light-gray bg-white"
+    isConsole ? "border-paper/10 bg-ink" : "border-light-gray bg-white"
   ]}>
     <div class="px-6 py-5 flex flex-col gap-4">
-      {isConsole && domains.map(d => (
-        <a
-          href={`/domains/${d.slug}`}
-          class="decal text-white/70 hover:text-white transition-colors flex items-center gap-2"
-        >
-          <span class="inline-block w-1.5 h-1.5 rounded-full" style={`background-color: ${d.accent}`}></span>
-          {d.designator} &mdash; {d.name}
-        </a>
-      ))}
       {navLinks.map(link => (
         <a
           href={link.href}
           class:list={[
-            "text-[13px] uppercase tracking-[0.15em] transition-colors",
-            isConsole ? "text-white/70 hover:text-white" : "text-dark-gray hover:text-near-black"
+            "text-[14px] transition-colors",
+            isConsole ? "text-paper/70 hover:text-paper" : "text-dark-gray hover:text-near-black"
           ]}
         >
           {link.label}
@@ -136,11 +102,11 @@ const currentPath = Astro.url.pathname;
         target="_blank"
         rel="noopener noreferrer"
         class:list={[
-          "text-[12px] uppercase tracking-[0.15em] font-medium px-4 py-2.5 text-center",
-          isConsole ? "bg-white text-near-black" : "bg-near-black text-white"
+          "text-[14px] font-medium px-4 py-2.5 text-center",
+          isConsole ? "bg-paper text-ink" : "bg-near-black text-white"
         ]}
       >
-        Apply &mdash; Cohort 01
+        Apply
       </a>
     </div>
   </div>
@@ -160,10 +126,10 @@ const currentPath = Astro.url.pathname;
     border-bottom: 1px solid transparent;
   }
   .navbar-console.is-scrolled {
-    background-color: rgb(10 10 10 / 0.75);
+    background-color: rgb(35 32 32 / 0.8);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgb(255 255 255 / 0.08);
+    border-bottom: 1px solid rgb(242 237 227 / 0.08);
   }
 </style>
 

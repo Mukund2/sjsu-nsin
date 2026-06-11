@@ -19,97 +19,73 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
 <BaseLayout title={`${domain.name} — SJSU NSIN`} description={domain.tagline} theme="console">
   <div style={`--accent: ${domain.accent};`}>
 
-    <!-- 1 / HERO -->
+    <!-- hero -->
     <section class="relative min-h-screen flex flex-col justify-end overflow-hidden">
       <img
         src={domain.hero}
         alt={`${domain.name} domain`}
         class="absolute inset-0 h-full w-full object-cover"
       />
-      <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/30"></div>
-      <div class="absolute inset-0" style={`background-color: ${domain.accentSoft};`}></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/25"></div>
 
       <div class="relative max-w-7xl mx-auto w-full px-6 pb-24 pt-40">
-        <p class="decal text-accent mb-6">
-          [ {domain.designator} // OPERATIONAL DOMAIN {domain.index} / 04 ]
-        </p>
-        <h1 class="font-display font-normal uppercase text-white text-7xl sm:text-8xl md:text-9xl leading-none">
+        <h1 class="font-display font-normal text-paper text-7xl sm:text-8xl md:text-9xl leading-none">
           {domain.name}
         </h1>
-        <p class="mt-6 text-xl sm:text-2xl text-white/80 max-w-2xl">
+        <p class="mt-6 text-xl sm:text-2xl text-paper/80 max-w-2xl">
           {domain.tagline}
         </p>
       </div>
-
-      <p class="hidden md:block absolute bottom-8 right-8 decal text-white/30">
-        [ FEED // {domain.slug.toUpperCase()}-CAM-01 ]
-      </p>
-
-      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-3 pb-6">
-        <span class="decal text-white/30">SCROLL</span>
-        <span class="block w-px h-10 bg-white/30"></span>
-      </div>
     </section>
 
-    <!-- 2 / INTRO STRIP -->
-    <section class="py-24">
-      <div class="max-w-4xl mx-auto px-6">
-        <p class="decal text-accent mb-8">[ SITREP ]</p>
-        <p class="text-2xl sm:text-3xl font-display text-white leading-snug">
+    <!-- intro + problems — warm paper scheme -->
+    <section class="bg-paper">
+      <div class="max-w-4xl mx-auto px-6 pt-24 pb-20">
+        <p class="text-2xl sm:text-3xl font-display text-ink leading-snug">
           {domain.intro}
         </p>
       </div>
-    </section>
-
-    <!-- 3 / THE PROBLEM -->
-    <section class="py-24 border-t border-white/10">
-      <div class="max-w-7xl mx-auto px-6">
-        <p class="decal text-accent mb-6">[ THE PROBLEM ]</p>
-        <h2 class="font-display font-normal text-white text-4xl sm:text-5xl mb-16">
-          What&rsquo;s actually broken.
+      <div class="max-w-7xl mx-auto px-6 pb-24">
+        <h2 class="font-display font-normal text-ink text-4xl sm:text-5xl mb-14">
+          What&rsquo;s actually broken
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
           {domain.problems.map((problem) => (
-            <div class="border-t border-white/10 hover:border-accent transition-colors duration-300 pt-6">
-              <p class="decal text-white/30 mb-4">{domain.designator}-P{problem.num}</p>
-              <h3 class="text-xl font-display font-normal text-white mb-3">{problem.title}</h3>
-              <p class="text-sm text-white/50 leading-relaxed">{problem.desc}</p>
+            <div class="border-t border-ink/20 pt-6">
+              <h3 class="text-xl font-display font-normal text-ink mb-3">{problem.title}</h3>
+              <p class="text-[15px] text-ink/65 leading-relaxed">{problem.desc}</p>
             </div>
           ))}
         </div>
       </div>
     </section>
 
-    <!-- 4 / WHAT YOU BUILD -->
-    <section class="py-24 border-t border-white/10">
+    <!-- what you build -->
+    <section class="py-24">
       <div class="max-w-7xl mx-auto px-6">
-        <p class="decal text-accent mb-6">[ WHAT YOU BUILD ]</p>
-        <h2 class="font-display font-normal text-white text-4xl sm:text-5xl mb-20">
-          Your hands on real problems.
+        <h2 class="font-display font-normal text-paper text-4xl sm:text-5xl mb-16">
+          What you&rsquo;d build here
         </h2>
         <div class="flex flex-col gap-24">
           {domain.builds.map((build, i) => (
             <div class="grid md:grid-cols-2 gap-10 items-center">
-              <div class:list={["group relative border border-white/10", i % 2 === 1 && "md:order-2"]}>
+              <div class:list={[i % 2 === 1 && "md:order-2"]}>
                 <img
                   src={build.image}
                   alt={build.title}
-                  class="mono-img aspect-[4/3] w-full object-cover"
+                  class="aspect-[4/3] w-full object-cover"
                 />
-                <span class="decal text-white/80 absolute bottom-4 left-4 bg-black/60 px-3 py-1.5">
-                  [ {build.tag} ]
-                </span>
               </div>
               <div class:list={[i % 2 === 1 && "md:order-1"]}>
-                <h3 class="text-3xl font-display font-normal text-white mb-5">{build.title}</h3>
-                <p class="text-white/50 leading-relaxed mb-8">{build.desc}</p>
+                <h3 class="text-3xl font-display font-normal text-paper mb-5">{build.title}</h3>
+                <p class="text-paper/60 leading-relaxed mb-8">{build.desc}</p>
                 <a
                   href={APPLY_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="decal text-accent border-b border-accent pb-1 inline-block"
+                  class="text-[14px] text-paper border-b border-paper/40 pb-1 hover:border-paper transition-colors"
                 >
-                  Discover &rarr;
+                  Work on this &rarr;
                 </a>
               </div>
             </div>
@@ -118,19 +94,18 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
       </div>
     </section>
 
-    <!-- 5 / THE INDUSTRY -->
-    <section class="py-24 border-t border-white/10">
+    <!-- industry -->
+    <section class="py-24 border-t border-paper/10">
       <div class="max-w-7xl mx-auto px-6">
-        <p class="decal text-accent mb-6">[ THE INDUSTRY ]</p>
-        <h2 class="font-display font-normal text-white text-4xl sm:text-5xl mb-6">
-          Who works on this.
+        <h2 class="font-display font-normal text-paper text-4xl sm:text-5xl mb-6">
+          Who works on this
         </h2>
-        <p class="text-white/50 leading-relaxed max-w-2xl mb-16">{domain.companiesNote}</p>
+        <p class="text-paper/60 leading-relaxed max-w-2xl mb-14">{domain.companiesNote}</p>
         <p class="leading-tight">
           {domain.companies.map((company, i) => (
             <>
-              {i > 0 && <span class="decal text-accent mx-3 sm:mx-5 align-middle">/</span>}
-              <span class="text-2xl sm:text-4xl font-display text-white/35 hover:text-white transition-colors">
+              {i > 0 && <span class="mx-3 sm:mx-5 align-middle text-2xl sm:text-3xl font-display" style={`color: ${domain.accent};`}>/</span>}
+              <span class="text-2xl sm:text-4xl font-display text-paper/40 hover:text-paper transition-colors">
                 {company}
               </span>
             </>
@@ -139,42 +114,44 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
       </div>
     </section>
 
-    <!-- 6 / NEXT DOMAIN -->
+    <!-- next domain -->
     <a
       href={`/domains/${next.slug}`}
-      class="next-domain-band block border-y border-white/10 transition-colors duration-300"
+      class="next-domain-band block border-y border-paper/10 transition-colors duration-300"
       style={`--next-accent: ${next.accent}; --next-accent-soft: ${next.accentSoft};`}
     >
-      <div class="max-w-7xl mx-auto px-6 py-16 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
-        <span class="decal text-white/40">[ NEXT DOMAIN ]</span>
-        <span class="next-domain-name font-display font-normal uppercase text-white text-5xl transition-colors duration-300">
+      <div class="max-w-7xl mx-auto px-6 py-16 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-6">
+        <span class="text-[14px] text-paper/50">Next domain</span>
+        <span class="next-domain-name font-display font-normal text-paper text-5xl transition-colors duration-300">
           {next.name} &rarr;
         </span>
       </div>
     </a>
 
-    <!-- 7 / COHORT CTA -->
-    <section class="py-32">
+    <!-- cohort CTA -->
+    <section class="bg-paper py-28">
       <div class="max-w-4xl mx-auto px-6 text-center">
-        <p class="decal text-accent mb-8">[ COHORT-01 // APPLICATIONS OPEN &mdash; FALL 2026 ]</p>
-        <h2 class="font-display font-normal text-white text-5xl sm:text-6xl mb-6">
+        <h2 class="font-display font-normal text-ink text-5xl sm:text-6xl mb-6">
           Join the first cohort.
         </h2>
-        <p class="text-white/50 mb-12">No experience required. Conviction required.</p>
+        <p class="text-ink/60 mb-12 max-w-xl mx-auto">
+          Applications open fall 2026. No experience required &mdash; whatever you
+          study, there's a seat.
+        </p>
         <a
           href={APPLY_URL}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block bg-white text-near-black px-10 py-3.5 uppercase tracking-[0.15em] text-[13px] hover:bg-accent transition-colors duration-300"
+          class="inline-block bg-ink text-paper px-9 py-3.5 text-[14px] font-medium hover:bg-ink-deep transition-colors"
         >
-          Apply Now
+          Apply to Cohort 01
         </a>
       </div>
     </section>
 
-    <!-- 8 / GIANT SLOGAN -->
-    <section class="py-28 overflow-hidden">
-      <p class="font-display text-accent text-[14vw] leading-none text-center whitespace-nowrap">
+    <!-- closing slogan -->
+    <section class="py-24 px-6 overflow-hidden">
+      <p class="font-display text-[11vw] sm:text-[9vw] leading-none text-center" style={`color: ${domain.accent};`}>
         {domain.slogan}
       </p>
     </section>

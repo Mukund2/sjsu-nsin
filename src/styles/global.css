@@ -13,6 +13,12 @@
   --color-sjsu-blue: #0055A2;
   --color-sjsu-gold: #E5A823;
 
+  /* console (dark editorial) palette — warm ink + paper, never pure black/white */
+  --color-ink: #232020;
+  --color-ink-deep: #1B1918;
+  --color-paper: #F2EDE3;
+  --color-paper-dim: #E5DECF;
+
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Instrument Serif", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
@@ -43,13 +49,13 @@
     color: var(--color-white);
   }
 
-  /* Console (dark) theme — homepage + domain pages.
-     The brand shell stays monochrome; color only ever comes from
-     the active domain's accent via the --accent custom property. */
+  /* Console (dark editorial) theme — homepage + domain pages.
+     Warm ink, warm paper, photography in full color. The --accent
+     property carries the active domain's hue. */
   body[data-theme="console"] {
-    background-color: var(--color-near-black);
-    color: #a3a3a3;
-    --accent: #ffffff;
+    background-color: var(--color-ink);
+    color: #aaa298;
+    --accent: var(--color-paper);
   }
 
   body[data-theme="console"] h1,
@@ -58,12 +64,12 @@
   body[data-theme="console"] h4,
   body[data-theme="console"] h5,
   body[data-theme="console"] h6 {
-    color: var(--color-white);
+    color: var(--color-paper);
   }
 
   body[data-theme="console"] ::selection {
-    background-color: var(--accent);
-    color: var(--color-near-black);
+    background-color: var(--color-paper);
+    color: var(--color-ink);
   }
 }
 
@@ -76,21 +82,5 @@
   }
   .border-accent {
     border-color: var(--accent);
-  }
-  /* mono eyebrow label: [LIKE-THIS] */
-  .decal {
-    font-family: var(--font-mono);
-    font-size: 0.6875rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-  }
-  /* grayscale until interacted with — color belongs to the domain */
-  .mono-img {
-    filter: grayscale(1) contrast(1.05);
-    transition: filter 0.6s ease;
-  }
-  .group:hover .mono-img,
-  .mono-img:hover {
-    filter: grayscale(0) contrast(1);
   }
 }
