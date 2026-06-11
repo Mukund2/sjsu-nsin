@@ -4,7 +4,6 @@ interface DomainLite {
   slug: string;
   name: string;
   accent: string;
-  accentSoft: string;
   tagline: string;
   hero: string;
 }
@@ -13,7 +12,7 @@ const WIPE_MS = 850;
 
 export default function DomainConsole({ domains }: { domains: DomainLite[] }) {
   // committed = the domain currently shown; incoming = mid-wipe
-  const [committed, setCommitted] = useState<DomainLite | null>(null);
+  const [committed, setCommitted] = useState<DomainLite>(domains[0]);
   const [incoming, setIncoming] = useState<DomainLite | null>(null);
   const [wiping, setWiping] = useState(false);
   const wipeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -21,7 +20,7 @@ export default function DomainConsole({ domains }: { domains: DomainLite[] }) {
   const active = incoming ?? committed;
 
   const select = (d: DomainLite) => {
-    if (active?.slug === d.slug) return;
+    if (active.slug === d.slug) return;
     if (wipeTimer.current) clearTimeout(wipeTimer.current);
     setIncoming(d);
     setWiping(false);
@@ -39,26 +38,9 @@ export default function DomainConsole({ domains }: { domains: DomainLite[] }) {
   }, []);
 
   return (
-    <div
-      className="relative min-h-screen w-full overflow-hidden bg-ink flex flex-col"
-      style={{ ["--accent" as string]: active?.accent ?? "#F2EDE3" }}
-    >
-      {/* resting state */}
-      <video
-        src="/videos/mechazilla-catch.mp4"
-        autoPlay
-        muted
-        loop
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-
+    <div className="relative min-h-[88vh] w-full overflow-hidden bg-ink flex flex-col">
       {/* committed domain */}
-      {committed && (
-        <div className="absolute inset-0">
-          <img src={committed.hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
-        </div>
-      )}
+      <img src={committed.hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
 
       {/* incoming domain, revealed by the top-to-bottom wipe */}
       {incoming && (
@@ -66,7 +48,7 @@ export default function DomainConsole({ domains }: { domains: DomainLite[] }) {
           className="absolute inset-0"
           style={{
             clipPath: wiping ? "inset(0 0 0% 0)" : "inset(0 0 100% 0)",
-            transition: `clip-path ${WIPE_MS}ms cubic-bezier(0.77, 0, 0.18, 1)`,
+            transition: `clip-path ${WIPE_MS}ms cubic-bezier(0.87, 0, 0.13, 1)`,
           }}
         >
           <img src={incoming.hero} alt="" className="absolute inset-0 w-full h-full object-cover" />
@@ -80,66 +62,48 @@ export default function DomainConsole({ domains }: { domains: DomainLite[] }) {
           style={{
             backgroundColor: incoming.accent,
             top: wiping ? "100%" : "0%",
-            transition: `top ${WIPE_MS}ms cubic-bezier(0.77, 0, 0.18, 1)`,
+            transition: `top ${WIPE_MS}ms cubic-bezier(0.87, 0, 0.13, 1)`,
           }}
         />
       )}
 
       {/* legibility gradient */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-black/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/20 to-ink/30" />
 
       {/* content */}
-      <div className="relative z-10 flex-1 flex flex-col px-5 sm:px-8 pt-28 pb-8 max-w-[1400px] w-full mx-auto">
-        <div className="flex-1 flex flex-col justify-center py-10">
-          {!active ? (
-            <div className="max-w-3xl">
-              <h1 className="text-5xl sm:text-6xl md:text-7xl text-paper leading-[1.05] font-display tracking-tight">
-                Every domain needs builders.
-              </h1>
-              <p className="mt-6 text-paper/70 text-lg sm:text-xl max-w-xl leading-relaxed">
-                The next era of national security runs on people who can ship.
-                Pick where you'd start.
-              </p>
-            </div>
-          ) : (
-            <div key={active.slug} className="max-w-3xl">
-              <h1 className="text-7xl sm:text-8xl md:text-9xl text-paper leading-[0.95] font-display tracking-tight">
-                {active.name}
-              </h1>
-              <p className="mt-6 text-paper/80 text-lg sm:text-2xl max-w-xl leading-relaxed">
-                {active.tagline}
-              </p>
-              <a
-                href={`/domains/${active.slug}`}
-                className="mt-9 inline-block bg-paper text-ink px-7 py-3.5 text-[14px] font-medium hover:bg-paper-dim transition-colors"
-              >
-                Explore {active.name} &rarr;
-              </a>
-            </div>
-          )}
+      <div className="relative z-10 flex-1 flex flex-col px-5 sm:px-10 pt-16 pb-8 max-w-[1500px] w-full mx-auto">
+        <div className="flex-1 flex flex-col justify-end pb-10" key={active.slug}>
+          <h3 className="t-h1 text-paper">{active.name}</h3>
+          <p className="t-lede mt-4 text-paper/80 max-w-[36ch]">{active.tagline}</p>
+          <a
+            href={`/domains/${active.slug}`}
+            className="press mt-8 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
+          >
+            Explore {active.name} &rarr;
+          </a>
         </div>
 
         {/* domain selector */}
-        <div className="grid grid-cols-2 md:grid-cols-4 border-t border-paper/20">
+        <div className="grid grid-cols-2 md:grid-cols-4 border-t border-paper/25">
           {domains.map((d) => {
-            const isActive = active?.slug === d.slug;
+            const isActive = active.slug === d.slug;
             return (
               <button
                 key={d.slug}
                 onClick={() => select(d)}
-                className="group relative text-left px-1 pt-4 pb-5 cursor-pointer"
+                className="group relative text-left pr-4 pt-4 pb-5 cursor-pointer"
               >
                 <span
-                  className="absolute -top-px left-0 right-0 h-px transition-colors duration-300"
+                  className="absolute -top-px left-0 right-4 h-px transition-colors duration-300"
                   style={{ backgroundColor: isActive ? d.accent : "transparent" }}
                 />
                 <span
-                  className="block text-2xl sm:text-[1.7rem] font-display tracking-tight transition-colors duration-300"
-                  style={{ color: isActive ? d.accent : "rgba(242,237,227,0.75)" }}
+                  className="t-h3 block transition-colors duration-300"
+                  style={{ color: isActive ? d.accent : "rgba(242,237,227,0.7)" }}
                 >
                   {d.name}
                 </span>
-                <span className="mt-0.5 block text-[13px] text-paper/40 group-hover:text-paper/65 transition-colors leading-snug pr-4 hidden sm:block">
+                <span className="t-caption mt-1 text-paper/45 group-hover:text-paper/70 transition-colors leading-snug hidden sm:block">
                   {d.tagline}
                 </span>
               </button>

@@ -18,6 +18,7 @@
   --color-ink-deep: #1B1918;
   --color-paper: #F2EDE3;
   --color-paper-dim: #E5DECF;
+  --color-gold: #C9A958;
 
   --font-sans: "Geist", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Instrument Serif", Georgia, serif;
@@ -82,5 +83,121 @@
   }
   .border-accent {
     border-color: var(--accent);
+  }
+}
+
+/* ── Golden Hour type scale ─────────────────────────────────────────
+   The rule: as size grows, line-height and tracking tighten. */
+@layer components {
+  .t-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(3rem, 1.2rem + 8vw, 8.5rem);
+    line-height: 0.96;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+  }
+  .t-h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.6rem, 1.6rem + 4.2vw, 5.25rem);
+    line-height: 1.0;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+  .t-h2 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2rem, 1.4rem + 2.6vw, 3.75rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .t-h3 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.25rem);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  .t-lede {
+    font-size: clamp(1.2rem, 1rem + 0.9vw, 1.625rem);
+    line-height: 1.35;
+    letter-spacing: -0.005em;
+    text-wrap: balance;
+  }
+  .t-body {
+    font-size: clamp(1.0625rem, 1rem + 0.2vw, 1.175rem);
+    line-height: 1.55;
+    max-width: 65ch;
+  }
+  .t-caption {
+    font-size: 0.9375rem;
+    line-height: 1.4;
+  }
+  .t-label {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  /* section schemes — flips between grounds, seams instead of cuts */
+  .scheme-ink {
+    background-color: var(--color-ink);
+    color: rgb(242 237 227 / 0.62);
+  }
+  .scheme-ink :is(h1, h2, h3, h4) { color: var(--color-paper); }
+  .scheme-paper {
+    background-color: var(--color-paper);
+    color: rgb(35 32 32 / 0.68);
+  }
+  .scheme-paper :is(h1, h2, h3, h4) { color: var(--color-ink); }
+
+  .seam-to-paper {
+    height: 100px;
+    margin-top: -100px;
+    position: relative;
+    pointer-events: none;
+    background: linear-gradient(to top, var(--color-paper), transparent);
+  }
+  .seam-to-ink {
+    height: 100px;
+    margin-top: -100px;
+    position: relative;
+    pointer-events: none;
+    background: linear-gradient(to top, var(--color-ink), transparent);
+  }
+
+  /* the dusk gradient — hero only, used once */
+  .dusk {
+    background: linear-gradient(178deg, #1B1918 0%, #3A3330 28%, #6E5A40 55%, #C9A958 88%, #C98C72 100%);
+  }
+
+  /* film grain — the material that unifies photo and flat color */
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='3' seed='7'/%3E%3CfeColorMatrix type='matrix' values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.16 0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* motion: line-mask reveal targets (gated on .has-motion so no-JS never hides text) */
+  .has-motion [data-reveal] { visibility: hidden; }
+  .has-motion [data-reveal].is-split { visibility: visible; }
+
+  /* buttons shrink, never grow */
+  .press {
+    transition: transform 0.125s ease-in-out, background-color 0.2s ease;
+  }
+  .press:hover { transform: scale(0.975); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .has-motion [data-reveal] { visibility: visible; }
   }
 }

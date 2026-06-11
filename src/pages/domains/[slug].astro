@@ -29,10 +29,10 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/25"></div>
 
       <div class="relative max-w-7xl mx-auto w-full px-6 pb-24 pt-40">
-        <h1 class="font-display font-normal text-paper text-7xl sm:text-8xl md:text-9xl leading-none">
+        <h1 class="t-display text-paper">
           {domain.name}
         </h1>
-        <p class="mt-6 text-xl sm:text-2xl text-paper/80 max-w-2xl">
+        <p class="t-lede mt-6 text-paper/80 max-w-2xl">
           {domain.tagline}
         </p>
       </div>
@@ -41,12 +41,12 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
     <!-- intro + problems — warm paper scheme -->
     <section class="bg-paper">
       <div class="max-w-4xl mx-auto px-6 pt-24 pb-20">
-        <p class="text-2xl sm:text-3xl font-display text-ink leading-snug">
+        <p class="t-h3 text-ink">
           {domain.intro}
         </p>
       </div>
       <div class="max-w-7xl mx-auto px-6 pb-24">
-        <h2 class="font-display font-normal text-ink text-4xl sm:text-5xl mb-14">
+        <h2 class="t-h2 text-ink mb-14">
           What&rsquo;s actually broken
         </h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -63,7 +63,7 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
     <!-- what you build -->
     <section class="py-24">
       <div class="max-w-7xl mx-auto px-6">
-        <h2 class="font-display font-normal text-paper text-4xl sm:text-5xl mb-16">
+        <h2 class="t-h2 text-paper mb-16" data-reveal>
           What you&rsquo;d build here
         </h2>
         <div class="flex flex-col gap-24">
@@ -77,7 +77,7 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
                 />
               </div>
               <div class:list={[i % 2 === 1 && "md:order-1"]}>
-                <h3 class="text-3xl font-display font-normal text-paper mb-5">{build.title}</h3>
+                <h3 class="t-h3 text-paper mb-5">{build.title}</h3>
                 <p class="text-paper/60 leading-relaxed mb-8">{build.desc}</p>
                 <a
                   href={APPLY_URL}
@@ -97,7 +97,7 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
     <!-- industry -->
     <section class="py-24 border-t border-paper/10">
       <div class="max-w-7xl mx-auto px-6">
-        <h2 class="font-display font-normal text-paper text-4xl sm:text-5xl mb-6">
+        <h2 class="t-h2 text-paper mb-6" data-reveal>
           Who works on this
         </h2>
         <p class="text-paper/60 leading-relaxed max-w-2xl mb-14">{domain.companiesNote}</p>
@@ -122,7 +122,7 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
     >
       <div class="max-w-7xl mx-auto px-6 py-16 flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-6">
         <span class="text-[14px] text-paper/50">Next domain</span>
-        <span class="next-domain-name font-display font-normal text-paper text-5xl transition-colors duration-300">
+        <span class="next-domain-name t-h1 text-paper transition-colors duration-300">
           {next.name} &rarr;
         </span>
       </div>
@@ -131,7 +131,7 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
     <!-- cohort CTA -->
     <section class="bg-paper py-28">
       <div class="max-w-4xl mx-auto px-6 text-center">
-        <h2 class="font-display font-normal text-ink text-5xl sm:text-6xl mb-6">
+        <h2 class="t-h1 text-ink mb-6">
           Join the first cohort.
         </h2>
         <p class="text-ink/60 mb-12 max-w-xl mx-auto">
@@ -151,7 +151,7 @@ const APPLY_URL = "https://forms.gle/9MLweCMRaaTkrEkGA";
 
     <!-- closing slogan -->
     <section class="py-24 px-6 overflow-hidden">
-      <p class="font-display text-[11vw] sm:text-[9vw] leading-none text-center" style={`color: ${domain.accent};`}>
+      <p class="font-display text-[10vw] leading-none tracking-[-0.03em] text-center text-balance" style={`color: ${domain.accent};`}>
         {domain.slogan}
       </p>
     </section>

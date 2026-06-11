@@ -55,5 +55,40 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     <main>
       <slot />
     </main>
+    {theme === "console" && <div class="grain" aria-hidden="true"></div>}
+    {theme === "console" && (
+      <script>
+        import Lenis from "lenis";
+        import gsap from "gsap";
+        import { ScrollTrigger } from "gsap/ScrollTrigger";
+        import { SplitText } from "gsap/SplitText";
+
+        const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        if (!reduced) {
+          document.documentElement.classList.add("has-motion");
+          gsap.registerPlugin(ScrollTrigger, SplitText);
+
+          const lenis = new Lenis();
+          lenis.on("scroll", ScrollTrigger.update);
+          gsap.ticker.add((time) => lenis.raf(time * 1000));
+          gsap.ticker.lagSmoothing(0);
+
+          document.fonts.ready.then(() => {
+            document.querySelectorAll("[data-reveal]").forEach((el) => {
+              const split = new SplitText(el, { type: "lines", mask: "lines" });
+              el.classList.add("is-split");
+              gsap.from(split.lines, {
+                yPercent: 110,
+                duration: 0.9,
+                ease: "power4.out",
+                stagger: 0.06,
+                scrollTrigger: { trigger: el, start: "top 85%", once: true },
+              });
+            });
+            ScrollTrigger.refresh();
+          });
+        }
+      </script>
+    )}
   </body>
 </html>

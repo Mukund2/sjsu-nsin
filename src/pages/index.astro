@@ -2,21 +2,238 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ConsoleFooter from "../components/layout/ConsoleFooter.astro";
 import DomainConsole from "../components/home/DomainConsole";
-import ConsoleSections from "../components/home/ConsoleSections";
 import { domains } from "../data/domains";
 
-const domainProps = domains.map(({ slug, name, accent, accentSoft, tagline, hero }) => ({
+const domainProps = domains.map(({ slug, name, accent, tagline, hero }) => ({
   slug,
   name,
   accent,
-  accentSoft,
   tagline,
   hero,
 }));
+
+const beats = [
+  {
+    year: "1933",
+    line: "The orchards came down, and Moffett Field went up.",
+    sub: "The Navy's Pacific airship base brought the first wave of engineers to the South Bay — twenty years before anyone said “silicon.”",
+    image: "/images/domains/air-3.jpg",
+  },
+  {
+    year: "1956",
+    line: "Lockheed Missiles & Space moves to Sunnyvale.",
+    sub: "For three decades the Valley's largest employer wasn't a chip company. It built submarine-launched missiles and the first reconnaissance satellites.",
+    image: "/images/domains/space-1.jpg",
+  },
+  {
+    year: "1990s",
+    line: "Then the Valley moved on.",
+    sub: "Consumer software paid better and shipped faster. Defense became something the Valley's grandparents did.",
+    image: "/images/mission-control.jpg",
+  },
+  {
+    year: "Today",
+    line: "The hard problems are back.",
+    sub: "Autonomy over every front line. Contested orbit. Cables on the seabed. Infrastructure attacked at machine speed.",
+    image: "/images/domains/sea-1.jpg",
+  },
+  {
+    year: "San José",
+    line: "The talent is still here. What's missing is access.",
+    sub: "NSIN at SJSU connects students to the people working these problems — through real projects, not career fairs.",
+    image: "/images/hackathon.jpg",
+  },
+];
+
+const programs = [
+  {
+    num: "01",
+    title: "Speaker Series",
+    desc: "Defense-tech founders, policymakers, and intelligence veterans on how technology is reshaping national security.",
+    image: "/images/speaker-podium.jpg",
+  },
+  {
+    num: "02",
+    title: "Build & Compete",
+    desc: "Prototype sprints and DoD challenge competitions. The preparation pipeline for the National Security Hackathon.",
+    image: "/images/hackathon.jpg",
+  },
+  {
+    num: "03",
+    title: "Government & Industry Projects",
+    desc: "Paired with defense and intelligence organizations on live problems. Experiential learning, not hypotheticals.",
+    image: "/images/mission-control.jpg",
+  },
+  {
+    num: "04",
+    title: "Policy & Strategy",
+    desc: "AI governance, export controls, and the future of deterrence — argued across engineering, business, and political science.",
+    image: "/images/capitol.jpg",
+  },
+];
 ---
 
 <BaseLayout theme="console">
-  <DomainConsole client:load domains={domainProps} />
-  <ConsoleSections client:load />
+  <!-- ACT 1 — dusk hero. The one display moment, the one gradient. -->
+  <section class="dusk relative min-h-screen flex flex-col justify-end overflow-hidden">
+    <div class="relative max-w-[1500px] w-full mx-auto px-5 sm:px-10 pb-14 sm:pb-20">
+      <h1 class="t-display text-ink max-w-[10ch]" data-reveal>
+        The Valley was built for this.
+      </h1>
+      <div class="mt-8 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-8">
+        <p class="t-lede text-ink/75 max-w-[38ch]" data-reveal>
+          NSIN at San Jos&eacute; State connects students with the national
+          security work Silicon Valley was founded on.
+        </p>
+        <p class="t-caption text-ink/55 shrink-0">Scroll &darr;</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 2 — the pinned essay. One signature sequence per page. -->
+  <section id="essay" class="scheme-ink relative">
+    <div id="essay-pin" class="relative h-screen overflow-hidden">
+      {beats.map((b, i) => (
+        <figure class="essay-beat absolute inset-0 m-0" data-index={i}>
+          <img
+            src={b.image}
+            alt=""
+            class="absolute inset-0 w-full h-full object-cover"
+            loading={i === 0 ? "eager" : "lazy"}
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/45 to-ink/25"></div>
+          <figcaption class="absolute inset-x-0 bottom-0">
+            <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-20 sm:pb-24">
+              <p class="t-label mb-5" style="color: var(--color-gold)">{b.year}</p>
+              <h2 class="t-h1 text-paper max-w-[16ch]">{b.line}</h2>
+              <p class="t-lede mt-5 max-w-[46ch] text-paper/70">{b.sub}</p>
+            </div>
+          </figcaption>
+        </figure>
+      ))}
+      <div class="absolute bottom-0 left-0 right-0 h-px bg-paper/20">
+        <div id="essay-progress" class="h-full w-0" style="background-color: var(--color-gold)"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT 3 — the club: programs, domains, cohort -->
+  <div class="seam-to-paper"></div>
+  <section class="scheme-paper pt-24 sm:pt-32 pb-20 px-5 sm:px-10">
+    <div class="max-w-[1500px] mx-auto">
+      <h2 class="t-h2 max-w-[16ch]" data-reveal>Four ways in.</h2>
+      <p class="t-body mt-5 text-ink/60">
+        Whatever you study, there's a seat. Engineers build, writers argue, and
+        everyone ships something real by the end of the semester.
+      </p>
+      <div class="mt-14 border-t border-ink/15">
+        {programs.map((p) => (
+          <div class="group grid grid-cols-1 md:grid-cols-[64px_1fr_300px] gap-5 md:gap-10 items-center border-b border-ink/15 py-8">
+            <p class="t-h3 text-ink/30">{p.num}</p>
+            <div>
+              <h3 class="t-h3 text-ink">{p.title}</h3>
+              <p class="t-caption mt-2 text-ink/60 max-w-xl">{p.desc}</p>
+            </div>
+            <div class="relative overflow-hidden aspect-video md:h-[150px] md:aspect-auto">
+              <img
+                src={p.image}
+                alt={p.title}
+                loading="lazy"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="scheme-paper px-5 sm:px-10 pb-24 sm:pb-32">
+    <div class="max-w-[1500px] mx-auto">
+      <h2 class="t-h2 max-w-[16ch] mb-12" data-reveal>Pick where you'd start.</h2>
+    </div>
+    <div class="max-w-[1500px] mx-auto">
+      <DomainConsole client:load domains={domainProps} />
+    </div>
+  </section>
+
+  <div class="seam-to-ink"></div>
+  <section class="scheme-ink relative overflow-hidden">
+    <img
+      src="/images/falcon9.jpg"
+      alt=""
+      class="absolute inset-0 w-full h-full object-cover opacity-80"
+      loading="lazy"
+    />
+    <div class="absolute inset-0 bg-ink/55"></div>
+    <div class="relative z-10 py-32 sm:py-44 px-6">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="t-h1 text-paper" data-reveal>Join the first cohort.</h2>
+        <p class="t-lede text-paper/70 mt-7 mb-12 max-w-xl mx-auto">
+          Engineers, designers, and policy thinkers working on problems the
+          country can't afford to ignore. Applications open fall 2026 — no
+          experience required.
+        </p>
+        <a
+          href="https://forms.gle/9MLweCMRaaTkrEkGA"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="press inline-block bg-paper text-ink px-9 py-3.5 text-[15px] font-medium"
+        >
+          Apply to Cohort 01
+        </a>
+      </div>
+    </div>
+  </section>
+
   <ConsoleFooter />
 </BaseLayout>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!reduced) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const beats = gsap.utils.toArray<HTMLElement>(".essay-beat");
+    gsap.set(beats, { autoAlpha: 0 });
+    gsap.set(beats[0], { autoAlpha: 1 });
+
+    const tl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: "#essay-pin",
+        start: "top top",
+        end: "+=" + beats.length * 110 + "%",
+        pin: true,
+        scrub: true,
+        anticipatePin: 1,
+      },
+    });
+
+    beats.forEach((beat, i) => {
+      if (i === 0) return;
+      const caption = beat.querySelector("figcaption");
+      tl.to(beats[i - 1], { autoAlpha: 0, duration: 0.4 }, i);
+      tl.fromTo(beat, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, i + 0.1);
+      if (caption) {
+        tl.fromTo(caption, { y: 48 }, { y: 0, duration: 0.55 }, i + 0.1);
+      }
+    });
+    // hold the thesis beat before unpinning
+    tl.to({}, { duration: 0.7 });
+
+    gsap.to("#essay-progress", {
+      width: "100%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: "#essay-pin",
+        start: "top top",
+        end: "+=" + beats.length * 110 + "%",
+        scrub: true,
+      },
+    });
+  }
+</script>
