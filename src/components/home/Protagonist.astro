@@ -1,0 +1,230 @@
+---
+// The site's persistent protagonist: ONE rendered 3D satellite (three.js
+// primitives, no external models) that rides the whole homepage scroll —
+// drifting past the Earth dive, flying the timeline, pitching down through
+// the descent, dispersing into particles at the cyber dissolve — until the
+// club's paper-plane mark lands above the CTA. The brand resolves out of it.
+---
+
+<div id="hero-object" class="fixed inset-0 pointer-events-none" style="z-index: 45; opacity: 0;" aria-hidden="true">
+  <canvas id="ho-canvas" style="position:absolute; inset:0; width:100%; height:100%;"></canvas>
+  <!-- the club mark, for the landing beat (the 3D object has dissolved by then) -->
+  <svg
+    id="ho-svg"
+    width="150"
+    height="150"
+    viewBox="0 0 100 100"
+    style="position:absolute; left:50%; top:18%; will-change: transform;"
+  >
+    <g id="ho-logo" opacity="0" fill="#C9A958" fill-opacity="0.95">
+      <g transform="translate(-30 -9.8) scale(0.2)">
+        <path d="M396 150 L180 432 L235 448 L318 416 L396 438 Z" />
+        <path d="M404 150 L620 432 L565 448 L482 416 L404 438 Z" />
+      </g>
+    </g>
+  </svg>
+</div>
+
+<style>
+  html:not(.has-motion) #hero-object {
+    display: none;
+  }
+</style>
+
+<script>
+  import * as THREE from "three";
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const tooSmall = window.innerWidth < 768;
+
+  if (!reduced && !tooSmall) {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const obj = "#hero-object";
+    const objEl = document.getElementById("hero-object")!;
+    const canvas = document.getElementById("ho-canvas") as HTMLCanvasElement;
+
+    // ── scene ──
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    const FOV = 38;
+    const camera = new THREE.PerspectiveCamera(FOV, 1, 0.1, 50);
+    camera.position.z = 6;
+    const scene = new THREE.Scene();
+
+    const key = new THREE.DirectionalLight(0xffd9a0, 2.5);
+    key.position.set(3, 2, 4);
+    const rim = new THREE.DirectionalLight(0xf2ede3, 0.8);
+    rim.position.set(-2, 1, -4);
+    const amb = new THREE.AmbientLight(0xf2ede3, 0.18);
+    scene.add(key, rim, amb);
+
+    // ── the satellite, primitives only ──
+    const rig = new THREE.Group(); // scroll-driven orientation
+    const sat = new THREE.Group(); // continuous tumble
+    rig.add(sat);
+    scene.add(rig);
+
+    const mat = (o: THREE.MeshStandardMaterialParameters) =>
+      new THREE.MeshStandardMaterial({ transparent: true, ...o });
+    const foil = () => mat({ color: 0xc9a958, metalness: 0.95, roughness: 0.3 });
+    const gun = () => mat({ color: 0x3a3a3a, metalness: 0.9, roughness: 0.4 });
+    const cell = () => mat({ color: 0x1c2430, metalness: 0.6, roughness: 0.35 });
+
+    const add = (geo: THREE.BufferGeometry, m: THREE.MeshStandardMaterial, x = 0, y = 0, z = 0) => {
+      const mesh = new THREE.Mesh(geo, m);
+      mesh.position.set(x, y, z);
+      sat.add(mesh);
+      return mesh;
+    };
+
+    add(new THREE.BoxGeometry(0.5, 0.42, 0.42), foil()); // gold-foil bus
+    add(new THREE.BoxGeometry(0.1, 0.46, 0.46), gun(), 0.3); // gunmetal end-cap
+    const boomG = new THREE.CylinderGeometry(0.016, 0.016, 0.5, 8);
+    boomG.rotateZ(Math.PI / 2);
+    add(boomG, gun(), -0.5);
+    add(boomG.clone(), gun(), 0.5); // mirrored boom
+    for (const side of [-1, 1]) {
+      add(new THREE.BoxGeometry(0.85, 0.02, 0.42), cell(), side * 1.15); // panel wing
+      for (const dx of [-0.22, 0, 0.22])
+        add(new THREE.BoxGeometry(0.025, 0.026, 0.42), foil(), side * 1.15 + dx); // gold dividers
+    }
+    const dishG = new THREE.SphereGeometry(0.16, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2.6);
+    const dish = add(dishG, foil(), -0.18, 0.36);
+    dish.rotation.x = Math.PI; // open face up
+    add(new THREE.CylinderGeometry(0.014, 0.014, 0.18, 8), gun(), -0.18, 0.24); // dish arm
+    add(new THREE.CylinderGeometry(0.008, 0.008, 0.42, 6), gun(), 0.12, 0.42); // antenna rod
+    const beaconMat = mat({
+      color: 0xc9a958,
+      emissive: 0xc9a958,
+      emissiveIntensity: 1.5,
+      metalness: 0.2,
+      roughness: 0.5,
+    });
+    add(new THREE.SphereGeometry(0.03, 10, 10), beaconMat, 0.12, 0.64);
+
+    // dissolve bookkeeping: original position + a random unit scatter vector
+    const parts = sat.children as THREE.Mesh[];
+    const scatter = parts.map((p) => ({
+      mesh: p,
+      home: p.position.clone(),
+      dir: new THREE.Vector3().randomDirection().multiplyScalar(3 + Math.random() * 3),
+    }));
+
+    // ── beat state, applied every frame ──
+    // px/py = viewport-% position (bob is an additive % offset); bank/pitch in
+    // radians; disperse 0→1 drives the scatter
+    const S = { px: 72, py: 26, bob: 0, bank: 0, pitch: 0, scale: 1, disperse: 0 };
+    let aspect = 1;
+
+    const resize = () => {
+      const w = window.innerWidth, h = window.innerHeight;
+      aspect = w / h;
+      camera.aspect = aspect;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h, false);
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const HALF = Math.tan((FOV / 2) * (Math.PI / 180)) * 6; // world half-height at z=0
+    const clock = new THREE.Clock();
+    const render = () => {
+      requestAnimationFrame(render);
+      if ((gsap.getProperty(obj, "opacity") as number) <= 0.001) return; // parked: skip
+      sat.rotation.x += 0.0012; // continuous life
+      sat.rotation.y += 0.0019;
+      rig.position.x = ((S.px - 50) / 50) * HALF * aspect;
+      rig.position.y = (-(S.py + S.bob - 50) / 50) * HALF;
+      rig.rotation.z = S.bank;
+      rig.rotation.x = S.pitch;
+      rig.scale.setScalar(S.scale);
+      for (const s of scatter) {
+        s.mesh.position.copy(s.home).addScaledVector(s.dir, S.disperse);
+        (s.mesh.material as THREE.MeshStandardMaterial).opacity = 1 - S.disperse;
+      }
+      beaconMat.emissiveIntensity = 1.5 + Math.sin(clock.getElapsedTime() * 3.2) * 0.8;
+      renderer.render(scene, camera);
+    };
+    requestAnimationFrame(render);
+
+    // ── choreography ──
+    const setup = () => {
+      // 1. ORBIT INTRO — the satellite drifts a shallow arc past the Earth
+      const t1 = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: { trigger: "#dive-pin", start: "top top", end: "+=260%", scrub: true },
+      });
+      t1.fromTo(obj, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.08 }, 0);
+      t1.fromTo(S, { px: 72, bank: 0 }, { px: 60, bank: 0.24, duration: 1 }, 0);
+      t1.fromTo(S, { py: 26 }, { py: 38, duration: 1, ease: "sine.inOut" }, 0); // shallow arc
+      t1.to(obj, { autoAlpha: 0, duration: 0.15 }, 0.85); // falls behind during the paper flash
+
+      // 2. TIMELINE FLIGHT — left→right along the axis, slight nose-forward bank
+      const t2 = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: { trigger: "#valley-pin", start: "top top", end: "bottom top", scrub: true },
+      });
+      t2.fromTo(obj, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.05 }, 0);
+      t2.fromTo(
+        S,
+        { px: 20, py: 46, pitch: 0, scale: 1 },
+        { px: 78, py: 46, pitch: 0, scale: 1, duration: 1 },
+        0
+      );
+      t2.fromTo(S, { bank: 0 }, { bank: -0.14, duration: 0.3, ease: "sine.out" }, 0); // nose-forward
+      t2.to(S, { bank: 0, duration: 0.3, ease: "sine.in" }, 0.7);
+      t2.to(S, { bob: 0.6, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0); // ±6px bob
+      t2.to(S, { bob: -0.6, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0.5);
+      t2.to(obj, { autoAlpha: 0, duration: 0.1 }, 0.9); // out as the bg fades to ink
+
+      // 3. THE DESCENT — parked right, pitching nose-down; disperses at the cyber beat
+      const TOTAL = 5.75; // matches index.astro's atl (PAN 4 + HOLD 0.6 + CYB 0.6 + TAIL 0.55)
+      const t3 = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: { trigger: "#alt-pin", start: "top top", end: "+=605%", scrub: true }, // (PAN+1.5)*110%
+      });
+      t3.fromTo(obj, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.12 }, 0);
+      t3.fromTo(
+        S,
+        { px: 76, py: 42, pitch: 0, scale: 1, bank: 0, bob: 0, disperse: 0 },
+        { px: 72, py: 58, pitch: 0.5, scale: 1.25, bank: 0, bob: 0, disperse: 0, duration: 4.6 },
+        0
+      );
+      // the wireframe dissolve (4.6/5.75): every part scatters along its own vector
+      t3.to(S, { disperse: 1, duration: 0.3 }, 4.6);
+      t3.to(obj, { autoAlpha: 0, duration: 0.3 }, 4.65);
+      t3.to({}, { duration: TOTAL - 4.95 }, 4.95); // pad to full pin length
+
+      // 4. LANDING — the paper-plane mark settles above "Join the first cohort."
+      const t4 = gsap.timeline({
+        defaults: { ease: "none" },
+        scrollTrigger: { trigger: "#join", start: "top 80%", end: "top 30%", scrub: true },
+      });
+      t4.fromTo(obj, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 }, 0);
+      t4.fromTo("#ho-logo", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, 0);
+      t4.fromTo(
+        "#ho-svg",
+        { left: "50%", top: "18%", xPercent: -50, yPercent: -50, rotation: -8 },
+        { top: "26%", rotation: 0, duration: 1 },
+        0
+      );
+
+      // stays landed through the CTA; bows out as the footer enters
+      ScrollTrigger.create({
+        trigger: "footer",
+        start: "top 60%",
+        onEnter: () => gsap.to(obj, { autoAlpha: 0, duration: 0.4 }),
+        onLeaveBack: () => gsap.to(obj, { autoAlpha: 1, duration: 0.4 }),
+      });
+
+      ScrollTrigger.refresh();
+    };
+
+    // let the other components' pins exist before we measure against them
+    if (document.readyState === "complete") setTimeout(setup, 100);
+    else window.addEventListener("load", () => setTimeout(setup, 100), { once: true });
+  }
+</script>

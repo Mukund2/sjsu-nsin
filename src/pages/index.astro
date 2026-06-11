@@ -2,6 +2,7 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ConsoleFooter from "../components/layout/ConsoleFooter.astro";
 import EarthDive from "../components/home/EarthDive.astro";
+import Protagonist from "../components/home/Protagonist.astro";
 import ValleyTimeline from "../components/home/ValleyTimeline.astro";
 import { domains } from "../data/domains";
 
@@ -48,6 +49,8 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
 ---
 
 <BaseLayout theme="console">
+  <Protagonist />
+
   <EarthDive />
 
   <div class="seam-to-paper"></div>
@@ -160,7 +163,7 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
     </div>
   </section>
 
-  <section class="scheme-ink relative overflow-hidden">
+  <section id="join" class="scheme-ink relative overflow-hidden">
     <img
       src="/images/domains/space-3.jpg"
       alt=""
