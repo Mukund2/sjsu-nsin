@@ -9,6 +9,14 @@ const bySlug = Object.fromEntries(domains.map((d) => [d.slug, d]));
 const bands = [
   {
     ...bySlug.sea,
+    name: "The seabed",
+    tagline: "Almost all intercontinental data crosses the ocean floor on cables like this one — nearly undefended.",
+    image: "/images/domains/seabed-cable.jpg",
+    imageAlt: "An undersea fiber-optic cable crossing the seabed, lit faintly from the surface far above",
+    cta: false,
+  },
+  {
+    ...bySlug.sea,
     image: "/images/domains/sea-2.jpg",
     imageAlt: "A destroyer taking a wave over the bow at golden hour",
   },
@@ -185,12 +193,14 @@ const programs = [
             <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-16 sm:pb-20">
               <h3 class="t-h1 text-paper">{b.name}</h3>
               <p class="t-lede mt-4 text-paper/75 max-w-[38ch]">{b.tagline}</p>
-              <a
-                href={`/domains/${b.slug}`}
-                class="press arrow-link mt-7 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
-              >
-                Explore {b.name} <span class="arrow" aria-hidden="true">&rarr;</span>
-              </a>
+              {b.cta !== false && (
+                <a
+                  href={`/domains/${b.slug}`}
+                  class="press arrow-link mt-7 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
+                >
+                  Explore {b.name} <span class="arrow" aria-hidden="true">&rarr;</span>
+                </a>
+              )}
             </div>
           </figcaption>
         </figure>
@@ -319,9 +329,10 @@ const programs = [
       return `${v < 0 ? "−" : ""}${Math.abs(v).toLocaleString("en-US")} m`;
     };
     const altitudeAt = (u: number) => {
-      if (u < 1) return -4000 + 4000 * u;
-      if (u < 2) return 13700 * (u - 1);
-      if (u < 3) return 13700 + (408000 - 13700) * (u - 2);
+      if (u < 1) return -4000 + 3600 * u;
+      if (u < 2) return -400 + 400 * (u - 1);
+      if (u < 3) return 13700 * (u - 2);
+      if (u < 4) return 13700 + (408000 - 13700) * (u - 3);
       return null; // cyber
     };
 
@@ -343,7 +354,7 @@ const programs = [
             marker.style.top = "0%";
           } else {
             readout.textContent = fmt(alt);
-            const climb = Math.min(u / 3, 1); // fraction of the physical climb
+            const climb = Math.min(u / 4, 1); // fraction of the physical climb
             marker.style.top = `${(1 - climb) * 100}%`;
           }
         },
