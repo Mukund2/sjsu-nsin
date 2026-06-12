@@ -222,3 +222,14 @@ Ocean clip rendered (public/videos/ocean.mp4 if present); seabed full render
 in flight (bj9bkuvxk); next scripts: orbit.py (stars/limb + satellite),
 clouds.py (billboards + logo-jet flythrough). Then re-render ocean with the
 destroyer silhouette added.
+
+## STRUCTURE — DEFINITIVE (user-confirmed; supersedes any ambiguity above)
+TWO separate sequences, plus the close:
+M1 ARRIVAL (built, keep): realtime Earth spins -> scrolljacked dive ->
+   Landsat Valley aerial, pin-to-pin bounce (timeline STAYS).
+M2 JOURNEY (Blender films): lift-off after Valley; first shot = satellite
+   profile over golden Earth limb (Terminal-truck composition — opens M2,
+   NOT the site); then satellite -> logo-delta jet -> destroyer on golden
+   ocean (ocean.mp4 DONE) -> seabed cable pulse (rendering) -> X-ray cyber
+   dissolve.
+M3 JOIN: cohort CTA + footer.
