@@ -153,3 +153,28 @@ piecewise. Kill #alt-strip + tiles after parity. Perf: antialias false,
 DPR≤1.75, fog cheap, particles ≤2k, RAF gated by pin proximity.
 Honest note told to user: this is stylized-animated (Lusion-tier direction),
 not photoreal film VFX — that is the correct genre standard.
+
+## RENDER PIPELINE (decided: Blender, not AI video — user's call, correct one)
+Terminal's clips are artist renders (filenames literally say "prerender").
+We replicate the real pipeline: Blender headless on this Mac.
+- Install: brew install --cask blender → /Applications/Blender.app/Contents/MacOS/Blender
+- Drive via: Blender -b -P script.py (build scene in bpy, render PNG preview
+  frames, iterate by Reading the rendered PNG, then render animation; encode
+  with ffmpeg to mp4 h264 yuv420p, ~5s loops, 1920x1080, 24fps).
+- Engine: EEVEE (Next) for speed on Apple Silicon (volumetrics/bloom fine);
+  Cycles+Metal only for hero stills if time allows.
+- Shots (replace EnvironmentJourney bands with scroll-sequenced <video> beats,
+  Terminal-style; keep realtime Earth + Voyager opening):
+  1 orbit drift (stars + Earth-limb glow), 2 cloud-deck descent (volumetric
+  clouds, Nishita sun low), 3 golden Pacific surface (OCEAN MODIFIER — this is
+  the film-quality unlock — gold sun glint, slow push), 4 underwater god rays
+  (volumetric cone lights, particles), 5 seabed cable push-in (displaced
+  ground, tube cable, emissive gold pulse), 6 cyber particle/wireframe.
+  Light everything with the house palette: key 0xffd9a0 golden, ink #232020
+  backgrounds, gold #C9A958 accents. Loop-friendly (ocean modifier time loops;
+  use linear camera moves that crossfade well).
+- NASA-3D-Resources has .blend models (incl. Voyager) importable directly for
+  any hero-object renders.
+- Delivery: public/videos/journey/*.mp4, looping <video muted playsinline
+  autoplay loop> per section, crossfaded by ScrollTrigger like Terminal;
+  CSP media-src 'self' already allows it.
