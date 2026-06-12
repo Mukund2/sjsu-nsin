@@ -70,6 +70,11 @@ spot shaft, volume density 0.026, pulse emission (1.0,0.72,0.30)x14.
 House palette: ink #232020 / paper #F2EDE3 / gold #C9A958.
 
 ## STATUS / NEXT QUEUE
+0. MAPSCENE CAMERA-TRAVEL UPGRADE (user-confirmed): scroll должен glide the
+   photo place-to-place — scrubbed pan+zoom keyframes per pin (arrive, pin
+   pops, dwell, glide on; Lockheed dwells longest). Re-export valley aerial
+   at full 6148px source res (image-originals has the crop recipe) for
+   deeper zooms. Pattern: NYT map scrollytelling; reversible scrub.
 1. seabed full render+encode (bg job bj9bkuvxk; if missing rerun + ffmpeg)
 2. orbit.py — M2 opener (satellite profile, Earth limb glow, stars)
 3. clouds.py — logo-delta jet through cloud billboards
