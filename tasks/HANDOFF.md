@@ -192,3 +192,17 @@ instead (Blender 5.1 at /Applications/Blender.app/Contents/MacOS/Blender,
 HDRI ready: tools/render/venice_sunset_2k.hdr (CC0). Next: ocean shot per
 RENDER PIPELINE section, consulting blender-pro-workflow → lighting →
 rendering skills for settings.
+
+## OCEAN SHOT STATUS (first Blender render in flight)
+tools/render/ocean.py — Ocean Modifier sea + MULTIPLE_SCATTERING sunset sky
+(Blender 5.1 renames: NISHITA->MULTIPLE_SCATTERING, dust->aerosol_density,
+Action.fcurves REMOVED (set pref keyframe_new_interpolation_type instead),
+scene.node_tree -> compositing_node_group, Glare API changed — bloom skipped).
+Preview loop works: PREVIEW=1 blender -b -P ocean.py -> out/ocean_preview.png,
+Read the PNG, tweak, repeat. Current look: approved-direction dark swells +
+gold sun column, still slightly rose — final grade nudge via ffmpeg in encode
+(warm gold: -vf colorbalance or eq saturation/gamma_b) OR sky aerosol down.
+Full 240f render running in bg -> tools/render/out/ocean_0001-0240.mp4.
+Remaining shots per RENDER PIPELINE list: orbit, clouds, underwater godrays
+(§5 of blender-cinematic-fx), seabed cable, cyber wireframe (§6 = the X-ray
+recipe). Then wire as <video> beats Terminal-style.
