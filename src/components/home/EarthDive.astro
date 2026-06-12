@@ -1,9 +1,9 @@
 ---
 // EarthDive — the signature sequence. A golden-hour Earth hangs in orbit;
 // scroll scrubs a dive toward the San Francisco Bay, and a white paper flash
-// cuts — the cloud-deck match — straight into the MapScene aerial that
-// follows. Vanilla three.js + GSAP ScrollTrigger. Reduced-motion / no-JS:
-// the canvas hides and MapScene carries the headline statically.
+// cuts — the cloud-deck match — straight into the EnvironmentJourney descent
+// that follows. Vanilla three.js + GSAP ScrollTrigger. Reduced-motion / no-JS:
+// the canvas hides and the journey captions carry the copy statically.
 ---
 
 <section id="dive" class="scheme-ink relative">
@@ -19,7 +19,7 @@
 </section>
 
 <style is:global>
-  /* no-JS / reduced-motion fallback: the canvas hides; MapScene carries the headline */
+  /* no-JS / reduced-motion fallback: the canvas hides; the journey carries the copy */
   html:not(.has-motion) #earth-canvas {
     display: none;
   }
@@ -220,12 +220,12 @@
     });
 
     // the white-cloud cut: clouds whiten the frame, paper flashes over, the
-    // canvas drops away, and the flash thins out onto the MapScene aerial
-    tl.to(proxy, { dist: 1.13, rotY: TARGET_ROT_Y, tilt: TILT_X, clouds: 1, duration: 0.75 }, 0);
-    tl.to("#dive-flash", { opacity: 1, duration: 0.08 }, 0.74);
-    tl.set("#earth-canvas", { autoAlpha: 0 }, 0.82);
-    tl.to("#dive-flash", { opacity: 0, duration: 0.1 }, 0.84);
-    tl.to({}, { duration: 0.06 }, 0.94); // breathe on the dark frame before the map
+    // canvas drops away, and the flash thins straight into the journey's
+    // space beat — no trailing pad, the unpin lands right off the flash
+    tl.to(proxy, { dist: 1.13, rotY: TARGET_ROT_Y, tilt: TILT_X, clouds: 1, duration: 0.84 }, 0);
+    tl.to("#dive-flash", { opacity: 1, duration: 0.08 }, 0.83);
+    tl.set("#earth-canvas", { autoAlpha: 0 }, 0.91);
+    tl.to("#dive-flash", { opacity: 0, duration: 0.09 }, 0.91);
   }
 
   init();

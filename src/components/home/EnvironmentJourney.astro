@@ -1,13 +1,11 @@
 ---
 // EnvironmentJourney — the traverse as ONE continuous animated shot. A single
 // three.js scene: the camera rides a world column from orbit (y=+60) down
-// through the atmosphere and cloud deck, plunges through an animated ocean
-// surface, falls past god-rays and marine snow to the seabed cable, then the
-// physical world fogs out into the drawn instrument layer (the cyber beat).
-// Replaces the old five-photo tile strip entirely. Vanilla three + GSAP scrub,
-// mirroring EarthDive's renderer / ResizeObserver / raf-gating patterns.
+// through the atmosphere and cloud deck, and levels out into a low glide just
+// above the golden ocean — the journey ends at the sea. Vanilla three + GSAP
+// scrub, mirroring EarthDive's renderer / ResizeObserver / raf-gating patterns.
 // Keeps section id="altitude" and pin id="alt-pin" (Protagonist targets them).
-// Reduced-motion / no-JS: canvas hides; the five captions stack statically.
+// Reduced-motion / no-JS: canvas hides; the three captions stack statically.
 import { domains } from "../../data/domains";
 
 const bySlug = Object.fromEntries(domains.map((d) => [d.slug, d]));
@@ -16,78 +14,12 @@ const caps = [
   { name: bySlug.space.name, tagline: bySlug.space.tagline, slug: "space" },
   { name: bySlug.air.name, tagline: bySlug.air.tagline, slug: "air" },
   { name: bySlug.sea.name, tagline: bySlug.sea.tagline, slug: "sea" },
-  {
-    name: "The seabed",
-    tagline: "Almost all intercontinental data crosses the ocean floor on cables like this one — nearly undefended.",
-    slug: null,
-  },
-  {
-    name: bySlug.cyber.name,
-    tagline: "Cyber has no altitude. It’s the layer under all of the others.",
-    slug: "cyber",
-  },
 ];
-
-// the digital layer: a one-point-perspective wireframe that draws itself in
-// as the physical world fogs out at the cyber beat
-const VP = { x: 800, y: 430 };
-const wireRays = [
-  [133, 0], [533, 0], [1066, 0], [1466, 0],
-  [0, 143], [1600, 143], [0, 716], [1600, 716],
-  [133, 900], [533, 900], [1066, 900], [1466, 900],
-];
-const wireDepths = [460, 500, 555, 625, 715, 825];
-const wireDots = Array.from({ length: 40 }, (_, i) => ({
-  x: Math.round(((i * 397.7 + 60) % 1600) * 10) / 10,
-  y: Math.round(((i * 233.3 + 120) % 900) * 10) / 10,
-  r: 1.2 + ((i * 7) % 11) / 10,
-}));
 ---
 
 <section id="altitude" class="scheme-ink relative">
   <div id="alt-pin" class="relative h-screen overflow-hidden">
     <canvas id="ej-canvas" class="absolute inset-0 w-full h-full"></canvas>
-
-    <!-- the digital layer the world resolves through at the cyber beat -->
-    <div id="ej-grid" class="absolute inset-0 pointer-events-none" style="opacity:0">
-      <svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 1600 900"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden="true"
-      >
-        {wireRays.map(([x, y]) => (
-          <line
-            class="wl"
-            x1={VP.x}
-            y1={VP.y}
-            x2={x}
-            y2={y}
-            stroke="#F2EDE3"
-            stroke-opacity="0.45"
-            stroke-width="1"
-            vector-effect="non-scaling-stroke"
-          />
-        ))}
-        {wireDepths.map((y) => (
-          <line
-            class="wl"
-            x1="0"
-            y1={y}
-            x2="1600"
-            y2={y}
-            stroke="#F2EDE3"
-            stroke-opacity="0.45"
-            stroke-width="1"
-            vector-effect="non-scaling-stroke"
-          />
-        ))}
-        {wireDots.map((d) => (
-          <circle class="wd" cx={d.x} cy={d.y} r={d.r} fill="#C9A958" opacity="0.8" />
-        ))}
-      </svg>
-    </div>
 
     <div id="ej-scrim" class="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-ink/25 pointer-events-none"></div>
 
@@ -122,24 +54,15 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
         ></div>
       </div>
     </div>
-
-    <!-- white-foam flash at the moment the camera breaks the surface -->
-    <div
-      id="ej-foam"
-      class="absolute inset-0 pointer-events-none"
-      style="background: var(--color-paper); opacity: 0;"
-    ></div>
   </div>
 </section>
 
 <style is:global>
-  /* no-JS / reduced-motion: the canvas and instruments hide; the five
+  /* no-JS / reduced-motion: the canvas and instruments hide; the three
      captions read as stacked sections (alt-pin/.alt-cap rules in global.css) */
   html:not(.has-motion) #ej-canvas,
-  html:not(.has-motion) #ej-grid,
   html:not(.has-motion) #ej-scrim,
-  html:not(.has-motion) #ej-hud,
-  html:not(.has-motion) #ej-foam {
+  html:not(.has-motion) #ej-hud {
     display: none;
   }
 </style>
@@ -168,12 +91,11 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
     const SLATE = new THREE.Color(0x232020).lerp(new THREE.Color(0x2a3340), 0.7);
     const HAZE = GOLD.clone().lerp(PAPER, 0.4);
     const SEA_BASE = new THREE.Color(0x15333a);
-    const WATER_FOG = new THREE.Color(0x0e2226);
 
     // ── the column ─────────────────────────────────────────────────
     const Y_TOP = 60; // space
-    const Y_END = -35; // hovering just above the seabed plane at y=-38
-    const DESCENT = 0.88; // camera travel ends here; the last 12% is cyber
+    const Y_END = 1.2; // resting just above the waterline (waves peak ~0.35)
+    const DESCENT = 0.94; // camera travel ends here; the last 6% rests at 0 m
     // progress at which camera.y crosses a given world y (camera is linear)
     const pOf = (y: number) => ((Y_TOP - y) / (Y_TOP - Y_END)) * DESCENT;
 
@@ -239,14 +161,10 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
     // ── ATMOSPHERE: camera-following gradient dome ─────────────────
     const domeUniforms = {
       uAlt: { value: 0 }, // 0 in space → 1 at sea level
-      uSub: { value: 0 }, // 0 above water → 1 submerged
-      uCyber: { value: 0 },
       uSpace: { value: INK_DEEP },
       uSlate: { value: SLATE },
       uHaze: { value: HAZE },
       uPaper: { value: PAPER },
-      uWater: { value: WATER_FOG },
-      uInk: { value: INK_DEEP },
     };
     const dome = new THREE.Mesh(
       new THREE.SphereGeometry(200, 48, 24),
@@ -262,8 +180,8 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
           }
         `,
         fragmentShader: /* glsl */ `
-          uniform float uAlt, uSub, uCyber;
-          uniform vec3 uSpace, uSlate, uHaze, uPaper, uWater, uInk;
+          uniform float uAlt;
+          uniform vec3 uSpace, uSlate, uHaze, uPaper;
           varying vec3 vDir;
           void main() {
             vec3 d = normalize(vDir);
@@ -273,8 +191,6 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
             float horizon = 1.0 - smoothstep(0.0, 0.65, abs(d.y));
             vec3 haze = mix(uHaze, uPaper, horizon * 0.5);
             col = mix(col, haze, horizon * uAlt * 0.85);
-            col = mix(col, uWater, uSub);
-            col = mix(col, uInk, uCyber);
             gl_FragColor = vec4(col, 1.0);
           }
         `,
@@ -379,114 +295,6 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
     ocean.position.set(0, 0, -20);
     scene.add(ocean);
 
-    // ── UNDERWATER: marine snow + god-ray cones ────────────────────
-    const N_SNOW = 1600;
-    const snowPos = new Float32Array(N_SNOW * 3);
-    const snowSpeed = new Float32Array(N_SNOW);
-    for (let i = 0; i < N_SNOW; i++) {
-      snowPos[i * 3] = (Math.random() - 0.5) * 48;
-      snowPos[i * 3 + 1] = -42 + Math.random() * 45;
-      snowPos[i * 3 + 2] = -34 + Math.random() * 40;
-      snowSpeed[i] = 0.004 + Math.random() * 0.01;
-    }
-    const snowGeo = new THREE.BufferGeometry();
-    const snowAttr = new THREE.BufferAttribute(snowPos, 3);
-    snowGeo.setAttribute("position", snowAttr);
-    const snowMat = new THREE.PointsMaterial({
-      color: PAPER,
-      size: 0.09,
-      sizeAttenuation: true,
-      transparent: true,
-      opacity: 0,
-      depthWrite: false,
-    });
-    const snow = new THREE.Points(snowGeo, snowMat);
-    scene.add(snow);
-
-    const rayGeo = new THREE.ConeGeometry(4, 20, 12, 1, true);
-    rayGeo.translate(0, -10, 0); // apex at local origin = the surface
-    const rays: THREE.Mesh[] = [];
-    const rayMats: THREE.MeshBasicMaterial[] = [];
-    const raySpots = [
-      [-9, -8], [4, -14], [11, -20], [-3, -24],
-    ];
-    for (const [x, z] of raySpots) {
-      const m = new THREE.MeshBasicMaterial({
-        color: PAPER,
-        transparent: true,
-        opacity: 0,
-        blending: THREE.AdditiveBlending,
-        depthWrite: false,
-        side: THREE.DoubleSide,
-        fog: false,
-      });
-      const cone = new THREE.Mesh(rayGeo, m);
-      cone.position.set(x, 0, z);
-      cone.rotation.z = (Math.random() - 0.5) * 0.12; // slight lean
-      scene.add(cone);
-      rays.push(cone);
-      rayMats.push(m);
-    }
-
-    // ── SEABED: noise-displaced sediment + the cable ───────────────
-    const bedGeo = new THREE.PlaneGeometry(200, 60, 64, 24);
-    bedGeo.rotateX(-Math.PI / 2);
-    {
-      const p = bedGeo.attributes.position;
-      for (let i = 0; i < p.count; i++) {
-        const x = p.getX(i);
-        const z = p.getZ(i);
-        const h =
-          Math.sin(x * 0.12) * 0.7 +
-          Math.sin(z * 0.2 + 1.7) * 0.5 +
-          Math.sin((x + z) * 0.07 + 0.5) * 0.6 +
-          Math.sin(x * 0.43 + z * 0.31) * 0.25;
-        p.setY(i, h);
-      }
-      bedGeo.computeVertexNormals();
-    }
-    const bed = new THREE.Mesh(
-      bedGeo,
-      new THREE.MeshStandardMaterial({ color: 0x141a18, roughness: 1, metalness: 0 })
-    );
-    bed.position.set(0, -38, -30);
-    scene.add(bed);
-
-    const cableCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(5, -37.2, -2),
-      new THREE.Vector3(1.5, -37.0, -12),
-      new THREE.Vector3(-4, -37.4, -24),
-      new THREE.Vector3(2, -36.9, -36),
-      new THREE.Vector3(-5, -37.3, -47),
-      new THREE.Vector3(-1, -37.1, -58),
-    ]);
-    const cableMat = new THREE.MeshStandardMaterial({
-      color: 0x3a3a3a,
-      metalness: 0.9,
-      roughness: 0.4,
-      emissive: GOLD,
-      emissiveIntensity: 0.05,
-    });
-    cableMat.defines = { USE_UV: "" };
-    const uPulse = { value: 0 };
-    cableMat.onBeforeCompile = (shader) => {
-      shader.uniforms.uPulse = uPulse;
-      shader.fragmentShader = shader.fragmentShader
-        .replace(
-          "#include <common>",
-          "#include <common>\nuniform float uPulse;"
-        )
-        .replace(
-          "#include <emissivemap_fragment>",
-          `#include <emissivemap_fragment>
-           // a gold pulse travelling the cable's length (tube u runs along it)
-           float band = smoothstep(0.06, 0.0, abs(vUv.x - uPulse));
-           totalEmissiveRadiance += vec3(0.788, 0.663, 0.345) * band * 1.6;`
-        );
-    };
-    const cable = new THREE.Mesh(new THREE.TubeGeometry(cableCurve, 120, 0.25, 8), cableMat);
-    scene.add(cable);
-
     // ── sizing (EarthDive's pattern: observe, never trust first layout) ──
     function resize() {
       const w = canvas!.clientWidth || 1;
@@ -500,31 +308,28 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
     window.addEventListener("load", resize);
     resize();
 
-    // ── altimeter (kept piecewise mapping, now keyed to camera.y) ──
+    // ── altimeter: 408 km → 0 m over the full descent, no negatives ──
     const readout = document.getElementById("alt-readout");
     const marker = document.getElementById("alt-marker");
     const fmt = (m: number) => {
       if (m >= 20000) return `${Math.round(m / 1000)} km`;
-      const v = Math.round(m / 10) * 10;
-      return `${v < 0 ? "−" : ""}${Math.abs(v).toLocaleString("en-US")} m`;
+      const v = Math.max(Math.round(m / 10) * 10, 0);
+      return `${v.toLocaleString("en-US")} m`;
     };
-    // y 60→35: 408 km→100 km · 35→0: 100 km→0 m · 0→−35: 0→−4,000 m
+    // y 60→35: 408 km→100 km · 35→Y_END: 100 km→0 m
     const altitudeAtY = (y: number) => {
       if (y >= 35) return 100000 + ((y - 35) / 25) * 308000;
-      if (y >= 0) return (y / 35) * 100000;
-      return (y / 35) * 4000;
+      return Math.max(((y - Y_END) / (35 - Y_END)) * 100000, 0);
     };
     let lastReadout = "";
 
     // ── scrub state ────────────────────────────────────────────────
     const cam = { y: Y_TOP };
-    const cyber = { v: 0 };
     const clock = new THREE.Clock();
 
     // ── render loop — runs only while the section is near the viewport ──
     let running = false;
     let rafId = 0;
-    const fogColor = new THREE.Color();
     const fog = scene.fog as THREE.FogExp2;
 
     function frame() {
@@ -536,10 +341,7 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
       dome.position.copy(camera.position);
 
       const uAlt = THREE.MathUtils.clamp((Y_TOP - y) / Y_TOP, 0, 1);
-      const uSub = THREE.MathUtils.clamp((0.2 - y) / 1.2, 0, 1);
       domeUniforms.uAlt.value = uAlt;
-      domeUniforms.uSub.value = uSub;
-      domeUniforms.uCyber.value = cyber.v;
 
       // stars die below ~30; the limb glow fades as you reach it
       starMat.opacity = 0.85 * THREE.MathUtils.clamp((y - 28) / 12, 0, 1);
@@ -558,54 +360,14 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
         .copy(sunDir)
         .transformDirection(camera.matrixWorldInverse);
 
-      // marine snow drifts down on the CPU (1600 points, trivial)
-      const submerged = y < 3;
-      snow.visible = submerged;
-      if (submerged) {
-        snowMat.opacity = 0.8 * THREE.MathUtils.clamp((1 - y) / 3, 0, 1) * (1 - cyber.v);
-        const arr = snowAttr.array as Float32Array;
-        for (let i = 0; i < N_SNOW; i++) {
-          let py = arr[i * 3 + 1] - snowSpeed[i];
-          if (py < -42) py += 45;
-          arr[i * 3 + 1] = py;
-        }
-        snowAttr.needsUpdate = true;
-      }
-
-      // god rays live y −2→−18, then hand over to the dark
-      const rayAmt =
-        THREE.MathUtils.clamp((-1 - y) / 3, 0, 1) *
-        THREE.MathUtils.clamp((y + 24) / 6, 0, 1) *
-        (1 - cyber.v);
-      for (let i = 0; i < rays.length; i++) {
-        rays[i].visible = rayAmt > 0.004;
-        rayMats[i].opacity = 0.06 * rayAmt;
-        rays[i].rotation.y += 0.0016;
-      }
-
-      uPulse.value = (t * 0.18) % 1;
-
-      // fog: golden haze above, teal-ink deepening below, ink flood at cyber
-      const above = 0.0006 + uAlt * 0.0035;
-      const below = 0.045 + THREE.MathUtils.clamp(-Math.min(y, 0) / 35, 0, 1) * 0.025;
-      let density = above + (below - above) * uSub;
-      fogColor.copy(HAZE).lerp(WATER_FOG, uSub);
-      density += (0.5 - density) * cyber.v;
-      fogColor.lerp(INK_DEEP, cyber.v);
-      fog.density = density;
-      fog.color.copy(fogColor);
+      // fog: golden haze thickening as the air does
+      fog.density = 0.0006 + uAlt * 0.0035;
 
       // the instrument
       if (readout && marker) {
-        let text: string;
-        if (cyber.v > 0.02) {
-          text = "no altitude";
-          marker.style.top = "100%";
-        } else {
-          text = fmt(altitudeAtY(y));
-          const frac = THREE.MathUtils.clamp((Y_TOP - y) / (Y_TOP - Y_END), 0, 1);
-          marker.style.top = `${frac * 100}%`;
-        }
+        const text = fmt(altitudeAtY(y));
+        const frac = THREE.MathUtils.clamp((Y_TOP - y) / (Y_TOP - Y_END), 0, 1);
+        marker.style.top = `${frac * 100}%`;
         if (text !== lastReadout) {
           readout.textContent = text;
           lastReadout = text;
@@ -620,12 +382,12 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
       if (running && !rafId) rafId = requestAnimationFrame(frame);
     }
 
-    // gate range: 1vh approach + 7vh pin (+=700%) + 1vh exit. Function-based
+    // gate range: 1vh approach + 4.5vh pin (+=450%) + 1vh exit. Function-based
     // because "bottom top" would be measured before the pin spacer exists.
     const gate = ScrollTrigger.create({
       trigger: "#altitude",
       start: "top bottom",
-      end: () => "+=" + window.innerHeight * 9,
+      end: () => "+=" + window.innerHeight * 6.5,
       onToggle: (self) => setRunning(self.isActive),
     });
     setRunning(gate.isActive);
@@ -635,20 +397,12 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
     gsap.set(altCaps, { autoAlpha: 0 });
     gsap.set(altCaps[0], { autoAlpha: 1 });
 
-    // the wireframe draws itself: each line carries its own length as dash
-    const wireLines = gsap.utils.toArray<SVGLineElement>(".wl");
-    wireLines.forEach((l) => {
-      const len = l.getTotalLength();
-      gsap.set(l, { strokeDasharray: len, strokeDashoffset: len });
-    });
-    gsap.set(".wd", { autoAlpha: 0 });
-
     const tl = gsap.timeline({
       defaults: { ease: "none" },
       scrollTrigger: {
         trigger: "#alt-pin",
         start: "top top",
-        end: "+=700%",
+        end: "+=450%",
         pin: true,
         scrub: 0.5,
         anticipatePin: 1,
@@ -657,18 +411,12 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
 
     tl.to(cam, { y: Y_END, duration: DESCENT }, 0);
 
-    // the plunge: foam flashes as camera.y crosses 0
-    const P0 = pOf(0);
-    tl.to("#ej-foam", { opacity: 0.9, duration: 0.03 }, P0 - 0.04);
-    tl.to("#ej-foam", { opacity: 0, duration: 0.05 }, P0 - 0.005);
-
-    // caption windows mapped to camera-y bands → [in, out] in progress units
+    // caption windows mapped to camera-y bands → [in, out] in progress units;
+    // the sea caption holds to the end — the journey rests there
     const windows: [number, number][] = [
       [0, pOf(32)],          // space: y > 32
       [pOf(30), pOf(6)],     // air: 30 → 6
-      [pOf(4), pOf(-6)],     // sea: 4 → −6
-      [pOf(-10), pOf(-31)],  // seabed: −10 → −31
-      [0.9, Infinity],       // cyber
+      [pOf(4), Infinity],    // sea: 4 → rest
     ];
     altCaps.forEach((capEl, i) => {
       const [tin, tout] = windows[i];
@@ -680,12 +428,7 @@ const wireDots = Array.from({ length: 40 }, (_, i) => ({
       }
     });
 
-    // ── the cyber takeover: the world fogs out, the drawn layer takes over ──
-    tl.to(cyber, { v: 1, duration: 0.12 }, DESCENT);
-    tl.to("#ej-grid", { opacity: 1, duration: 0.015 }, DESCENT);
-    tl.to(".wl", { strokeDashoffset: 0, duration: 0.06, stagger: 0.0025 }, DESCENT + 0.005);
-    tl.fromTo(".wd", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.04, stagger: 0.0008 }, DESCENT + 0.025);
-    tl.to({}, { duration: 0.02 }, 0.98); // hold on the drawn layer before unpin
+    tl.to({}, { duration: 0.06 }, DESCENT); // rest at 0 m over the waves before unpin
   }
 
   init();

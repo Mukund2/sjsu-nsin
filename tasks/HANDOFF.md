@@ -10,8 +10,18 @@ they drift from this file. Re-read this file before launching any agent.
 The Valley map/timeline M1 is CUT. No undersea cables (niche). No cyber (not
 our thing). No subterranean. Domains = the Anduril triad: SPACE / AIR / SEA.
 
-THE SITE IS ONE JOURNEY (scroll-jacked, Terminal-style — ONE hero rendered
-sequence + everything else normal sections in the same fonts/grade):
+THE SITE = JOURNEY SPLIT AROUND THE GROUND (user-approved outline):
+ACT I (pinned animation): space (Earth + satellite + space copy) -> sky
+  (jets + air copy) -> cloud-breakthrough TOUCHDOWN; headline "Lockheed was
+  here before Google." lands at touchdown.
+ACT II GROUND = THE CLUB (plain sections, scheme-paper, same type/grade):
+  who-we-are statement -> four programs editorial rows ("What we do.") ->
+  real-footage slot (user shooting club-room phone clip; graded still
+  placeholder until then) -> first-year row (Fall '26 / Spring '27).
+ACT III (animation resumes): SEA beat = pinned full-bleed ocean.mp4 video
+  with sea copy + Explore Sea (destroyer silhouette re-render later).
+ACT IV: Join CTA -> footer.
+Original notes below still apply where not superseded:
 1. OPEN IN SPACE: Earth rotating (realtime three.js EarthDive stays as base).
    Scroll-jacked: a SATELLITE comes into view. Text overlays: SPACE problems
    (domain copy from src/data/domains.ts space entry).
