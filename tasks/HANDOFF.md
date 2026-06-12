@@ -206,3 +206,19 @@ Full 240f render running in bg -> tools/render/out/ocean_0001-0240.mp4.
 Remaining shots per RENDER PIPELINE list: orbit, clouds, underwater godrays
 (§5 of blender-cinematic-fx), seabed cable, cyber wireframe (§6 = the X-ray
 recipe). Then wire as <video> beats Terminal-style.
+
+## PROTAGONIST-IN-FILM (user confirmed the transformation chain lives IN the journey)
+The one-object-transforms concept rides inside the rendered clips, descending:
+SPACE: satellite drifting (render Voyager .blend or simple sat in orbit clip)
+-> AIR: transforms to the FIGHTER JET — use the club logo's delta geometry
+   extruded as the jet silhouette ("it could be the one that's our logo")
+-> SEA: surface clip gains a distant destroyer SILHOUETTE against the sun
+   (low-poly silhouette at horizon = forgiving, cinematic)
+-> UNDERSEA: the cable clip (the protagonist's path becomes the cable/pulse)
+-> CYBER/GROUND: X-ray wireframe dissolve (cinematic-fx §6) = infrastructure
+   layer; page logo landing stays at the cohort CTA.
+Transform moments rendered via §6 crossfade/morph recipes at clip handoffs.
+Ocean clip rendered (public/videos/ocean.mp4 if present); seabed full render
+in flight (bj9bkuvxk); next scripts: orbit.py (stars/limb + satellite),
+clouds.py (billboards + logo-jet flythrough). Then re-render ocean with the
+destroyer silhouette added.

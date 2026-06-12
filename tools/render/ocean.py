@@ -161,10 +161,8 @@ if PREVIEW:
     bpy.ops.render.render(write_still=True)
 else:
     r.resolution_x, r.resolution_y = 1920, 1080
-    r.image_settings.file_format = 'FFMPEG'
-    r.ffmpeg.format = 'MPEG4'
-    r.ffmpeg.codec = 'H264'
-    r.ffmpeg.constant_rate_factor = 'HIGH'
-    r.ffmpeg.ffmpeg_preset = 'GOOD'
-    r.filepath = os.path.join(OUT, "ocean_")
+    r.image_settings.file_format = 'PNG'
+    frames = os.path.join(OUT, "frames")
+    os.makedirs(frames, exist_ok=True)
+    r.filepath = os.path.join(frames, "ocean_")
     bpy.ops.render.render(animation=True)
