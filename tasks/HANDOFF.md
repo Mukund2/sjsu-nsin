@@ -178,3 +178,17 @@ We replicate the real pipeline: Blender headless on this Mac.
 - Delivery: public/videos/journey/*.mp4, looping <video muted playsinline
   autoplay loop> per section, crossfaded by ScrollTrigger like Terminal;
   CSP media-src 'self' already allows it.
+
+## BLENDER SKILLS (installed + audited 2026-06-11)
+~/.claude/skills/ now has a full registered Blender suite (blender-pro-workflow,
+-lighting, -cameras, -materials, -modeling, -rendering, -animation, -physics,
+-geometry-nodes, -compositing, text-to-blender, wireframe-to-3d). Security
+audit: 64 files, markdown/LICENSE/evals.json only, no scripts, no network
+calls; Norton's quarantine of an overview.md was a false positive ("Grid Curl"
+geometry-node docs trip 'curl' heuristics). text-to-blender/wireframe-to-3d
+need the blender-mcp addon (port 9876) — NOT installed; use headless loop
+instead (Blender 5.1 at /Applications/Blender.app/Contents/MacOS/Blender,
+-b -P script.py; preview frame → Read PNG → adjust → final render).
+HDRI ready: tools/render/venice_sunset_2k.hdr (CC0). Next: ocean shot per
+RENDER PIPELINE section, consulting blender-pro-workflow → lighting →
+rendering skills for settings.
