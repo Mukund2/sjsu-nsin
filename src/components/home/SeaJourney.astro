@@ -1,6 +1,6 @@
 ---
 // SeaJourney — Act III: the journey resumes at the water. A pinned full-bleed
-// loop of the rendered golden ocean (public/videos/ocean.mp4, Blender) with
+// loop of the AI-rendered golden ocean (public/videos/ocean-ai.mp4) with
 // the sea caption overlaid — the same caption grammar as the descent beats.
 // The destroyer-silhouette re-render will replace the clip in place later.
 // Reduced-motion / no-JS: no pin, the video sits still and the caption reads
@@ -15,7 +15,7 @@ const sea = domains.find((d) => d.slug === "sea")!;
     <video
       id="sea-video"
       class="absolute inset-0 w-full h-full object-cover"
-      src="/videos/ocean.mp4"
+      src="/videos/ocean-ai.mp4"
       autoplay
       muted
       loop
