@@ -174,58 +174,6 @@ export const domains: Domain[] = [
       "Half the commercial space industry sits between Hawthorne and Moffett Field. Planet’s satellites are operated from San Francisco.",
     closing: "Half the commercial space industry is a Caltrain ride away.",
   },
-  {
-    slug: "cyber",
-    name: "Cyber",
-    accent: "#A8A06A",
-    tagline: "The first shots of the next conflict will be fired in milliseconds.",
-    intro:
-      "Power grids, water systems, hospitals, and ports run on decades-old software that was never meant to face a nation-state. Cyber is the one domain where a student with a laptop is already holding operational-grade equipment.",
-    hero: "/images/domains/cyber-1.jpg",
-    heroAlt:
-      "Space Force operators monitoring screens at workstations in a dim operations floor",
-    problems: [
-      {
-        title: "Critical infrastructure",
-        desc: "Industrial control systems built in the 1990s now face adversaries with AI tooling. Defending the grid is the most consequential security engineering problem in the country.",
-      },
-      {
-        title: "Software supply chain",
-        desc: "One poisoned dependency can compromise thousands of systems at once. Provenance, SBOMs, and secure-by-design pipelines are now national security disciplines.",
-      },
-      {
-        title: "AI-speed offense and defense",
-        desc: "Attacks that took weeks of human effort now take minutes of compute. Defense has to operate at the same speed — autonomous detection, response, and patching.",
-      },
-      {
-        title: "Talent pipeline collapse",
-        desc: "The U.S. has hundreds of thousands of unfilled security roles. The clearance pipeline starts years before graduation — most students never learn that.",
-      },
-    ],
-    builds: [
-      {
-        title: "Competitive CTF team",
-        desc: "Capture-the-flag competitions in reverse engineering, binary exploitation, and web security — the most direct skill pipeline into the security industry that exists.",
-        image: "/images/domains/cyber-2.jpg",
-      },
-      {
-        title: "Infrastructure defense projects",
-        desc: "Threat modeling and hardening exercises against realistic critical-infrastructure scenarios, including NSA’s annual Codebreaker Challenge.",
-        image: "/images/domains/cyber-3.jpg",
-      },
-    ],
-    companies: [
-      { name: "Palantir", url: "https://www.palantir.com" },
-      { name: "Vannevar Labs", url: "https://www.vannevarlabs.com" },
-      { name: "CrowdStrike", url: "https://www.crowdstrike.com" },
-      { name: "Anduril", url: "https://www.anduril.com" },
-      { name: "NSA", url: "https://www.nsa.gov" },
-      { name: "CISA", url: "https://www.cisa.gov" },
-    ],
-    companiesNote:
-      "Cyber has the shortest distance between a student club and a cleared career — agencies and primes recruit directly from CTF leaderboards.",
-    closing: "The grid gets defended by whoever shows up.",
-  },
 ];
 
 export function getDomain(slug: string): Domain | undefined {
@@ -236,3 +184,4 @@ export function nextDomain(slug: string): Domain {
   const i = domains.findIndex((d) => d.slug === slug);
   return domains[(i + 1) % domains.length];
 }
+

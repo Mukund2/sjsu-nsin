@@ -1,0 +1,87 @@
+---
+// SeaJourney — Act III: the journey resumes at the water. A pinned full-bleed
+// loop of the rendered golden ocean (public/videos/ocean.mp4, Blender) with
+// the sea caption overlaid — the same caption grammar as the descent beats.
+// The destroyer-silhouette re-render will replace the clip in place later.
+// Reduced-motion / no-JS: no pin, the video sits still and the caption reads
+// as a normal section.
+import { domains } from "../../data/domains";
+
+const sea = domains.find((d) => d.slug === "sea")!;
+---
+
+<section id="sea-journey" class="scheme-ink relative">
+  <div id="sea-pin" class="relative h-screen overflow-hidden">
+    <video
+      id="sea-video"
+      class="absolute inset-0 w-full h-full object-cover"
+      src="/videos/ocean.mp4"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      aria-hidden="true"
+    ></video>
+    <div class="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-ink/25 pointer-events-none"></div>
+
+    <div id="sea-cap" class="absolute inset-x-0 bottom-0">
+      <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-16 sm:pb-20">
+        <h3 class="t-h1 text-paper">{sea.name}</h3>
+        <p class="t-lede mt-4 text-paper/75 max-w-[38ch]">{sea.tagline}</p>
+        <a
+          href="/domains/sea"
+          class="press arrow-link mt-7 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
+        >
+          Explore {sea.name} <span class="arrow" aria-hidden="true">&rarr;</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  function init() {
+    const video = document.getElementById("sea-video") as HTMLVideoElement | null;
+    if (!video) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      video.removeAttribute("autoplay");
+      video.pause();
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const tl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: "#sea-pin",
+        start: "top top",
+        end: "+=120%",
+        pin: true,
+        scrub: 0.5,
+        anticipatePin: 1,
+      },
+    });
+    tl.fromTo("#sea-cap", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.35 }, 0.1);
+    tl.to({}, { duration: 0.55 }, 0.45); // hold on the water before unpin
+
+    // only run the clip while the section is near the viewport
+    ScrollTrigger.create({
+      trigger: "#sea-journey",
+      start: "top bottom",
+      end: () => "+=" + window.innerHeight * 3.2,
+      onToggle: (self) => {
+        if (self.isActive) video.play().catch(() => {});
+        else video.pause();
+      },
+    });
+  }
+
+  init();
+</script>

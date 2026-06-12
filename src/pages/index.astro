@@ -4,15 +4,128 @@ import ConsoleFooter from "../components/layout/ConsoleFooter.astro";
 import EarthDive from "../components/home/EarthDive.astro";
 import Protagonist from "../components/home/Protagonist.astro";
 import EnvironmentJourney from "../components/home/EnvironmentJourney.astro";
+import SeaJourney from "../components/home/SeaJourney.astro";
+
+const programs = [
+  {
+    num: "01",
+    title: "Speaker Series",
+    desc: "Defense-tech founders, policymakers, and intelligence veterans on how technology is reshaping national security.",
+    image: "/images/speaker-podium.jpg",
+  },
+  {
+    num: "02",
+    title: "Build & Compete",
+    desc: "Prototype sprints and DoD challenge competitions. The preparation pipeline for the National Security Hackathon.",
+    image: "/images/hackathon.jpg",
+  },
+  {
+    num: "03",
+    title: "Government & Industry Projects",
+    desc: "Paired with defense and intelligence organizations on live problems. Experiential learning, not hypotheticals.",
+    image: "/images/mission-control.jpg",
+  },
+  {
+    num: "04",
+    title: "Policy & Strategy",
+    desc: "AI governance, export controls, and the future of deterrence — argued across engineering, business, and political science.",
+    image: "/images/capitol.jpg",
+  },
+];
 ---
 
 <BaseLayout theme="console">
   <Protagonist />
 
+  <!-- ACT I — the descent: space and air, ending in the touchdown flash -->
   <EarthDive />
 
   <EnvironmentJourney />
 
+  <!-- the touchdown statement: the flash thins out onto this headline -->
+  <section id="touchdown" class="scheme-paper px-5 sm:px-10 pt-28 sm:pt-36 pb-16 sm:pb-20">
+    <div class="max-w-[1500px] mx-auto">
+      <h2 class="t-display text-ink max-w-[13ch]" data-reveal>
+        Lockheed was here before Google.
+      </h2>
+    </div>
+  </section>
+
+  <!-- ACT II — the ground: the club itself -->
+  <section class="scheme-paper px-5 sm:px-10 pb-20 sm:pb-28">
+    <div class="max-w-[1500px] mx-auto">
+      <p class="t-lede text-ink/80 max-w-[52rem]">
+        The talent never left San Jos&eacute; — what&rsquo;s missing is access.
+        NSIN at SJSU connects engineers, designers, and policy minds to the
+        people working these problems, through real projects instead of career
+        fairs.
+      </p>
+    </div>
+  </section>
+
+  <section class="scheme-paper px-5 sm:px-10 pb-20">
+    <div class="max-w-[1500px] mx-auto">
+      <h2 class="t-h2 max-w-[16ch]" data-reveal>What we do.</h2>
+      <p class="t-body mt-5 text-ink/60">
+        Whatever you study, there's a seat. Engineers build, writers argue, and
+        everyone ships something real by the end of the semester.
+      </p>
+      <div class="mt-14 border-t border-ink/15">
+        {programs.map((p) => (
+          <div class="group grid grid-cols-1 md:grid-cols-[1fr_300px] gap-5 md:gap-10 items-center border-b border-ink/15 py-8">
+            <div>
+              <h3 class="t-h3 text-ink">{p.title}</h3>
+              <p class="t-caption mt-2 text-ink/60 max-w-xl">{p.desc}</p>
+            </div>
+            <div class="relative overflow-hidden aspect-video md:h-[150px] md:aspect-auto">
+              <img
+                src={p.image}
+                alt={p.title}
+                loading="lazy"
+                class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- real-footage slot: the <img> swaps for a phone-shot <video> when the
+       club-room clips exist — keep this figure structure intact -->
+  <section class="scheme-paper">
+    <figure id="ground-footage" class="m-0">
+      <div class="relative h-[70vh] sm:h-screen overflow-hidden">
+        <img
+          src="/images/hackathon.jpg"
+          alt="Students mid-build at a hackathon table"
+          loading="lazy"
+          class="absolute inset-0 w-full h-full object-cover"
+        />
+      </div>
+      <figcaption class="max-w-[1500px] mx-auto px-5 sm:px-10 py-5">
+        <p class="t-caption text-ink/60">Build nights, fall 2026</p>
+      </figcaption>
+    </figure>
+  </section>
+
+  <section class="scheme-paper px-5 sm:px-10 pt-16 pb-24 sm:pb-32">
+    <div class="max-w-[1500px] mx-auto border-t border-ink/15 pt-10 grid grid-cols-1 sm:grid-cols-2 gap-10">
+      <div>
+        <p class="t-label text-ink/50">Fall 2026</p>
+        <p class="t-h3 mt-3 text-ink">Speaker series and the first government project teams</p>
+      </div>
+      <div>
+        <p class="t-label text-ink/50">Spring 2027</p>
+        <p class="t-h3 mt-3 text-ink">National Security Hackathon</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACT III — the journey resumes at the sea -->
+  <SeaJourney />
+
+  <!-- ACT IV — join -->
   <section id="join" class="scheme-ink relative overflow-hidden">
     <img
       src="/images/domains/space-3.jpg"

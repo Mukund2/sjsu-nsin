@@ -1,11 +1,13 @@
 ---
-// EnvironmentJourney — the traverse as ONE continuous animated shot. A single
-// three.js scene: the camera rides a world column from orbit (y=+60) down
-// through the atmosphere and cloud deck, and levels out into a low glide just
-// above the golden ocean — the journey ends at the sea. Vanilla three + GSAP
-// scrub, mirroring EarthDive's renderer / ResizeObserver / raf-gating patterns.
-// Keeps section id="altitude" and pin id="alt-pin" (Protagonist targets them).
-// Reduced-motion / no-JS: canvas hides; the three captions stack statically.
+// EnvironmentJourney — Act I of the journey as ONE continuous animated shot.
+// A single three.js scene: the camera rides a world column from orbit (y=+60)
+// down through the atmosphere into the cloud deck — the space and air beats —
+// then a paper flash marks the cloud-breakthrough touchdown and hands off to
+// the ground sections ("Lockheed was here before Google." lands right after).
+// The sea beat resumes in SeaJourney further down the page. Vanilla three +
+// GSAP scrub, mirroring EarthDive's renderer / ResizeObserver / raf-gating
+// patterns. Keeps section id="altitude" and pin id="alt-pin" (Protagonist
+// targets them). Reduced-motion / no-JS: canvas hides; captions stack.
 import { domains } from "../../data/domains";
 
 const bySlug = Object.fromEntries(domains.map((d) => [d.slug, d]));
@@ -13,7 +15,6 @@ const bySlug = Object.fromEntries(domains.map((d) => [d.slug, d]));
 const caps = [
   { name: bySlug.space.name, tagline: bySlug.space.tagline, slug: "space" },
   { name: bySlug.air.name, tagline: bySlug.air.tagline, slug: "air" },
-  { name: bySlug.sea.name, tagline: bySlug.sea.tagline, slug: "sea" },
 ];
 ---
 
@@ -54,15 +55,24 @@ const caps = [
         ></div>
       </div>
     </div>
+
+    <!-- paper flash at the cloud-breakthrough touchdown; the next section is
+         paper, so the unpin cuts straight onto the touchdown statement -->
+    <div
+      id="ej-flash"
+      class="absolute inset-0 pointer-events-none"
+      style="background: var(--color-paper); opacity: 0;"
+    ></div>
   </div>
 </section>
 
 <style is:global>
-  /* no-JS / reduced-motion: the canvas and instruments hide; the three
+  /* no-JS / reduced-motion: the canvas and instruments hide; the two
      captions read as stacked sections (alt-pin/.alt-cap rules in global.css) */
   html:not(.has-motion) #ej-canvas,
   html:not(.has-motion) #ej-scrim,
-  html:not(.has-motion) #ej-hud {
+  html:not(.has-motion) #ej-hud,
+  html:not(.has-motion) #ej-flash {
     display: none;
   }
 </style>
@@ -94,8 +104,8 @@ const caps = [
 
     // ── the column ─────────────────────────────────────────────────
     const Y_TOP = 60; // space
-    const Y_END = 1.2; // resting just above the waterline (waves peak ~0.35)
-    const DESCENT = 0.94; // camera travel ends here; the last 6% rests at 0 m
+    const Y_END = 10; // just under the cloud deck — the touchdown flash cuts here
+    const DESCENT = 0.9; // camera travel ends here; the flash owns the last 10%
     // progress at which camera.y crosses a given world y (camera is linear)
     const pOf = (y: number) => ((Y_TOP - y) / (Y_TOP - Y_END)) * DESCENT;
 
@@ -308,7 +318,7 @@ const caps = [
     window.addEventListener("load", resize);
     resize();
 
-    // ── altimeter: 408 km → 0 m over the full descent, no negatives ──
+    // ── altimeter: 408 km → 0 m over the descent, no negatives ─────
     const readout = document.getElementById("alt-readout");
     const marker = document.getElementById("alt-marker");
     const fmt = (m: number) => {
@@ -316,7 +326,7 @@ const caps = [
       const v = Math.max(Math.round(m / 10) * 10, 0);
       return `${v.toLocaleString("en-US")} m`;
     };
-    // y 60→35: 408 km→100 km · 35→Y_END: 100 km→0 m
+    // y 60→35: 408 km→100 km · 35→Y_END: 100 km→0 m at touchdown
     const altitudeAtY = (y: number) => {
       if (y >= 35) return 100000 + ((y - 35) / 25) * 308000;
       return Math.max(((y - Y_END) / (35 - Y_END)) * 100000, 0);
@@ -382,12 +392,12 @@ const caps = [
       if (running && !rafId) rafId = requestAnimationFrame(frame);
     }
 
-    // gate range: 1vh approach + 4.5vh pin (+=450%) + 1vh exit. Function-based
+    // gate range: 1vh approach + 3vh pin (+=300%) + 1vh exit. Function-based
     // because "bottom top" would be measured before the pin spacer exists.
     const gate = ScrollTrigger.create({
       trigger: "#altitude",
       start: "top bottom",
-      end: () => "+=" + window.innerHeight * 6.5,
+      end: () => "+=" + window.innerHeight * 5,
       onToggle: (self) => setRunning(self.isActive),
     });
     setRunning(gate.isActive);
@@ -402,7 +412,7 @@ const caps = [
       scrollTrigger: {
         trigger: "#alt-pin",
         start: "top top",
-        end: "+=450%",
+        end: "+=300%",
         pin: true,
         scrub: 0.5,
         anticipatePin: 1,
@@ -411,24 +421,23 @@ const caps = [
 
     tl.to(cam, { y: Y_END, duration: DESCENT }, 0);
 
-    // caption windows mapped to camera-y bands → [in, out] in progress units;
-    // the sea caption holds to the end — the journey rests there
+    // caption windows mapped to camera-y bands → [in, out] in progress units
     const windows: [number, number][] = [
       [0, pOf(32)],          // space: y > 32
-      [pOf(30), pOf(6)],     // air: 30 → 6
-      [pOf(4), Infinity],    // sea: 4 → rest
+      [pOf(30), pOf(13)],    // air: 30 → 13, clear before the flash
     ];
     altCaps.forEach((capEl, i) => {
       const [tin, tout] = windows[i];
       if (i > 0) {
         tl.fromTo(capEl, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.03 }, tin);
       }
-      if (tout !== Infinity) {
-        tl.to(capEl, { autoAlpha: 0, y: -20, duration: 0.025 }, tout);
-      }
+      tl.to(capEl, { autoAlpha: 0, y: -20, duration: 0.025 }, tout);
     });
 
-    tl.to({}, { duration: 0.06 }, DESCENT); // rest at 0 m over the waves before unpin
+    // the touchdown: paper floods the frame and holds through the unpin —
+    // the next section is paper, so the cut lands on the headline
+    tl.to("#ej-flash", { opacity: 1, duration: 0.08 }, 0.88);
+    tl.to({}, { duration: 0.04 }, 0.96); // hold white to the end
   }
 
   init();

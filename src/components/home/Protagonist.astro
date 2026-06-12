@@ -1,8 +1,8 @@
 ---
 // The site's persistent protagonist: ONE rendered 3D satellite that rides the
-// whole homepage scroll — drifting past the Earth dive, flying the map,
-// pitching down through the descent, dispersing into particles at the cyber
-// dissolve — until the club's paper-plane mark lands above the CTA.
+// whole homepage scroll — drifting past the Earth dive, pitching down through
+// the descent, fading out into the touchdown flash — until the club's
+// paper-plane mark lands above the CTA.
 //
 // Model: NASA "Voyager Probe (A)" from github.com/nasa/NASA-3D-Resources
 // (public domain — "free and without copyright"), Draco-decoded offline to a
@@ -221,45 +221,24 @@
       t1.fromTo(S, { py: 26 }, { py: 38, duration: 1, ease: "sine.inOut" }, 0); // shallow arc
       t1.to(obj, { autoAlpha: 0, duration: 0.15 }, 0.85); // falls behind during the paper flash
 
-      // 2. MAP FLIGHT — left→right across the upper third of the aerial while
-      // the pins pop below. Small over the map: scale 0.42 ≈ a 120-160px footprint.
-      const t2 = gsap.timeline({
-        defaults: { ease: "none" },
-        scrollTrigger: { trigger: "#map-pin", start: "top top", end: "bottom top", scrub: true },
-      });
-      t2.fromTo(obj, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.05 }, 0);
-      t2.fromTo(
-        S,
-        { px: 20, py: 30, pitch: 0, scale: 0.42 },
-        { px: 78, py: 30, pitch: 0, scale: 0.42, duration: 1 },
-        0
-      );
-      t2.fromTo(S, { bank: 0 }, { bank: -0.14, duration: 0.3, ease: "sine.out" }, 0); // nose-forward
-      t2.to(S, { bank: 0, duration: 0.3, ease: "sine.in" }, 0.7);
-      t2.to(S, { bob: 0.6, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0); // ±6px bob
-      t2.to(S, { bob: -0.6, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0.5);
-      t2.to(obj, { autoAlpha: 0, duration: 0.1 }, 0.9); // out before the descent takes over
-
-      // 3. THE DESCENT — parked right, pitching nose-down; disperses at the
-      // cyber beat. Matches EnvironmentJourney's scrub: end "+=700%", camera
-      // descent over [0, 0.88], cyber takeover in the last 12%.
+      // 2. THE DESCENT — parked right, pitching nose-down. Matches
+      // EnvironmentJourney's scrub: end "+=300%", camera descent over
+      // [0, 0.9], touchdown flash from 0.88 — fade out into the whiteout.
       const t3 = gsap.timeline({
         defaults: { ease: "none" },
-        scrollTrigger: { trigger: "#alt-pin", start: "top top", end: "+=700%", scrub: true },
+        scrollTrigger: { trigger: "#alt-pin", start: "top top", end: "+=300%", scrub: true },
       });
       t3.fromTo(obj, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.02 }, 0);
       t3.fromTo(
         S,
         { px: 76, py: 42, pitch: 0, scale: 1, bank: 0, bob: 0, disperse: 0 },
-        { px: 72, py: 58, pitch: 0.5, scale: 1.25, bank: 0, bob: 0, disperse: 0, duration: 0.88 },
+        { px: 72, py: 58, pitch: 0.5, scale: 1.25, bank: 0, bob: 0, disperse: 0, duration: 0.86 },
         0
       );
-      // the cyber dissolve (0.88): every part scatters along its own vector
-      t3.to(S, { disperse: 1, duration: 0.06 }, 0.88);
-      t3.to(obj, { autoAlpha: 0, duration: 0.05 }, 0.9);
-      t3.to({}, { duration: 0.05 }, 0.95); // pad to full pin length
+      t3.to(obj, { autoAlpha: 0, duration: 0.06 }, 0.86);
+      t3.to({}, { duration: 0.08 }, 0.92); // pad to full pin length
 
-      // 4. LANDING — the paper-plane mark settles above "Join the first cohort."
+      // 3. LANDING — the paper-plane mark settles above "Join the first cohort."
       const t4 = gsap.timeline({
         defaults: { ease: "none" },
         scrollTrigger: { trigger: "#join", start: "top 80%", end: "top 30%", scrub: true },
