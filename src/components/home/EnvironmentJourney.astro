@@ -1,0 +1,692 @@
+---
+// EnvironmentJourney — the traverse as ONE continuous animated shot. A single
+// three.js scene: the camera rides a world column from orbit (y=+60) down
+// through the atmosphere and cloud deck, plunges through an animated ocean
+// surface, falls past god-rays and marine snow to the seabed cable, then the
+// physical world fogs out into the drawn instrument layer (the cyber beat).
+// Replaces the old five-photo tile strip entirely. Vanilla three + GSAP scrub,
+// mirroring EarthDive's renderer / ResizeObserver / raf-gating patterns.
+// Keeps section id="altitude" and pin id="alt-pin" (Protagonist targets them).
+// Reduced-motion / no-JS: canvas hides; the five captions stack statically.
+import { domains } from "../../data/domains";
+
+const bySlug = Object.fromEntries(domains.map((d) => [d.slug, d]));
+
+const caps = [
+  { name: bySlug.space.name, tagline: bySlug.space.tagline, slug: "space" },
+  { name: bySlug.air.name, tagline: bySlug.air.tagline, slug: "air" },
+  { name: bySlug.sea.name, tagline: bySlug.sea.tagline, slug: "sea" },
+  {
+    name: "The seabed",
+    tagline: "Almost all intercontinental data crosses the ocean floor on cables like this one — nearly undefended.",
+    slug: null,
+  },
+  {
+    name: bySlug.cyber.name,
+    tagline: "Cyber has no altitude. It’s the layer under all of the others.",
+    slug: "cyber",
+  },
+];
+
+// the digital layer: a one-point-perspective wireframe that draws itself in
+// as the physical world fogs out at the cyber beat
+const VP = { x: 800, y: 430 };
+const wireRays = [
+  [133, 0], [533, 0], [1066, 0], [1466, 0],
+  [0, 143], [1600, 143], [0, 716], [1600, 716],
+  [133, 900], [533, 900], [1066, 900], [1466, 900],
+];
+const wireDepths = [460, 500, 555, 625, 715, 825];
+const wireDots = Array.from({ length: 40 }, (_, i) => ({
+  x: Math.round(((i * 397.7 + 60) % 1600) * 10) / 10,
+  y: Math.round(((i * 233.3 + 120) % 900) * 10) / 10,
+  r: 1.2 + ((i * 7) % 11) / 10,
+}));
+---
+
+<section id="altitude" class="scheme-ink relative">
+  <div id="alt-pin" class="relative h-screen overflow-hidden">
+    <canvas id="ej-canvas" class="absolute inset-0 w-full h-full"></canvas>
+
+    <!-- the digital layer the world resolves through at the cyber beat -->
+    <div id="ej-grid" class="absolute inset-0 pointer-events-none" style="opacity:0">
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 1600 900"
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden="true"
+      >
+        {wireRays.map(([x, y]) => (
+          <line
+            class="wl"
+            x1={VP.x}
+            y1={VP.y}
+            x2={x}
+            y2={y}
+            stroke="#F2EDE3"
+            stroke-opacity="0.45"
+            stroke-width="1"
+            vector-effect="non-scaling-stroke"
+          />
+        ))}
+        {wireDepths.map((y) => (
+          <line
+            class="wl"
+            x1="0"
+            y1={y}
+            x2="1600"
+            y2={y}
+            stroke="#F2EDE3"
+            stroke-opacity="0.45"
+            stroke-width="1"
+            vector-effect="non-scaling-stroke"
+          />
+        ))}
+        {wireDots.map((d) => (
+          <circle class="wd" cx={d.x} cy={d.y} r={d.r} fill="#C9A958" opacity="0.8" />
+        ))}
+      </svg>
+    </div>
+
+    <div id="ej-scrim" class="absolute inset-0 bg-gradient-to-t from-ink/75 via-ink/10 to-ink/25 pointer-events-none"></div>
+
+    {caps.map((c, i) => (
+      <div class="alt-cap absolute inset-x-0 bottom-0" style={i === 0 ? "" : "opacity: 0; visibility: hidden;"}>
+        <div class="max-w-[1500px] mx-auto px-5 sm:px-10 pb-16 sm:pb-20">
+          <h3 class="t-h1 text-paper">{c.name}</h3>
+          <p class="t-lede mt-4 text-paper/75 max-w-[38ch]">{c.tagline}</p>
+          {c.slug && (
+            <a
+              href={`/domains/${c.slug}`}
+              class="press arrow-link mt-7 inline-block w-fit bg-paper text-ink px-7 py-3.5 text-[15px] font-medium"
+            >
+              Explore {c.name} <span class="arrow" aria-hidden="true">&rarr;</span>
+            </a>
+          )}
+        </div>
+      </div>
+    ))}
+
+    <!-- the altimeter: a live instrument, not decoration -->
+    <div id="ej-hud" class="absolute right-6 sm:right-10 top-1/2 -translate-y-1/2 h-[58vh] hidden sm:flex items-stretch gap-5 pointer-events-none">
+      <div class="flex flex-col justify-between items-end text-right">
+        <p id="alt-readout" class="t-h3 text-paper" style="font-variant-numeric: tabular-nums;">408 km</p>
+        <p class="t-caption text-paper/45">altitude</p>
+      </div>
+      <div class="relative w-px bg-paper/25">
+        <div
+          id="alt-marker"
+          class="absolute right-0 w-5 h-px"
+          style="background-color: var(--color-gold); top: 0%;"
+        ></div>
+      </div>
+    </div>
+
+    <!-- white-foam flash at the moment the camera breaks the surface -->
+    <div
+      id="ej-foam"
+      class="absolute inset-0 pointer-events-none"
+      style="background: var(--color-paper); opacity: 0;"
+    ></div>
+  </div>
+</section>
+
+<style is:global>
+  /* no-JS / reduced-motion: the canvas and instruments hide; the five
+     captions read as stacked sections (alt-pin/.alt-cap rules in global.css) */
+  html:not(.has-motion) #ej-canvas,
+  html:not(.has-motion) #ej-grid,
+  html:not(.has-motion) #ej-scrim,
+  html:not(.has-motion) #ej-hud,
+  html:not(.has-motion) #ej-foam {
+    display: none;
+  }
+</style>
+
+<script>
+  import * as THREE from "three";
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  function init() {
+    const canvas = document.getElementById("ej-canvas") as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) {
+      canvas.style.display = "none";
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // ── palette ────────────────────────────────────────────────────
+    const INK_DEEP = new THREE.Color(0x1b1918);
+    const PAPER = new THREE.Color(0xf2ede3);
+    const GOLD = new THREE.Color(0xc9a958);
+    const SLATE = new THREE.Color(0x232020).lerp(new THREE.Color(0x2a3340), 0.7);
+    const HAZE = GOLD.clone().lerp(PAPER, 0.4);
+    const SEA_BASE = new THREE.Color(0x15333a);
+    const WATER_FOG = new THREE.Color(0x0e2226);
+
+    // ── the column ─────────────────────────────────────────────────
+    const Y_TOP = 60; // space
+    const Y_END = -35; // hovering just above the seabed plane at y=-38
+    const DESCENT = 0.88; // camera travel ends here; the last 12% is cyber
+    // progress at which camera.y crosses a given world y (camera is linear)
+    const pOf = (y: number) => ((Y_TOP - y) / (Y_TOP - Y_END)) * DESCENT;
+
+    // ── scene ──────────────────────────────────────────────────────
+    const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
+    renderer.setClearColor(INK_DEEP, 1);
+
+    const camera = new THREE.PerspectiveCamera(50, 1, 0.1, 420);
+    camera.rotation.x = -8 * (Math.PI / 180); // slight down-tilt the whole way
+    camera.position.set(0, Y_TOP, 0);
+
+    const scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(HAZE.getHex(), 0.0006);
+
+    // golden-hour key from high above + low warm fill
+    const key = new THREE.DirectionalLight(0xffd9a0, 1.6);
+    key.position.set(30, 100, 20);
+    scene.add(key);
+    scene.add(new THREE.AmbientLight(0x8a8276, 0.55));
+    const sunDir = key.position.clone().normalize();
+
+    // ── SPACE: starfield + Earth-limb glow ─────────────────────────
+    const N_STARS = 1400;
+    const starPos = new Float32Array(N_STARS * 3);
+    for (let i = 0; i < N_STARS; i++) {
+      const r = 60 + Math.random() * 90;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      starPos[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+      starPos[i * 3 + 1] = 60 + r * Math.cos(phi);
+      starPos[i * 3 + 2] = r * Math.sin(phi) * Math.sin(theta);
+    }
+    const starGeo = new THREE.BufferGeometry();
+    starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+    const starMat = new THREE.PointsMaterial({
+      color: PAPER,
+      size: 0.5,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 0.85,
+      depthWrite: false,
+      fog: false,
+    });
+    const stars = new THREE.Points(starGeo, starMat);
+    scene.add(stars);
+
+    const limbMat = new THREE.MeshBasicMaterial({
+      color: GOLD,
+      transparent: true,
+      opacity: 0.1,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+      side: THREE.DoubleSide,
+      fog: false,
+    });
+    const limb = new THREE.Mesh(new THREE.CircleGeometry(80, 40), limbMat);
+    limb.rotation.x = -Math.PI / 2;
+    limb.position.y = 30;
+    limb.renderOrder = -1;
+    scene.add(limb);
+
+    // ── ATMOSPHERE: camera-following gradient dome ─────────────────
+    const domeUniforms = {
+      uAlt: { value: 0 }, // 0 in space → 1 at sea level
+      uSub: { value: 0 }, // 0 above water → 1 submerged
+      uCyber: { value: 0 },
+      uSpace: { value: INK_DEEP },
+      uSlate: { value: SLATE },
+      uHaze: { value: HAZE },
+      uPaper: { value: PAPER },
+      uWater: { value: WATER_FOG },
+      uInk: { value: INK_DEEP },
+    };
+    const dome = new THREE.Mesh(
+      new THREE.SphereGeometry(200, 48, 24),
+      new THREE.ShaderMaterial({
+        uniforms: domeUniforms,
+        side: THREE.BackSide,
+        depthWrite: false,
+        vertexShader: /* glsl */ `
+          varying vec3 vDir;
+          void main() {
+            vDir = position;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+          }
+        `,
+        fragmentShader: /* glsl */ `
+          uniform float uAlt, uSub, uCyber;
+          uniform vec3 uSpace, uSlate, uHaze, uPaper, uWater, uInk;
+          varying vec3 vDir;
+          void main() {
+            vec3 d = normalize(vDir);
+            // space black -> blue-slate as the air thickens, sky-down first
+            vec3 col = mix(uSpace, uSlate, clamp(uAlt * 1.6 - max(d.y, 0.0) * 1.2, 0.0, 1.0));
+            // golden haze gathers at the horizon, warming toward paper
+            float horizon = 1.0 - smoothstep(0.0, 0.65, abs(d.y));
+            vec3 haze = mix(uHaze, uPaper, horizon * 0.5);
+            col = mix(col, haze, horizon * uAlt * 0.85);
+            col = mix(col, uWater, uSub);
+            col = mix(col, uInk, uCyber);
+            gl_FragColor = vec4(col, 1.0);
+          }
+        `,
+      })
+    );
+    dome.renderOrder = -2;
+    scene.add(dome);
+
+    // ── CLOUDS: 6 billboards with a canvas-painted soft alpha ──────
+    const cloudCanvas = document.createElement("canvas");
+    cloudCanvas.width = cloudCanvas.height = 128;
+    const cctx = cloudCanvas.getContext("2d")!;
+    for (let i = 0; i < 14; i++) {
+      const x = 18 + Math.random() * 92;
+      const y = 40 + Math.random() * 48;
+      const r = 14 + Math.random() * 24;
+      const g = cctx.createRadialGradient(x, y, 0, x, y, r);
+      g.addColorStop(0, "rgba(242,237,227,0.16)");
+      g.addColorStop(1, "rgba(242,237,227,0)");
+      cctx.fillStyle = g;
+      cctx.fillRect(0, 0, 128, 128);
+    }
+    const cloudTex = new THREE.CanvasTexture(cloudCanvas);
+    const cloudGeo = new THREE.PlaneGeometry(30, 12);
+    const cloudMat = new THREE.MeshBasicMaterial({
+      map: cloudTex,
+      transparent: true,
+      opacity: 0.5,
+      depthWrite: false,
+      blending: THREE.NormalBlending,
+      side: THREE.DoubleSide,
+    });
+    const clouds: { mesh: THREE.Mesh; baseX: number; speed: number }[] = [];
+    for (let i = 0; i < 6; i++) {
+      const m = new THREE.Mesh(cloudGeo, cloudMat);
+      const baseX = -16 + (i % 3) * 16 + (Math.random() - 0.5) * 6;
+      m.position.set(baseX, 16 + i * 2.2 + Math.random() * 1.4, -24 + (i % 2) * 18 + Math.random() * 6);
+      scene.add(m);
+      clouds.push({ mesh: m, baseX, speed: 0.04 + Math.random() * 0.05 });
+    }
+
+    // ── OCEAN SURFACE: displaced sine plane with a gold glint ──────
+    const oceanGeo = new THREE.PlaneGeometry(200, 200, 128, 128);
+    oceanGeo.rotateX(-Math.PI / 2);
+    const oceanUniforms = THREE.UniformsUtils.merge([
+      THREE.UniformsLib.fog,
+      {
+        uTime: { value: 0 },
+        uBase: { value: SEA_BASE },
+        uGold: { value: GOLD },
+        uLightDir: { value: new THREE.Vector3(0, 1, 0) }, // view-space, set per frame
+      },
+    ]);
+    const oceanMat = new THREE.ShaderMaterial({
+      uniforms: oceanUniforms,
+      fog: true,
+      side: THREE.DoubleSide,
+      vertexShader: /* glsl */ `
+        uniform float uTime;
+        varying vec3 vNormalV;
+        varying vec3 vViewPos;
+        #include <fog_pars_vertex>
+        float wave(vec2 p) {
+          return sin(p.x * 0.18 + uTime * 0.7) * 0.16
+               + sin(p.x * 0.11 + p.y * 0.14 - uTime * 0.5) * 0.12
+               + sin(p.y * 0.21 + uTime * 0.9) * 0.07;
+        }
+        void main() {
+          vec3 pos = position;
+          float e = 0.6;
+          float h  = wave(pos.xz);
+          float hx = wave(pos.xz + vec2(e, 0.0));
+          float hz = wave(pos.xz + vec2(0.0, e));
+          pos.y += h;
+          vec3 n = normalize(vec3(-(hx - h) / e, 1.0, -(hz - h) / e));
+          vNormalV = normalize(normalMatrix * n);
+          vec4 mvPosition = modelViewMatrix * vec4(pos, 1.0);
+          vViewPos = -mvPosition.xyz;
+          gl_Position = projectionMatrix * mvPosition;
+          #include <fog_vertex>
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform vec3 uBase, uGold, uLightDir;
+        varying vec3 vNormalV;
+        varying vec3 vViewPos;
+        #include <fog_pars_fragment>
+        void main() {
+          vec3 N = normalize(vNormalV);
+          vec3 V = normalize(vViewPos);
+          vec3 L = normalize(uLightDir);
+          float diff = max(dot(N, L), 0.0);
+          vec3 col = uBase * (0.55 + 0.45 * diff);
+          // the sun-glint streak: cheap gold specular
+          col += uGold * pow(max(dot(reflect(-L, N), V), 0.0), 24.0) * 1.1;
+          gl_FragColor = vec4(col, 1.0);
+          #include <fog_fragment>
+        }
+      `,
+    });
+    const ocean = new THREE.Mesh(oceanGeo, oceanMat);
+    ocean.position.set(0, 0, -20);
+    scene.add(ocean);
+
+    // ── UNDERWATER: marine snow + god-ray cones ────────────────────
+    const N_SNOW = 1600;
+    const snowPos = new Float32Array(N_SNOW * 3);
+    const snowSpeed = new Float32Array(N_SNOW);
+    for (let i = 0; i < N_SNOW; i++) {
+      snowPos[i * 3] = (Math.random() - 0.5) * 48;
+      snowPos[i * 3 + 1] = -42 + Math.random() * 45;
+      snowPos[i * 3 + 2] = -34 + Math.random() * 40;
+      snowSpeed[i] = 0.004 + Math.random() * 0.01;
+    }
+    const snowGeo = new THREE.BufferGeometry();
+    const snowAttr = new THREE.BufferAttribute(snowPos, 3);
+    snowGeo.setAttribute("position", snowAttr);
+    const snowMat = new THREE.PointsMaterial({
+      color: PAPER,
+      size: 0.09,
+      sizeAttenuation: true,
+      transparent: true,
+      opacity: 0,
+      depthWrite: false,
+    });
+    const snow = new THREE.Points(snowGeo, snowMat);
+    scene.add(snow);
+
+    const rayGeo = new THREE.ConeGeometry(4, 20, 12, 1, true);
+    rayGeo.translate(0, -10, 0); // apex at local origin = the surface
+    const rays: THREE.Mesh[] = [];
+    const rayMats: THREE.MeshBasicMaterial[] = [];
+    const raySpots = [
+      [-9, -8], [4, -14], [11, -20], [-3, -24],
+    ];
+    for (const [x, z] of raySpots) {
+      const m = new THREE.MeshBasicMaterial({
+        color: PAPER,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        side: THREE.DoubleSide,
+        fog: false,
+      });
+      const cone = new THREE.Mesh(rayGeo, m);
+      cone.position.set(x, 0, z);
+      cone.rotation.z = (Math.random() - 0.5) * 0.12; // slight lean
+      scene.add(cone);
+      rays.push(cone);
+      rayMats.push(m);
+    }
+
+    // ── SEABED: noise-displaced sediment + the cable ───────────────
+    const bedGeo = new THREE.PlaneGeometry(200, 60, 64, 24);
+    bedGeo.rotateX(-Math.PI / 2);
+    {
+      const p = bedGeo.attributes.position;
+      for (let i = 0; i < p.count; i++) {
+        const x = p.getX(i);
+        const z = p.getZ(i);
+        const h =
+          Math.sin(x * 0.12) * 0.7 +
+          Math.sin(z * 0.2 + 1.7) * 0.5 +
+          Math.sin((x + z) * 0.07 + 0.5) * 0.6 +
+          Math.sin(x * 0.43 + z * 0.31) * 0.25;
+        p.setY(i, h);
+      }
+      bedGeo.computeVertexNormals();
+    }
+    const bed = new THREE.Mesh(
+      bedGeo,
+      new THREE.MeshStandardMaterial({ color: 0x141a18, roughness: 1, metalness: 0 })
+    );
+    bed.position.set(0, -38, -30);
+    scene.add(bed);
+
+    const cableCurve = new THREE.CatmullRomCurve3([
+      new THREE.Vector3(5, -37.2, -2),
+      new THREE.Vector3(1.5, -37.0, -12),
+      new THREE.Vector3(-4, -37.4, -24),
+      new THREE.Vector3(2, -36.9, -36),
+      new THREE.Vector3(-5, -37.3, -47),
+      new THREE.Vector3(-1, -37.1, -58),
+    ]);
+    const cableMat = new THREE.MeshStandardMaterial({
+      color: 0x3a3a3a,
+      metalness: 0.9,
+      roughness: 0.4,
+      emissive: GOLD,
+      emissiveIntensity: 0.05,
+    });
+    cableMat.defines = { USE_UV: "" };
+    const uPulse = { value: 0 };
+    cableMat.onBeforeCompile = (shader) => {
+      shader.uniforms.uPulse = uPulse;
+      shader.fragmentShader = shader.fragmentShader
+        .replace(
+          "#include <common>",
+          "#include <common>\nuniform float uPulse;"
+        )
+        .replace(
+          "#include <emissivemap_fragment>",
+          `#include <emissivemap_fragment>
+           // a gold pulse travelling the cable's length (tube u runs along it)
+           float band = smoothstep(0.06, 0.0, abs(vUv.x - uPulse));
+           totalEmissiveRadiance += vec3(0.788, 0.663, 0.345) * band * 1.6;`
+        );
+    };
+    const cable = new THREE.Mesh(new THREE.TubeGeometry(cableCurve, 120, 0.25, 8), cableMat);
+    scene.add(cable);
+
+    // ── sizing (EarthDive's pattern: observe, never trust first layout) ──
+    function resize() {
+      const w = canvas!.clientWidth || 1;
+      const h = canvas!.clientHeight || 1;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    }
+    window.addEventListener("resize", resize);
+    new ResizeObserver(resize).observe(canvas!);
+    window.addEventListener("load", resize);
+    resize();
+
+    // ── altimeter (kept piecewise mapping, now keyed to camera.y) ──
+    const readout = document.getElementById("alt-readout");
+    const marker = document.getElementById("alt-marker");
+    const fmt = (m: number) => {
+      if (m >= 20000) return `${Math.round(m / 1000)} km`;
+      const v = Math.round(m / 10) * 10;
+      return `${v < 0 ? "−" : ""}${Math.abs(v).toLocaleString("en-US")} m`;
+    };
+    // y 60→35: 408 km→100 km · 35→0: 100 km→0 m · 0→−35: 0→−4,000 m
+    const altitudeAtY = (y: number) => {
+      if (y >= 35) return 100000 + ((y - 35) / 25) * 308000;
+      if (y >= 0) return (y / 35) * 100000;
+      return (y / 35) * 4000;
+    };
+    let lastReadout = "";
+
+    // ── scrub state ────────────────────────────────────────────────
+    const cam = { y: Y_TOP };
+    const cyber = { v: 0 };
+    const clock = new THREE.Clock();
+
+    // ── render loop — runs only while the section is near the viewport ──
+    let running = false;
+    let rafId = 0;
+    const fogColor = new THREE.Color();
+    const fog = scene.fog as THREE.FogExp2;
+
+    function frame() {
+      rafId = running ? requestAnimationFrame(frame) : 0;
+      const t = clock.getElapsedTime();
+      const y = cam.y;
+
+      camera.position.set(Math.sin((Y_TOP - y) * 0.13) * 1.5, y, 0);
+      dome.position.copy(camera.position);
+
+      const uAlt = THREE.MathUtils.clamp((Y_TOP - y) / Y_TOP, 0, 1);
+      const uSub = THREE.MathUtils.clamp((0.2 - y) / 1.2, 0, 1);
+      domeUniforms.uAlt.value = uAlt;
+      domeUniforms.uSub.value = uSub;
+      domeUniforms.uCyber.value = cyber.v;
+
+      // stars die below ~30; the limb glow fades as you reach it
+      starMat.opacity = 0.85 * THREE.MathUtils.clamp((y - 28) / 12, 0, 1);
+      stars.visible = starMat.opacity > 0.01;
+      limbMat.opacity = 0.1 * THREE.MathUtils.clamp((y - 32) / 16, 0, 1);
+      limb.visible = limbMat.opacity > 0.004;
+
+      for (let i = 0; i < clouds.length; i++) {
+        const c = clouds[i];
+        c.mesh.position.x = c.baseX + Math.sin(t * c.speed + i * 1.7) * 3;
+        c.mesh.lookAt(camera.position);
+      }
+
+      oceanUniforms.uTime.value = t;
+      oceanUniforms.uLightDir.value
+        .copy(sunDir)
+        .transformDirection(camera.matrixWorldInverse);
+
+      // marine snow drifts down on the CPU (1600 points, trivial)
+      const submerged = y < 3;
+      snow.visible = submerged;
+      if (submerged) {
+        snowMat.opacity = 0.8 * THREE.MathUtils.clamp((1 - y) / 3, 0, 1) * (1 - cyber.v);
+        const arr = snowAttr.array as Float32Array;
+        for (let i = 0; i < N_SNOW; i++) {
+          let py = arr[i * 3 + 1] - snowSpeed[i];
+          if (py < -42) py += 45;
+          arr[i * 3 + 1] = py;
+        }
+        snowAttr.needsUpdate = true;
+      }
+
+      // god rays live y −2→−18, then hand over to the dark
+      const rayAmt =
+        THREE.MathUtils.clamp((-1 - y) / 3, 0, 1) *
+        THREE.MathUtils.clamp((y + 24) / 6, 0, 1) *
+        (1 - cyber.v);
+      for (let i = 0; i < rays.length; i++) {
+        rays[i].visible = rayAmt > 0.004;
+        rayMats[i].opacity = 0.06 * rayAmt;
+        rays[i].rotation.y += 0.0016;
+      }
+
+      uPulse.value = (t * 0.18) % 1;
+
+      // fog: golden haze above, teal-ink deepening below, ink flood at cyber
+      const above = 0.0006 + uAlt * 0.0035;
+      const below = 0.045 + THREE.MathUtils.clamp(-Math.min(y, 0) / 35, 0, 1) * 0.025;
+      let density = above + (below - above) * uSub;
+      fogColor.copy(HAZE).lerp(WATER_FOG, uSub);
+      density += (0.5 - density) * cyber.v;
+      fogColor.lerp(INK_DEEP, cyber.v);
+      fog.density = density;
+      fog.color.copy(fogColor);
+
+      // the instrument
+      if (readout && marker) {
+        let text: string;
+        if (cyber.v > 0.02) {
+          text = "no altitude";
+          marker.style.top = "100%";
+        } else {
+          text = fmt(altitudeAtY(y));
+          const frac = THREE.MathUtils.clamp((Y_TOP - y) / (Y_TOP - Y_END), 0, 1);
+          marker.style.top = `${frac * 100}%`;
+        }
+        if (text !== lastReadout) {
+          readout.textContent = text;
+          lastReadout = text;
+        }
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    function setRunning(active: boolean) {
+      running = active;
+      if (running && !rafId) rafId = requestAnimationFrame(frame);
+    }
+
+    // gate range: 1vh approach + 7vh pin (+=700%) + 1vh exit. Function-based
+    // because "bottom top" would be measured before the pin spacer exists.
+    const gate = ScrollTrigger.create({
+      trigger: "#altitude",
+      start: "top bottom",
+      end: () => "+=" + window.innerHeight * 9,
+      onToggle: (self) => setRunning(self.isActive),
+    });
+    setRunning(gate.isActive);
+
+    // ── the journey (ONE scrubbed timeline, total duration 1) ──────
+    const altCaps = gsap.utils.toArray<HTMLElement>(".alt-cap");
+    gsap.set(altCaps, { autoAlpha: 0 });
+    gsap.set(altCaps[0], { autoAlpha: 1 });
+
+    // the wireframe draws itself: each line carries its own length as dash
+    const wireLines = gsap.utils.toArray<SVGLineElement>(".wl");
+    wireLines.forEach((l) => {
+      const len = l.getTotalLength();
+      gsap.set(l, { strokeDasharray: len, strokeDashoffset: len });
+    });
+    gsap.set(".wd", { autoAlpha: 0 });
+
+    const tl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: "#alt-pin",
+        start: "top top",
+        end: "+=700%",
+        pin: true,
+        scrub: 0.5,
+        anticipatePin: 1,
+      },
+    });
+
+    tl.to(cam, { y: Y_END, duration: DESCENT }, 0);
+
+    // the plunge: foam flashes as camera.y crosses 0
+    const P0 = pOf(0);
+    tl.to("#ej-foam", { opacity: 0.9, duration: 0.03 }, P0 - 0.04);
+    tl.to("#ej-foam", { opacity: 0, duration: 0.05 }, P0 - 0.005);
+
+    // caption windows mapped to camera-y bands → [in, out] in progress units
+    const windows: [number, number][] = [
+      [0, pOf(32)],          // space: y > 32
+      [pOf(30), pOf(6)],     // air: 30 → 6
+      [pOf(4), pOf(-6)],     // sea: 4 → −6
+      [pOf(-10), pOf(-31)],  // seabed: −10 → −31
+      [0.9, Infinity],       // cyber
+    ];
+    altCaps.forEach((capEl, i) => {
+      const [tin, tout] = windows[i];
+      if (i > 0) {
+        tl.fromTo(capEl, { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.03 }, tin);
+      }
+      if (tout !== Infinity) {
+        tl.to(capEl, { autoAlpha: 0, y: -20, duration: 0.025 }, tout);
+      }
+    });
+
+    // ── the cyber takeover: the world fogs out, the drawn layer takes over ──
+    tl.to(cyber, { v: 1, duration: 0.12 }, DESCENT);
+    tl.to("#ej-grid", { opacity: 1, duration: 0.015 }, DESCENT);
+    tl.to(".wl", { strokeDashoffset: 0, duration: 0.06, stagger: 0.0025 }, DESCENT + 0.005);
+    tl.fromTo(".wd", { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.04, stagger: 0.0008 }, DESCENT + 0.025);
+    tl.to({}, { duration: 0.02 }, 0.98); // hold on the drawn layer before unpin
+  }
+
+  init();
+</script>

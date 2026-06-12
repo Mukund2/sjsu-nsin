@@ -243,19 +243,11 @@
     inset: auto;
     min-height: 100vh;
   }
-  html:not(.has-motion) #alt-strip {
-    position: relative;
-    height: auto;
-    transform: none !important;
-  }
   html:not(.has-motion) .alt-cap {
     position: relative;
     opacity: 1 !important;
     visibility: visible !important;
     padding-block: 2rem;
-  }
-  html:not(.has-motion) #alt-cyber {
-    display: none;
   }
 
   @media (prefers-reduced-motion: reduce) {

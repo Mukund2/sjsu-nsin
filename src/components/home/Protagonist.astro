@@ -240,23 +240,24 @@
       t2.to(S, { bob: -0.6, duration: 0.25, yoyo: true, repeat: 1, ease: "sine.inOut" }, 0.5);
       t2.to(obj, { autoAlpha: 0, duration: 0.1 }, 0.9); // out before the descent takes over
 
-      // 3. THE DESCENT — parked right, pitching nose-down; disperses at the cyber beat
-      const TOTAL = 5.75; // matches index.astro's atl (PAN 4 + HOLD 0.6 + CYB 0.6 + TAIL 0.55)
+      // 3. THE DESCENT — parked right, pitching nose-down; disperses at the
+      // cyber beat. Matches EnvironmentJourney's scrub: end "+=700%", camera
+      // descent over [0, 0.88], cyber takeover in the last 12%.
       const t3 = gsap.timeline({
         defaults: { ease: "none" },
-        scrollTrigger: { trigger: "#alt-pin", start: "top top", end: "+=605%", scrub: true }, // (PAN+1.5)*110%
+        scrollTrigger: { trigger: "#alt-pin", start: "top top", end: "+=700%", scrub: true },
       });
-      t3.fromTo(obj, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.12 }, 0);
+      t3.fromTo(obj, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.02 }, 0);
       t3.fromTo(
         S,
         { px: 76, py: 42, pitch: 0, scale: 1, bank: 0, bob: 0, disperse: 0 },
-        { px: 72, py: 58, pitch: 0.5, scale: 1.25, bank: 0, bob: 0, disperse: 0, duration: 4.6 },
+        { px: 72, py: 58, pitch: 0.5, scale: 1.25, bank: 0, bob: 0, disperse: 0, duration: 0.88 },
         0
       );
-      // the wireframe dissolve (4.6/5.75): every part scatters along its own vector
-      t3.to(S, { disperse: 1, duration: 0.3 }, 4.6);
-      t3.to(obj, { autoAlpha: 0, duration: 0.3 }, 4.65);
-      t3.to({}, { duration: TOTAL - 4.95 }, 4.95); // pad to full pin length
+      // the cyber dissolve (0.88): every part scatters along its own vector
+      t3.to(S, { disperse: 1, duration: 0.06 }, 0.88);
+      t3.to(obj, { autoAlpha: 0, duration: 0.05 }, 0.9);
+      t3.to({}, { duration: 0.05 }, 0.95); // pad to full pin length
 
       // 4. LANDING — the paper-plane mark settles above "Join the first cohort."
       const t4 = gsap.timeline({
