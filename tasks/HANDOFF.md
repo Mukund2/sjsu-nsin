@@ -1,10 +1,38 @@
 # HANDOFF — single source of truth (REWRITTEN 2026-06-11 night — supersedes everything)
 
+## DIRECTION SESSION 2026-07-11 (user decisions — layer on top of the journey)
+- MANIFESTO (approved): dedicated /manifesto page — morality of AI warfare,
+  precision reduces civilian deaths, deterrence prevents wars — plus ONE
+  distilled line inside the journey. Nav link.
+- CONSULTING (approved): the flagship. Own page + top/larger row in "What we
+  do" (currently row 03 "Government & Industry Projects"); rename to lead
+  with consulting. Nav link.
+- NAV (partial): Manifesto · Consulting · Apply confirmed; About CUT from nav
+  (homepage tells the about story). Anduril-style Space/Air/Sea links:
+  undecided — demoed in /proto-cursor nav, awaiting verdict.
+- CURSOR (awaiting verdict): /proto-cursor has Version A (full crosshair,
+  pointer position picks domain image) vs Version B (default cursor,
+  pointer-parallax). Whichever wins must stay a bonus — touch/reduced-motion
+  get static content.
+
+
 Branch: redesign/domain-console (pushed). NEVER push/merge main (deploys).
 Dev: npm run dev → localhost:4321. Build: npx astro build.
 PROCESS RULE (user demand): when sub-agents run, actively monitor mid-flight
 (TaskOutput / check their file edits) and redirect via SendMessage the moment
 they drift from this file. Re-read this file before launching any agent.
+
+## ONE-SHOT JOURNEY (user lock 2026-06-13) — see tasks/shots.md for full detail
+The whole site is ONE continuous fall that PAUSES in the white for the club
+story: SPACE(orbit,descends)->AIR(jets,descends)->BREAKTHROUGH(dive to white
+#F2EDE3) -> [CLUB CONTENT on the white/paper] -> the SAME white keeps
+descending -> SEA(destroyer emerges from fog) -> JOIN. The white-out is the
+hinge (arrival AND departure). Clips chain via seeded first/last frames:
+descent ends on paper white; sea clip STARTS on paper white. Drafts proven at
+localhost:4321/drafts/ (STITCHED-JOURNEY.mp4). Opener = Shot 1 cand H/G (TBD).
+Pipeline in tasks/shots.md (Replicate Wan 2.2). NEXT: user picks opener, then
+720p finals + wire into the real pinned-scroll site with club sections in the
+white pause.
 
 ## THE STRUCTURE — NEW CONTRACT (user redirect, replaces all prior structure)
 The Valley map/timeline M1 is CUT. No undersea cables (niche). No cyber (not
@@ -45,7 +73,19 @@ SITE CLEANUP QUEUE: drop cyber from domains.ts + delete /domains/cyber page
   + nav/footers; journey captions become Space/Air/Sea only; altimeter range
   ends at sea level (no negative depths) unless sea beat wants shallow.
 
-## RENDER PIPELINE (proven — Blender 5.1.2 headless)
+## VIDEO PIPELINE — REPLICATE API (current; supersedes Blender + HF-free-quota)
+Token: ~/.config/replicate/token (chmod 600, NEVER commit; verified user mukund2,
+~$3.50 credit as of 2026-06-11). Auth: -H "Authorization: Bearer $(cat ~/.config/replicate/token)".
+Models: wan-video/wan-2.2-i2v-fast (cheap drafts), wan-video/wan-2.2-i2v-a14b
+(720p finals), kwaivgi/kling-v2.1 (backup if Wan motion fails a shot).
+Method: graded FLUX still (or previous clip's LAST FRAME for continuity) as
+input_image URL (raw.githubusercontent.com of pushed stills) → POST
+/v1/predictions → poll → download → ffmpeg faststart remux → public/videos/.
+Continuity contract: each Act-I clip is SEEDED from the previous clip's final
+frame (ffmpeg -sseof -0.1 frame grab) so cuts are invisible by construction.
+DO NOT GENERATE until user signs off on the shot list (pending as of 2026-06-11).
+
+## RENDER PIPELINE (Blender 5.1.2 headless — ABANDONED per user, kept for reference)
 /Applications/Blender.app/Contents/MacOS/Blender -b -P tools/render/<shot>.py
 PREVIEW=1 → 960x540 still → Read PNG → tweak → repeat; full = 240 PNG frames
 1920x1080 → ffmpeg -framerate 30 -i frames/<shot>_%04d.png -c:v libx264

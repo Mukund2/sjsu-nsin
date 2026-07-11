@@ -1,0 +1,276 @@
+---
+// PROTOTYPE — localhost only, not linked from nav.
+// Two treatments of the "cursor drives the imagery" idea, stacked for
+// side-by-side judgment, plus a demo Anduril-style navbar up top showing
+// how Space/Air/Sea + Manifesto/Consulting would sit together.
+// Version A: full crosshair cursor; pointer position picks the domain image.
+// Version B: default cursor; the scene leans toward the pointer (parallax).
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const zones = [
+  {
+    id: "space",
+    name: "Space",
+    line: "Orbit is infrastructure now.",
+    image: "/images/domains/orbit-limb.jpg",
+  },
+  {
+    id: "air",
+    name: "Air",
+    line: "Contest the sky without a pilot in it.",
+    image: "/images/domains/air-1.jpg",
+  },
+  {
+    id: "sea",
+    name: "Sea",
+    line: "The Pacific is the largest chessboard on Earth.",
+    image: "/images/domains/sea-surface.jpg",
+  },
+];
+---
+
+<BaseLayout title="Cursor prototype — NSIN" theme="console">
+  <!-- demo nav: the Anduril-style fit. Domains left, club actions right. -->
+  <nav
+    id="demo-nav"
+    class="fixed top-0 left-0 right-0 z-[70] bg-ink/85 backdrop-blur-md border-b border-paper/10"
+  >
+    <div class="max-w-[1500px] mx-auto px-5 sm:px-10 h-16 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-3">
+        <img src="/logo.svg" alt="SJSU NSIN" class="h-9 w-auto invert brightness-200" />
+        <span class="text-[14px] font-medium text-paper hidden lg:block">NSIN at SJSU</span>
+      </a>
+      <div class="hidden md:flex items-center gap-7">
+        {zones.map((z) => (
+          <a href={`/domains/${z.id}`} class="text-[14px] text-paper/60 hover:text-paper transition-colors">
+            {z.name}
+          </a>
+        ))}
+        <span class="w-px h-4 bg-paper/20" aria-hidden="true"></span>
+        <a href="#" class="text-[14px] text-paper/60 hover:text-paper transition-colors">Manifesto</a>
+        <a href="#" class="text-[14px] text-paper/60 hover:text-paper transition-colors">Consulting</a>
+        <a
+          href="https://forms.gle/9MLweCMRaaTkrEkGA"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="press bg-paper text-ink text-[14px] font-medium px-4 py-2"
+        >
+          Apply
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- evaluation notes (prototype page, so meta copy is allowed here) -->
+  <section class="scheme-ink px-5 sm:px-10 pt-28 pb-12">
+    <div class="max-w-[1500px] mx-auto">
+      <h1 class="t-h2">Cursor prototype — two treatments.</h1>
+      <p class="t-body mt-4 text-paper/60">
+        Version A is the full idea: crosshair cursor, and where you point picks
+        the domain. Version B is the restrained take: normal cursor, the scene
+        leans toward your pointer. The navbar above is the Anduril-style fit —
+        domains on the left, club actions on the right.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── VERSION A — crosshair; pointer position picks the domain ── -->
+  <section class="scheme-ink px-5 sm:px-10 pb-4">
+    <p class="t-caption text-paper/40 max-w-[1500px] mx-auto pb-3">Version A — crosshair</p>
+  </section>
+  <section id="xh-stage" class="relative h-[92vh] overflow-hidden bg-ink-deep">
+    {zones.map((z, i) => (
+      <img
+        src={z.image}
+        alt=""
+        class="xh-img absolute inset-0 w-full h-full object-cover"
+        style={`opacity:${i === 0 ? 1 : 0}`}
+        data-zone={z.id}
+        draggable="false"
+      />
+    ))}
+    <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/70 via-transparent to-ink/30"></div>
+
+    <!-- one caption per zone, bottom-left -->
+    {zones.map((z, i) => (
+      <div
+        class="xh-cap absolute left-6 sm:left-12 bottom-10 sm:bottom-14 pointer-events-none"
+        style={`opacity:${i === 0 ? 1 : 0}`}
+        data-zone={z.id}
+      >
+        <p class="font-display text-gold text-[clamp(1.1rem,1rem+0.6vw,1.4rem)]">{z.name}</p>
+        <h2 class="t-h1 text-paper max-w-[16ch]">{z.line}</h2>
+      </div>
+    ))}
+
+    <!-- the crosshair: full-bleed hairlines + open center ring -->
+    <div id="xh" class="absolute inset-0 pointer-events-none" aria-hidden="true">
+      <div id="xh-v" class="absolute top-0 bottom-0 w-px bg-paper/50"></div>
+      <div id="xh-h" class="absolute left-0 right-0 h-px bg-paper/50"></div>
+      <div id="xh-ring" class="absolute w-9 h-9 rounded-full border border-paper/80"></div>
+    </div>
+  </section>
+
+  <!-- ── VERSION B — no custom cursor; the scene leans toward the pointer ── -->
+  <section class="scheme-ink px-5 sm:px-10 pt-16 pb-4">
+    <p class="t-caption text-paper/40 max-w-[1500px] mx-auto pb-3">Version B — pointer-parallax</p>
+  </section>
+  <section id="pp-stage" class="relative h-[92vh] overflow-hidden bg-ink-deep">
+    <img
+      id="pp-img"
+      src="/images/valley-aerial.jpg"
+      alt=""
+      class="absolute inset-0 w-full h-full object-cover will-change-transform"
+      draggable="false"
+    />
+    <div class="absolute inset-0 pointer-events-none bg-gradient-to-t from-ink/75 via-transparent to-transparent"></div>
+    <div id="pp-copy" class="absolute left-6 sm:left-12 bottom-10 sm:bottom-14 will-change-transform">
+      <h2 class="t-display text-paper max-w-[13ch]">Lockheed was here before Google.</h2>
+      <p class="t-lede mt-5 text-paper/80 max-w-[36rem]">
+        The talent never left San José — what&rsquo;s missing is access.
+      </p>
+    </div>
+  </section>
+
+  <section class="scheme-ink px-5 sm:px-10 py-16">
+    <p class="t-caption text-paper/40 max-w-[1500px] mx-auto">
+      Touch devices and reduced-motion get static images — whichever version
+      wins has to be a bonus, never the content.
+    </p>
+  </section>
+</BaseLayout>
+
+<style>
+  /* this page runs its own demo nav */
+  :global(#main-navbar) {
+    display: none;
+  }
+  #xh-stage {
+    cursor: none;
+  }
+  #xh-ring {
+    transform: translate(-50%, -50%);
+  }
+  #xh-v,
+  #xh-h,
+  #xh-ring {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  #xh-stage:hover #xh-v,
+  #xh-stage:hover #xh-h,
+  #xh-stage:hover #xh-ring {
+    opacity: 1;
+  }
+  .xh-img,
+  .xh-cap {
+    will-change: transform, opacity;
+  }
+  .font-display {
+    font-family: var(--font-display);
+  }
+  /* touch / reduced motion: plain static images, normal cursor */
+  @media (hover: none), (prefers-reduced-motion: reduce) {
+    #xh-stage {
+      cursor: auto;
+    }
+    #xh {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  import gsap from "gsap";
+
+  function init() {
+    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!fine || reduced) return;
+
+    /* ── Version A: crosshair + zone-picked imagery ── */
+    const stage = document.getElementById("xh-stage");
+    if (stage) {
+      const imgs = Array.from(stage.querySelectorAll<HTMLElement>(".xh-img"));
+      const caps = Array.from(stage.querySelectorAll<HTMLElement>(".xh-cap"));
+      const vLine = document.getElementById("xh-v")!;
+      const hLine = document.getElementById("xh-h")!;
+      const ring = document.getElementById("xh-ring")!;
+
+      // hairlines track tight; the ring lags a touch so it feels weighted
+      const vTo = gsap.quickTo(vLine, "x", { duration: 0.12, ease: "power2.out" });
+      const hTo = gsap.quickTo(hLine, "y", { duration: 0.12, ease: "power2.out" });
+      const rxTo = gsap.quickTo(ring, "x", { duration: 0.28, ease: "power2.out" });
+      const ryTo = gsap.quickTo(ring, "y", { duration: 0.28, ease: "power2.out" });
+
+      // per-image parallax drift (images pre-scaled so edges never show)
+      imgs.forEach((img) => gsap.set(img, { scale: 1.08 }));
+      const drifts = imgs.map((img) => ({
+        x: gsap.quickTo(img, "x", { duration: 0.9, ease: "power3.out" }),
+        y: gsap.quickTo(img, "y", { duration: 0.9, ease: "power3.out" }),
+      }));
+
+      let active = "space";
+      const activate = (zone: string) => {
+        if (zone === active) return;
+        active = zone;
+        imgs.forEach((img) =>
+          gsap.to(img, { opacity: img.dataset.zone === zone ? 1 : 0, duration: 0.55, ease: "power2.inOut" })
+        );
+        caps.forEach((cap) =>
+          gsap.to(cap, {
+            opacity: cap.dataset.zone === zone ? 1 : 0,
+            y: cap.dataset.zone === zone ? 0 : 10,
+            duration: 0.4,
+            ease: "power2.out",
+          })
+        );
+      };
+
+      stage.addEventListener("pointermove", (e) => {
+        const r = stage.getBoundingClientRect();
+        const x = e.clientX - r.left;
+        const y = e.clientY - r.top;
+        vTo(x);
+        hTo(y);
+        rxTo(x);
+        ryTo(y);
+        const nx = x / r.width - 0.5;
+        const ny = y / r.height - 0.5;
+        drifts.forEach((d) => {
+          d.x(nx * -36);
+          d.y(ny * -24);
+        });
+        activate(nx < -1 / 6 ? "space" : nx < 1 / 6 ? "air" : "sea");
+      });
+    }
+
+    /* ── Version B: the scene leans toward the pointer ── */
+    const pp = document.getElementById("pp-stage");
+    const ppImg = document.getElementById("pp-img");
+    const ppCopy = document.getElementById("pp-copy");
+    if (pp && ppImg && ppCopy) {
+      gsap.set(ppImg, { scale: 1.06 });
+      const ix = gsap.quickTo(ppImg, "x", { duration: 1.1, ease: "power3.out" });
+      const iy = gsap.quickTo(ppImg, "y", { duration: 1.1, ease: "power3.out" });
+      const cx = gsap.quickTo(ppCopy, "x", { duration: 1.4, ease: "power3.out" });
+      const cy = gsap.quickTo(ppCopy, "y", { duration: 1.4, ease: "power3.out" });
+
+      pp.addEventListener("pointermove", (e) => {
+        const r = pp.getBoundingClientRect();
+        const nx = (e.clientX - r.left) / r.width - 0.5;
+        const ny = (e.clientY - r.top) / r.height - 0.5;
+        // image leans toward the pointer; copy drifts gently the other way
+        ix(nx * 22);
+        iy(ny * 14);
+        cx(nx * -8);
+        cy(ny * -5);
+      });
+      pp.addEventListener("pointerleave", () => {
+        ix(0); iy(0); cx(0); cy(0);
+      });
+    }
+  }
+
+  init();
+</script>
