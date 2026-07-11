@@ -1,0 +1,222 @@
+---
+// PROTOTYPE — scroll-scrubbed journey with stepped text beats.
+// Localhost only (not linked from nav). The pinned video advances as you
+// scroll, holds at each clip's end, and a text beat fades in: Space -> Air ->
+// Club (on the white). Mirrors the locked one-shot structure.
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout title="Journey prototype — NSIN" theme="console">
+  <section id="proto" class="relative">
+    <div id="proto-pin" class="relative h-screen w-full overflow-hidden bg-ink">
+      <video
+        id="jv"
+        class="absolute inset-0 w-full h-full object-cover"
+        src="/drafts/journey-scrub.mp4"
+        poster="/drafts/journey-poster.jpg"
+        muted
+        playsinline
+        preload="auto"
+        aria-hidden="true"
+      ></video>
+
+      <!-- legibility scrim for the dark (space/air) beats; fades on the white -->
+      <div id="scrim" class="absolute inset-0 pointer-events-none"></div>
+
+      <!-- SPACE -->
+      <div class="cap" id="cap-space">
+        <p class="cap-eyebrow">Space</p>
+        <h2 class="cap-h t-h1">Orbit is infrastructure now.</h2>
+        <p class="cap-sub t-lede">
+          GPS, weather, banking, communications, defense — modern life runs
+          through orbit. Tens of thousands of objects cross it at 17,000&nbsp;mph,
+          and someone has to track every one of them.
+        </p>
+      </div>
+
+      <!-- AIR -->
+      <div class="cap" id="cap-sky">
+        <p class="cap-eyebrow">Air</p>
+        <h2 class="cap-h t-h1">Contest the sky without a pilot in it.</h2>
+        <p class="cap-sub t-lede">
+          Air superiority is becoming thousands of cheap, autonomous,
+          software-defined things that see, decide, and act faster than anything
+          with a cockpit — and it&rsquo;s built by software people.
+        </p>
+      </div>
+
+      <!-- CLUB (on the white) -->
+      <div class="cap cap-dark" id="cap-club">
+        <h2 class="cap-h t-display">Lockheed was here before Google.</h2>
+        <p class="cap-sub t-lede">
+          The talent never left San Jos&eacute; — what&rsquo;s missing is access.
+          NSIN at SJSU connects engineers, designers, and policy minds to the
+          people working these problems, through real projects.
+        </p>
+      </div>
+
+      <!-- scroll hint -->
+      <div id="hint" aria-hidden="true">
+        <span>Scroll</span>
+        <span class="hint-arrow">↓</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- trailing spacer so the pin has somewhere to release into -->
+  <section class="scheme-paper h-[60vh] flex items-center justify-center">
+    <p class="t-caption text-ink/40">[ club content + sea + join continue from here ]</p>
+  </section>
+</BaseLayout>
+
+<style is:global>
+  #scrim {
+    background: linear-gradient(
+      to top,
+      rgb(27 25 24 / 0.72) 0%,
+      rgb(27 25 24 / 0.32) 32%,
+      transparent 60%
+    );
+  }
+  .cap {
+    position: absolute;
+    left: clamp(1.25rem, 5vw, 6rem);
+    bottom: clamp(2.5rem, 9vh, 7rem);
+    max-width: min(46rem, 82vw);
+    opacity: 0;
+    visibility: hidden;
+    will-change: opacity, transform;
+  }
+  .cap-eyebrow {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 0.9rem + 0.8vw, 1.5rem);
+    color: var(--color-gold);
+    margin-bottom: 0.6rem;
+    letter-spacing: 0.01em;
+  }
+  .cap-h {
+    color: var(--color-paper);
+    text-wrap: balance;
+  }
+  .cap-sub {
+    color: rgb(242 237 227 / 0.86);
+    margin-top: 1rem;
+    max-width: 40rem;
+  }
+  /* the club beat sits on white — flip to ink */
+  .cap-dark .cap-h {
+    color: var(--color-ink);
+  }
+  .cap-dark .cap-sub {
+    color: rgb(35 32 32 / 0.74);
+  }
+
+  #hint {
+    position: absolute;
+    left: 50%;
+    bottom: 2rem;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.35rem;
+    color: rgb(242 237 227 / 0.7);
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+  }
+  .hint-arrow {
+    animation: hint-bob 1.8s ease-in-out infinite;
+  }
+  @keyframes hint-bob {
+    0%, 100% { transform: translateY(0); opacity: 0.6; }
+    50% { transform: translateY(5px); opacity: 1; }
+  }
+
+  /* no-JS / reduced-motion: stack the beats statically over the poster */
+  html:not(.has-motion) #proto-pin { height: auto; }
+  html:not(.has-motion) #jv { position: relative; height: 70vh; }
+  html:not(.has-motion) .cap {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+    left: auto;
+    bottom: auto;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem;
+  }
+  html:not(.has-motion) #hint { display: none; }
+</style>
+
+<script>
+  import gsap from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  function init() {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduced) return; // static fallback via CSS
+
+    const video = document.getElementById("jv") as HTMLVideoElement | null;
+    const pin = document.getElementById("proto-pin");
+    if (!video || !pin) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    // clip boundaries inside journey-scrub.mp4 (orbit / dive-jets / dive-white)
+    const SPACE_T = 4.8; // end of orbit clip
+    const SKY_T = 9.9; // end of dive-into-jets clip
+    const WHITE_T = 15.0; // fully white (breakthrough landed)
+
+    const V = { t: 0 };
+
+    video.pause();
+
+    const tl = gsap.timeline({
+      defaults: { ease: "none" },
+      scrollTrigger: {
+        trigger: "#proto",
+        start: "top top",
+        end: "+=620%",
+        pin: "#proto-pin",
+        scrub: 1,
+        anticipatePin: 1,
+      },
+      onUpdate: () => {
+        // sync the scrubbed video to the proxy time
+        if (video.readyState >= 1) {
+          const t = Math.min(Math.max(V.t, 0), WHITE_T);
+          if (Math.abs(video.currentTime - t) > 0.01) video.currentTime = t;
+        }
+      },
+    });
+
+    // hide the hint as soon as the journey starts
+    tl.to("#hint", { autoAlpha: 0, duration: 0.25 }, 0);
+
+    // ── SPACE ──
+    tl.to(V, { t: SPACE_T, duration: 1.2 }, 0.25); // scrub through orbit
+    tl.fromTo("#cap-space", { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.35 }, "-=0.35");
+    tl.to(V, { t: SPACE_T, duration: 1.4 }); // HOLD — read space
+    tl.to("#cap-space", { autoAlpha: 0, y: -16, duration: 0.3 });
+
+    // ── AIR ──
+    tl.to(V, { t: SKY_T, duration: 1.2 }); // dive into the jets
+    tl.fromTo("#cap-sky", { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.35 }, "-=0.35");
+    tl.to(V, { t: SKY_T, duration: 1.4 }); // HOLD — read air
+    tl.to("#cap-sky", { autoAlpha: 0, y: -16, duration: 0.3 });
+
+    // ── CLUB (on the white) ──
+    tl.to(V, { t: WHITE_T, duration: 1.3 }); // dive through cloud to white
+    tl.to("#scrim", { autoAlpha: 0, duration: 0.4 }, "-=0.5"); // drop the dark scrim
+    tl.fromTo("#cap-club", { autoAlpha: 0, y: 24 }, { autoAlpha: 1, y: 0, duration: 0.45 }, "-=0.3");
+    tl.to(V, { t: WHITE_T, duration: 2.0 }); // HOLD on white — club text
+
+    // make sure pin measurements are right once the video can seek
+    const refresh = () => ScrollTrigger.refresh();
+    if (video.readyState >= 1) refresh();
+    video.addEventListener("loadedmetadata", refresh, { once: true });
+    video.addEventListener("loadeddata", refresh, { once: true });
+    window.addEventListener("load", refresh, { once: true });
+  }
+
+  init();
+</script>
