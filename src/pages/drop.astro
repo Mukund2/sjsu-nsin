@@ -1,0 +1,598 @@
+---
+// PROTOTYPE — "the drop site" homepage. Localhost only, standalone.
+// Register: Erewhon × El Segundo — LA hardware-scene meme confidence,
+// luxury-grocery product framing, played completely straight.
+// Pattern: the homepage is a toy; the paperwork lives at /info (plain,
+// emojis + text). The contrast is the joke.
+// Taste rules still apply: every line carries a real fact; the fun is in
+// the framing, not in filler.
+
+const apply = "https://forms.gle/9MLweCMRaaTkrEkGA";
+
+const tickerLines = [
+  "DROP 001 — FALL 2026 COHORT",
+  "LOCKHEED WAS HERE BEFORE GOOGLE",
+  "THE PACIFIC IS RIGHT THERE",
+  "EVERY MAJOR HAS A SEAT",
+  "NO EXPERIENCE REQUIRED",
+  "SAN JOSÉ, CALIFORNIA",
+];
+
+const menu = [
+  {
+    emoji: "🫱🏽‍🫲🏼",
+    name: "CONSULTING CLEANSE",
+    desc: "Student teams paired with defense & intelligence orgs on live problems. Ships a real deliverable.",
+    price: "$0.00",
+    tag: "STAFF PICK",
+    tagClass: "tag-pick",
+  },
+  {
+    emoji: "🎙️",
+    name: "RAW SPEAKER SERIES",
+    desc: "Defense-tech founders, policymakers, and intelligence veterans. In the room, unfiltered.",
+    price: "$0.00",
+    tag: "IN STOCK",
+    tagClass: "tag-stock",
+  },
+  {
+    emoji: "🛠️",
+    name: "HACKATHON PRE-WORKOUT",
+    desc: "Prototype sprints + DoD challenges. The pipeline to the National Security Hackathon.",
+    price: "$0.00",
+    tag: "LIMITED",
+    tagClass: "tag-limited",
+  },
+  {
+    emoji: "📜",
+    name: "COLD-PRESSED POLICY",
+    desc: "AI governance, export controls, deterrence — argued across engineering, business & poli-sci.",
+    price: "$0.00",
+    tag: "IN STOCK",
+    tagClass: "tag-stock",
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>NSIN @ SJSU — DROP 001</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- ── ticker ── -->
+    <div class="ticker" aria-hidden="true">
+      <div class="ticker-track">
+        {[...tickerLines, ...tickerLines, ...tickerLines].map((t) => (
+          <span class="tick">★ {t}</span>
+        ))}
+      </div>
+    </div>
+
+    <!-- ── nav ── -->
+    <nav class="bar">
+      <span class="brand"><img src="/logo.svg" alt="" class="brand-logo" /> NSIN @ SJSU</span>
+      <span class="bar-links">
+        <a href="/info">info 📄</a>
+        <a href={apply} target="_blank" rel="noopener noreferrer">apply ✍️</a>
+      </span>
+    </nav>
+
+    <!-- ── hero: the launch console ── -->
+    <main class="hero">
+      <h1 class="stack" aria-label="Defense tech club">
+        <span class="line fill">DEFENSE</span>
+        <span class="line hollow">TECH</span>
+        <span class="line fill">CLUB</span>
+      </h1>
+
+      <div class="stickers" aria-hidden="true">
+        <span class="sticker sticker-free">FREE</span>
+        <span class="sticker sticker-loc">SAN JOSÉ, CA</span>
+      </div>
+
+      <!-- the toy -->
+      <div class="console" id="console">
+        <p class="console-label">APPLICATION LAUNCH CONSOLE</p>
+        <div class="console-row">
+          <div class="arm">
+            <p class="arm-label">1 — ARM</p>
+            <button id="arm-switch" class="arm-switch" aria-pressed="false" aria-label="Arm the launch button">
+              <span class="arm-cover"></span>
+              <span class="arm-toggle"></span>
+            </button>
+          </div>
+          <div class="fire">
+            <p class="arm-label">2 — LAUNCH</p>
+            <a
+              id="launch-btn"
+              class="launch"
+              href={apply}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-disabled="true"
+            >
+              LAUNCH<br />APPLICATION
+            </a>
+          </div>
+        </div>
+        <p class="console-foot" id="console-foot">safety cover engaged · flip the switch</p>
+      </div>
+    </main>
+
+    <!-- ── the shelf ── -->
+    <section class="shelf">
+      <h2 class="shelf-h">THIS SEMESTER'S MENU</h2>
+      <p class="shelf-sub">all items $0.00 with a student ID · no experience required</p>
+      <div class="tags-grid">
+        {menu.map((m) => (
+          <article class="shelf-tag">
+            <p class="tag-emoji">{m.emoji}</p>
+            <span class={`stock ${m.tagClass}`}>{m.tag}</span>
+            <h3>{m.name}</h3>
+            <p class="tag-desc">{m.desc}</p>
+            <p class="tag-price">{m.price}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <footer class="foot">
+      <p>this page is the fun part. the boring part lives at <a href="/info">/info</a> 📄</p>
+      <p class="foot-fine">NSIN at San José State University · Washington Square since 1857</p>
+    </footer>
+
+    <!-- flight satellite for the launch moment -->
+    <div id="bird" aria-hidden="true">🛰️</div>
+
+    <style>
+      :root {
+        --cream: #f7f1e3;
+        --ink: #141414;
+        --red: #e3352b;
+        --cobalt: #1f4fd8;
+        --green: #1e6b4a;
+        --gold: #f2b32c;
+      }
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--cream);
+        color: var(--ink);
+        font-family: ui-sans-serif, system-ui, sans-serif;
+        overflow-x: hidden;
+      }
+      body.shake {
+        animation: shake 0.5s linear;
+      }
+      @keyframes shake {
+        10% { transform: translate(-6px, 3px) rotate(-0.4deg); }
+        30% { transform: translate(5px, -4px) rotate(0.3deg); }
+        50% { transform: translate(-4px, 2px) rotate(-0.2deg); }
+        70% { transform: translate(3px, -2px) rotate(0.2deg); }
+        90% { transform: translate(-2px, 1px); }
+      }
+
+      .ticker {
+        background: var(--ink);
+        color: var(--cream);
+        overflow: hidden;
+        padding: 0.45rem 0;
+      }
+      .ticker-track {
+        display: inline-flex;
+        white-space: nowrap;
+        animation: crawl 30s linear infinite;
+      }
+      .tick {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding-right: 2.2rem;
+      }
+      @keyframes crawl {
+        to { transform: translateX(-33.333%); }
+      }
+
+      .bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.9rem clamp(1rem, 4vw, 2.5rem);
+        border-bottom: 3px solid var(--ink);
+      }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        font-size: 1rem;
+      }
+      .brand-logo {
+        height: 1.6rem;
+        width: auto;
+      }
+      .bar-links {
+        display: flex;
+        gap: 1.6rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.95rem;
+      }
+      .bar-links a {
+        color: var(--ink);
+        text-decoration: none;
+        border-bottom: 2px solid transparent;
+      }
+      .bar-links a:hover {
+        border-bottom-color: var(--ink);
+      }
+
+      .hero {
+        position: relative;
+        text-align: center;
+        padding: clamp(2rem, 5vw, 4rem) 1rem 3.5rem;
+      }
+      .stack {
+        font-family: "Anton", Impact, sans-serif;
+        font-weight: 400;
+        line-height: 0.88;
+        letter-spacing: 0.01em;
+        font-size: clamp(4rem, 16vw, 13rem);
+        text-transform: uppercase;
+      }
+      .stack .line {
+        display: block;
+      }
+      .fill {
+        color: var(--ink);
+      }
+      .hollow {
+        color: var(--cream);
+        -webkit-text-stroke: 3px var(--ink);
+      }
+
+      .stickers {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+      .sticker {
+        position: absolute;
+        font-family: "Anton", Impact, sans-serif;
+        font-size: clamp(1rem, 2.4vw, 1.6rem);
+        padding: 0.5em 0.9em;
+        transform: rotate(-8deg);
+        border: 3px solid var(--ink);
+        box-shadow: 4px 4px 0 var(--ink);
+      }
+      .sticker-free {
+        top: 12%;
+        right: clamp(4%, 12vw, 18%);
+        background: var(--gold);
+      }
+      .sticker-loc {
+        bottom: 38%;
+        left: clamp(2%, 8vw, 14%);
+        background: var(--cobalt);
+        color: var(--cream);
+        transform: rotate(5deg);
+      }
+
+      /* ── the console ── */
+      .console {
+        display: inline-block;
+        margin-top: 2.4rem;
+        background: #fff;
+        border: 3px solid var(--ink);
+        box-shadow: 8px 8px 0 var(--ink);
+        padding: 1.4rem 1.8rem 1.1rem;
+      }
+      .console-label {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        font-size: 0.8rem;
+        letter-spacing: 0.14em;
+        border-bottom: 2px solid var(--ink);
+        padding-bottom: 0.6rem;
+        margin-bottom: 1.1rem;
+      }
+      .console-row {
+        display: flex;
+        gap: 2.2rem;
+        align-items: stretch;
+        justify-content: center;
+      }
+      .arm-label {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-bottom: 0.55rem;
+      }
+      .arm-switch {
+        position: relative;
+        width: 5.2rem;
+        height: 7.4rem;
+        background: #ddd6c4;
+        border: 3px solid var(--ink);
+        cursor: pointer;
+        padding: 0;
+      }
+      .arm-cover {
+        position: absolute;
+        inset: -3px;
+        background: repeating-linear-gradient(
+          45deg,
+          var(--gold),
+          var(--gold) 12px,
+          var(--ink) 12px,
+          var(--ink) 24px
+        );
+        border: 3px solid var(--ink);
+        transform-origin: top center;
+        transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      }
+      .arm-switch.open .arm-cover {
+        transform: rotateX(140deg);
+      }
+      .arm-toggle {
+        position: absolute;
+        left: 50%;
+        top: 60%;
+        width: 1.6rem;
+        height: 3.4rem;
+        transform: translate(-50%, -50%);
+        background: var(--ink);
+        border-radius: 0.8rem;
+        transition: top 0.2s ease, background 0.2s ease;
+      }
+      .arm-switch.armed .arm-toggle {
+        top: 40%;
+        background: var(--green);
+      }
+
+      .launch {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 11.5rem;
+        height: 7.4rem;
+        font-family: "Anton", Impact, sans-serif;
+        font-size: 1.5rem;
+        line-height: 1.05;
+        text-decoration: none;
+        color: #fff;
+        background: #b9b3a2;
+        border: 3px solid var(--ink);
+        pointer-events: none;
+        transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.1s ease;
+      }
+      .launch.armed {
+        background: var(--red);
+        pointer-events: auto;
+        box-shadow: 0 6px 0 #8f1d16;
+        animation: pulse 1.2s ease-in-out infinite;
+      }
+      .launch.armed:active {
+        transform: translateY(6px);
+        box-shadow: 0 0 0 #8f1d16;
+        animation: none;
+      }
+      @keyframes pulse {
+        50% { filter: brightness(1.12); }
+      }
+      .console-foot {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        color: #6d675a;
+        margin-top: 1rem;
+      }
+
+      /* ── shelf ── */
+      .shelf {
+        border-top: 3px solid var(--ink);
+        padding: 3rem clamp(1rem, 4vw, 2.5rem) 3.5rem;
+        max-width: 78rem;
+        margin: 0 auto;
+      }
+      .shelf-h {
+        font-family: "Anton", Impact, sans-serif;
+        font-size: clamp(2rem, 6vw, 4rem);
+        text-transform: uppercase;
+      }
+      .shelf-sub {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.9rem;
+        margin: 0.5rem 0 2rem;
+        color: #55503f;
+      }
+      .tags-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+        gap: 1.4rem;
+      }
+      .shelf-tag {
+        position: relative;
+        background: #fff;
+        border: 3px solid var(--ink);
+        box-shadow: 6px 6px 0 var(--ink);
+        padding: 1.3rem 1.2rem 1.1rem;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+      }
+      .shelf-tag:hover {
+        transform: translate(-2px, -4px) rotate(-0.6deg);
+        box-shadow: 9px 10px 0 var(--ink);
+      }
+      .tag-emoji {
+        font-size: 2rem;
+      }
+      .stock {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.62rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        padding: 0.3em 0.6em;
+        border: 2px solid var(--ink);
+      }
+      .tag-pick { background: var(--gold); }
+      .tag-stock { background: #c9e4d2; }
+      .tag-limited { background: var(--red); color: #fff; }
+      .shelf-tag h3 {
+        font-family: "Anton", Impact, sans-serif;
+        font-weight: 400;
+        font-size: 1.45rem;
+        margin: 0.8rem 0 0.5rem;
+      }
+      .tag-desc {
+        font-size: 0.95rem;
+        line-height: 1.45;
+        min-height: 4.2em;
+      }
+      .tag-price {
+        font-family: "IBM Plex Mono", monospace;
+        font-weight: 600;
+        font-size: 1.5rem;
+        margin-top: 0.9rem;
+        border-top: 2px dashed var(--ink);
+        padding-top: 0.6rem;
+      }
+
+      .foot {
+        border-top: 3px solid var(--ink);
+        padding: 2rem clamp(1rem, 4vw, 2.5rem) 2.6rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.95rem;
+      }
+      .foot a {
+        color: var(--cobalt);
+      }
+      .foot-fine {
+        font-size: 0.72rem;
+        color: #6d675a;
+        margin-top: 0.7rem;
+      }
+
+      /* launch flight */
+      #bird {
+        position: fixed;
+        left: -8vw;
+        top: 55vh;
+        font-size: 3.2rem;
+        z-index: 90;
+        pointer-events: none;
+        visibility: hidden;
+      }
+      #bird.fly {
+        visibility: visible;
+        animation: fly 1.4s cubic-bezier(0.3, 0.1, 0.4, 1) forwards;
+      }
+      #bird::after {
+        content: "";
+        position: absolute;
+        right: 100%;
+        top: 50%;
+        width: 34vw;
+        height: 4px;
+        background: linear-gradient(to left, var(--ink), transparent);
+      }
+      @keyframes fly {
+        to { transform: translate(125vw, -42vh) rotate(14deg); }
+      }
+
+      .confetto {
+        position: fixed;
+        width: 10px;
+        height: 14px;
+        z-index: 95;
+        pointer-events: none;
+        animation: drop 1.6s ease-in forwards;
+      }
+      @keyframes drop {
+        to {
+          transform: translateY(110vh) rotate(720deg);
+          opacity: 0.7;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .ticker-track { animation: none; }
+        .launch.armed { animation: none; }
+        body.shake { animation: none; }
+        #bird.fly { animation: none; visibility: hidden; }
+      }
+    </style>
+
+    <script>
+      const armSwitch = document.getElementById("arm-switch")!;
+      const launchBtn = document.getElementById("launch-btn")!;
+      const consoleFoot = document.getElementById("console-foot")!;
+      const bird = document.getElementById("bird")!;
+      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let armed = false;
+
+      armSwitch.addEventListener("click", () => {
+        // first click flips the cover, second click flips the switch
+        if (!armSwitch.classList.contains("open")) {
+          armSwitch.classList.add("open");
+          consoleFoot.textContent = "cover open · flip the switch";
+          return;
+        }
+        armed = !armed;
+        armSwitch.classList.toggle("armed", armed);
+        armSwitch.setAttribute("aria-pressed", String(armed));
+        launchBtn.classList.toggle("armed", armed);
+        launchBtn.setAttribute("aria-disabled", String(!armed));
+        consoleFoot.textContent = armed
+          ? "ARMED · the red button is live"
+          : "disarmed · flip the switch";
+      });
+
+      const COLORS = ["#e3352b", "#1f4fd8", "#f2b32c", "#1e6b4a", "#141414"];
+      function confetti() {
+        for (let i = 0; i < 90; i++) {
+          const c = document.createElement("div");
+          c.className = "confetto";
+          c.style.left = Math.random() * 100 + "vw";
+          c.style.top = -(Math.random() * 20 + 5) + "vh";
+          c.style.background = COLORS[i % COLORS.length];
+          c.style.animationDelay = Math.random() * 0.35 + "s";
+          c.style.transform = `rotate(${Math.random() * 360}deg)`;
+          document.body.appendChild(c);
+          setTimeout(() => c.remove(), 2400);
+        }
+      }
+
+      launchBtn.addEventListener("click", (e) => {
+        if (!armed) {
+          e.preventDefault();
+          return;
+        }
+        // the <a> opens the form in a new tab natively; we just celebrate
+        if (!reduced) {
+          document.body.classList.remove("shake");
+          void document.body.offsetWidth; // restart animation
+          document.body.classList.add("shake");
+          bird.classList.remove("fly");
+          void bird.offsetWidth;
+          bird.classList.add("fly");
+          confetti();
+        }
+      });
+    </script>
+  </body>
+</html>
