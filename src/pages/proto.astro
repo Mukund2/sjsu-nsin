@@ -1,0 +1,445 @@
+---
+// PROTOTYPE — "Heart's Delight, 1956" creative direction sampler.
+// Localhost only, fully standalone (no BaseLayout, no Tailwind, no site CSS)
+// so it can be judged — and thrown away — in isolation.
+//
+// The organizing idea (the Castelion move — ONE period reference, everything
+// downstream of it): the Valley of Heart's Delight. San José's own
+// mid-century summer — fruit-crate lithography, blossom festivals, travel
+// posters — which is the SAME landscape and decade where the first
+// defense-tech boom happened (Lockheed → Sunnyvale, 1956). Cream never
+// white, crate-label plates, Fraunces with the wonk turned on, and every
+// decorative element carries a real dated fact.
+
+const apply = "https://forms.gle/9MLweCMRaaTkrEkGA";
+
+const ticker = [
+  "1857 — San José State founded: the oldest public university in the West",
+  "1883 — Bean Spray Pump Co. opens in San José; ninety years on, it builds the Bradley",
+  "1900 — the first Blossom Festival draws thousands to see the valley bloom",
+  "1939 — Charles Lindbergh sites the NACA's Ames laboratory at Moffett Field",
+  "1948 — the Chamber of Commerce films “Valley of Heart's Delight” in color",
+  "1956 — Lockheed Missiles arrives beside the orchards: 28,000 jobs in nine years",
+  "1956 — IBM San José ships the world's first hard disk drive",
+];
+
+const programs = [
+  {
+    name: "Consulting",
+    desc: "Student teams paired with defense and intelligence organizations on live problems — the flagship.",
+    plate: "sea",
+  },
+  {
+    name: "Speaker Series",
+    desc: "Defense-tech founders, policymakers, and intelligence veterans — in the room, on the record.",
+    plate: "butter",
+  },
+  {
+    name: "Build & Compete",
+    desc: "Prototype sprints and DoD challenges. The preparation pipeline for the National Security Hackathon.",
+    plate: "tomato",
+  },
+  {
+    name: "Policy & Strategy",
+    desc: "AI governance, export controls, and deterrence — argued across engineering, business, and political science.",
+    plate: "olive",
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Heart's Delight, 1956 — direction prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,100..900,0..100,0..1;1,9..144,100..900,0..100,0..1&family=EB+Garamond:ital,wght@0,400..700;1,400..700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- ── nav ── -->
+    <nav class="bar">
+      <span class="wordmark">NSIN <em>at</em> San José State</span>
+      <span class="bar-links">
+        <a href="#programs">Programs</a>
+        <a href="#story">Manifesto</a>
+        <a class="btn btn-tomato" href={apply} target="_blank" rel="noopener noreferrer">Apply</a>
+      </span>
+    </nav>
+
+    <!-- ── hero: a crate label for the club ── -->
+    <header class="hero">
+      <div class="plate hero-plate">
+        <p class="eyebrow">Santa Clara Valley, Calif.</p>
+        <h1>The Valley of <em>Heart's Delight</em></h1>
+        <p class="lede">
+          For a century, this valley grew apricots for half the world. Then, in
+          1956, Lockheed moved in next to the orchards — and the first
+          defense-tech boom began. NSIN at San José State is the newest
+          chapter: students working real national-security problems, in the
+          valley that <em>invented the industry</em>.
+        </p>
+        <a class="btn btn-tomato btn-big" href={apply} target="_blank" rel="noopener noreferrer">
+          Join the club
+        </a>
+        <p class="plate-foot">San José, California &nbsp;·&nbsp; Washington Square since 1857</p>
+      </div>
+    </header>
+
+    <!-- ── the record: every entry a real dated fact ── -->
+    <div class="ticker" aria-label="A timeline of the valley">
+      <div class="ticker-track">
+        {[...ticker, ...ticker].map((t) => <span class="tick">{t}</span>)}
+      </div>
+    </div>
+
+    <!-- ── the statement ── -->
+    <section class="statement" id="story">
+      <h2>Leisure and deterrence grew up in the same orchard.</h2>
+      <p>
+        The engineers who tracked satellites from Sunnyvale's Blue Cube lived
+        in Eichler houses built on apricot land. The company that became the
+        valley's biggest employer assembled <em>Polaris</em> two miles from the
+        blossom-festival route. And San José State watched it all from the same
+        square downtown — orchard to cannery to missile plant to chip fab —
+        while its graduates staffed Ames, Lockheed, and the Kepler mission.
+        <em>The talent never left.</em> What's missing is access.
+      </p>
+    </section>
+
+    <!-- ── programs: each one owns a color, like label stock ── -->
+    <section class="programs" id="programs">
+      <h2 class="programs-h">What we do</h2>
+      <div class="plates">
+        {programs.map((p) => (
+          <article class={`plate program plate-${p.plate}`}>
+            <h3>{p.name}</h3>
+            <p>{p.desc}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- ── join ── -->
+    <section class="join">
+      <h2>Join the first cohort.</h2>
+      <p>
+        Fall 2026: weekly build nights, the speaker series, and the first
+        consulting teams. Every major has a seat.
+      </p>
+      <a class="btn btn-butter btn-big" href={apply} target="_blank" rel="noopener noreferrer">
+        Apply — it takes five minutes
+      </a>
+    </section>
+
+    <footer class="foot">
+      <span>NSIN at San José State University</span>
+      <span>Washington Square, San José, Calif.</span>
+    </footer>
+
+    <style>
+      :root {
+        --paper: #efe7d6;
+        --espresso: #362822;
+        --butter: #f1d27a;
+        --tomato: #d93a2b;
+        --sea: #23659f;
+        --olive: #967c29;
+        --rule: 2px solid var(--espresso);
+      }
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--paper);
+        color: var(--espresso);
+        font-family: "EB Garamond", Georgia, serif;
+        font-size: 1.1875rem;
+        line-height: 1.5;
+      }
+      h1,
+      h2,
+      h3 {
+        font-family: "Fraunces", Georgia, serif;
+        font-variation-settings: "SOFT" 0, "WONK" 1;
+        font-weight: 620;
+        line-height: 0.98;
+        letter-spacing: -0.015em;
+        text-wrap: balance;
+      }
+      em {
+        font-style: italic;
+      }
+      h1 em,
+      h2 em {
+        font-variation-settings: "SOFT" 40, "WONK" 1;
+      }
+      a {
+        color: inherit;
+      }
+
+      /* buttons: label-stock chips, square-ish, they press down */
+      .btn {
+        display: inline-block;
+        font-family: "Fraunces", serif;
+        font-weight: 560;
+        text-decoration: none;
+        border: var(--rule);
+        border-radius: 2px;
+        padding: 0.55em 1.6em;
+        box-shadow: 3px 3px 0 var(--espresso);
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+      }
+      .btn:hover {
+        transform: translate(2px, 2px);
+        box-shadow: 1px 1px 0 var(--espresso);
+      }
+      .btn-tomato {
+        background: var(--tomato);
+        color: var(--paper);
+      }
+      .btn-butter {
+        background: var(--butter);
+        color: var(--espresso);
+      }
+      .btn-big {
+        font-size: 1.25rem;
+        padding: 0.7em 2em;
+      }
+
+      /* nav */
+      .bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem clamp(1.25rem, 4vw, 3rem);
+        border-bottom: var(--rule);
+      }
+      .wordmark {
+        font-family: "Fraunces", serif;
+        font-weight: 640;
+        font-size: 1.25rem;
+      }
+      .wordmark em {
+        font-weight: 420;
+      }
+      .bar-links {
+        display: flex;
+        align-items: center;
+        gap: 1.75rem;
+        font-family: "Fraunces", serif;
+        font-size: 1.05rem;
+      }
+      .bar-links a:not(.btn) {
+        text-decoration: none;
+        border-bottom: 1.5px solid transparent;
+      }
+      .bar-links a:not(.btn):hover {
+        border-bottom-color: var(--espresso);
+      }
+
+      /* the crate-label plate: double rule, like printed label stock */
+      .plate {
+        border: var(--rule);
+        outline: 1px solid var(--espresso);
+        outline-offset: 4px;
+        background: var(--paper);
+      }
+
+      .hero {
+        padding: clamp(2rem, 6vw, 5rem) clamp(1.25rem, 4vw, 3rem);
+        display: grid;
+        place-items: center;
+      }
+      .hero-plate {
+        max-width: 62rem;
+        width: 100%;
+        text-align: center;
+        padding: clamp(2.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 5rem) 0;
+      }
+      .eyebrow {
+        font-family: "Fraunces", serif;
+        font-size: 0.9375rem;
+        font-weight: 560;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+      }
+      .hero h1 {
+        font-size: clamp(3rem, 1rem + 9vw, 8rem);
+        font-variation-settings: "SOFT" 0, "WONK" 1, "opsz" 144;
+        margin: 1.2rem 0 1.6rem;
+      }
+      .lede {
+        font-size: clamp(1.2rem, 1.05rem + 0.7vw, 1.5rem);
+        max-width: 44rem;
+        margin: 0 auto 2.2rem;
+        text-wrap: pretty;
+      }
+      .plate-foot {
+        margin-top: 2.6rem;
+        padding: 0.8rem 0;
+        border-top: var(--rule);
+        font-family: "Fraunces", serif;
+        font-size: 0.9375rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+
+      /* ticker — espresso band, slow crawl, every entry a dated fact */
+      .ticker {
+        background: var(--espresso);
+        color: var(--paper);
+        overflow: hidden;
+        border-block: var(--rule);
+        padding: 0.7rem 0;
+      }
+      .ticker-track {
+        display: inline-flex;
+        white-space: nowrap;
+        animation: crawl 60s linear infinite;
+      }
+      .ticker:hover .ticker-track {
+        animation-play-state: paused;
+      }
+      .tick {
+        font-family: "Fraunces", serif;
+        font-size: 1.05rem;
+        padding: 0 1.6rem;
+      }
+      .tick::after {
+        content: "✳";
+        color: var(--butter);
+        margin-left: 3.2rem;
+      }
+      @keyframes crawl {
+        to {
+          transform: translateX(-50%);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .ticker-track {
+          animation: none;
+          white-space: normal;
+          display: block;
+          padding: 0 1.5rem;
+        }
+        .tick {
+          display: block;
+          padding: 0.15rem 0;
+        }
+        .tick::after {
+          content: "";
+        }
+      }
+
+      /* statement — butter plate section */
+      .statement {
+        background: var(--butter);
+        padding: clamp(3rem, 8vw, 6.5rem) clamp(1.25rem, 4vw, 3rem);
+        border-bottom: var(--rule);
+      }
+      .statement h2 {
+        font-size: clamp(2rem, 1rem + 4.5vw, 4.25rem);
+        max-width: 18ch;
+        margin: 0 auto;
+      }
+      .statement p {
+        max-width: 42rem;
+        margin: 2rem auto 0;
+        font-size: clamp(1.15rem, 1rem + 0.6vw, 1.4rem);
+      }
+
+      /* programs — each plate owns a color, like label stock runs */
+      .programs {
+        padding: clamp(3rem, 7vw, 5.5rem) clamp(1.25rem, 4vw, 3rem);
+        max-width: 74rem;
+        margin: 0 auto;
+      }
+      .programs-h {
+        font-size: clamp(2rem, 1.2rem + 3.5vw, 3.5rem);
+        margin-bottom: 2.2rem;
+      }
+      .plates {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.6rem;
+      }
+      @media (max-width: 640px) {
+        .plates {
+          grid-template-columns: 1fr;
+        }
+      }
+      .program {
+        padding: 1.8rem 1.6rem 2rem;
+        transition: transform 0.18s ease, box-shadow 0.18s ease;
+      }
+      .program:hover {
+        transform: rotate(-0.6deg) translateY(-4px);
+        box-shadow: 5px 6px 0 rgb(54 40 34 / 0.25);
+      }
+      .program h3 {
+        font-size: 1.8rem;
+        margin-bottom: 0.7rem;
+      }
+      .program p {
+        font-size: 1.05rem;
+      }
+      .plate-sea {
+        background: var(--sea);
+        color: var(--paper);
+      }
+      .plate-butter {
+        background: var(--butter);
+      }
+      .plate-tomato {
+        background: var(--tomato);
+        color: var(--paper);
+      }
+      .plate-olive {
+        background: var(--olive);
+        color: var(--paper);
+      }
+
+      /* join — sea band */
+      .join {
+        background: var(--sea);
+        color: var(--paper);
+        text-align: center;
+        padding: clamp(3.5rem, 9vw, 7rem) clamp(1.25rem, 4vw, 3rem);
+        border-block: var(--rule);
+      }
+      .join h2 {
+        font-size: clamp(2.4rem, 1.4rem + 5vw, 5rem);
+      }
+      .join p {
+        max-width: 34rem;
+        margin: 1.4rem auto 2.4rem;
+        font-size: 1.25rem;
+      }
+
+      .foot {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        flex-wrap: wrap;
+        padding: 1.4rem clamp(1.25rem, 4vw, 3rem);
+        font-family: "Fraunces", serif;
+        font-size: 0.9375rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      @media (max-width: 640px) {
+        .bar-links a:not(.btn) {
+          display: none;
+        }
+      }
+    </style>
+  </body>
+</html>
