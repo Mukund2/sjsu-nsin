@@ -1,0 +1,464 @@
+---
+// MOODBOARD — localhost only. Three candidate worlds for the NSIN identity,
+// unified by one thesis: a quiet summer is the product of deterrence.
+// Images are hotlinked references (Unsplash/Pexels free license; Wikimedia
+// US-gov public domain) — final site imagery gets AI-generated/shot later.
+// This page is disposable: it exists so we can point at feelings.
+
+const worlds = [
+  {
+    id: "a",
+    index: "Nº 1",
+    name: "La Nouvelle Vague",
+    thesis:
+      "Modern French-editorial confidence. Hard light, white space, enormous type. The future of defense, dressed nothing like a defense website.",
+    serious:
+      "Seriousness lives in the copy — cold, precise sentences set huge. The images stay sunlit; the words carry the weight.",
+    font: "a",
+    specimen: "Deterrence is a summer that stays boring.",
+    caption: "Archivo (expanded, black) + Newsreader italic — modern, not retro",
+    palette: [
+      { hex: "#FAFAF6", name: "gallery white" },
+      { hex: "#101010", name: "ink" },
+      { hex: "#002FA7", name: "Klein blue" },
+      { hex: "#E8E4D8", name: "plaster" },
+    ],
+    images: [
+      {
+        src: "https://images.unsplash.com/photo-1518005020951-eccb494ad742?w=1400&q=80",
+        alt: "Curved white-and-blue striped architecture against clear sky",
+        note: "graphic, surreal-clean — no mood filters",
+        tall: true,
+      },
+      {
+        src: "https://upload.wikimedia.org/wikipedia/commons/e/e0/French_destroyer_Chevalier_Paul_%28D621%29_underway_in_the_Mediterranean_Sea_on_15_July_2017.JPG",
+        alt: "Destroyer alone on a clean Mediterranean horizon",
+        note: "a warship can be this quiet",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=1400&q=80",
+        alt: "Santorini stairway to deep-blue Aegean, hard midday light",
+        tall: true,
+      },
+      {
+        src: "https://images.unsplash.com/photo-1486718448742-163732cd1544?w=1400&q=80",
+        alt: "Terracotta sculptural facade against saturated blue sky",
+        tall: true,
+      },
+      {
+        src: "https://upload.wikimedia.org/wikipedia/commons/9/9b/STS-31_Hubble_Space_Telescope_%28HST%29_drifts_away_from_Discovery%27s_RMS.jpg",
+        alt: "Hubble drifting tiny over Earth's desert coastline",
+        note: "surreal scale, zero CGI",
+        tall: true,
+      },
+      {
+        src: "https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1400&q=80",
+        alt: "Aerial of teal surf meeting blank sand",
+        tall: true,
+      },
+      {
+        src: "https://upload.wikimedia.org/wikipedia/commons/6/64/Contrail_-blue_sky_-4Oct2006.jpg",
+        alt: "Single contrail cutting across pure blue sky",
+        note: "one line in the sky = the whole story",
+        tall: true,
+      },
+      {
+        src: "https://images.pexels.com/photos/1268871/pexels-photo-1268871.jpeg?auto=compress&cs=tinysrgb&w=1600",
+        alt: "Seaside stone pool under hard Mediterranean sun",
+      },
+    ],
+  },
+  {
+    id: "b",
+    index: "Nº 2",
+    name: "Golden Hour",
+    thesis:
+      "Riviera 1962, aperitif light. Warm film color, striped umbrellas, terraces over the water — and the fleet on the same horizon at dusk.",
+    serious:
+      "Seriousness arrives as scale: leisure in the foreground, gray hulls on the horizon line. The pairing does the arguing.",
+    font: "b",
+    specimen: "The beaches we summer on were defended once.",
+    caption: "Young Serif + EB Garamond italic — warm, printed, unhurried",
+    palette: [
+      { hex: "#F4E9D4", name: "cream" },
+      { hex: "#3A2C22", name: "espresso" },
+      { hex: "#E8A25C", name: "apricot" },
+      { hex: "#7A2E2E", name: "wine" },
+      { hex: "#C9A958", name: "gold" },
+    ],
+    images: [
+      {
+        src: "https://images.unsplash.com/photo-1534250617995-d16425086b91?w=1400&q=80",
+        alt: "Rows of blue-and-white striped umbrellas on an Italian beach",
+        note: "the stripes — our awning, our flag",
+        tall: true,
+      },
+      {
+        src: "https://images.unsplash.com/photo-1581416271120-61cbe0c2cafb?w=1400&q=80",
+        alt: "Positano cliffside at sunset",
+        tall: true,
+      },
+      {
+        src: "https://images.unsplash.com/photo-1654363539422-76c4e6b93b3d?w=1400&q=80",
+        alt: "Poolside reader",
+        note: "leisure played completely straight",
+      },
+      {
+        src: "https://upload.wikimedia.org/wikipedia/commons/c/c8/USS_Ronald_Reagan_%28CVN-76%29_sails_into_the_sunset_in_November_2015.JPG",
+        alt: "Aircraft carrier at golden hour",
+        note: "same light as the beach — that's the trick",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1641475910579-d4d2fb3034d7?w=1400&q=80",
+        alt: "Aperitif table with spritz and lemons",
+        tall: true,
+      },
+      {
+        src: "https://images.unsplash.com/photo-1560932668-3b6f9c12f4e1?w=1400&q=80",
+        alt: "Vintage boats in Portofino harbor",
+        tall: true,
+      },
+      {
+        src: "https://upload.wikimedia.org/wikipedia/commons/2/2f/US_Navy_051029-N-5884M-007_An_F-A-18F_Super_Hornet_launches_off_the_fight_deck_aboard_the_Nimitz-class_aircraft_carrier_USS_Dwight_D._Eisenhower_%28CVN_69%29_during_sunset_flight_operations.jpg",
+        alt: "Super Hornet launching at sunset",
+      },
+    ],
+  },
+  {
+    id: "c",
+    index: "Nº 3",
+    name: "The Journal",
+    thesis:
+      "A smart European weekly. Documentary photography, a real typographic grid, captions that inform. The club as a serious publication about its own valley.",
+    serious:
+      "Seriousness is the default register — reportage. The fun lives in wit, captions, and the confidence of the grid.",
+    font: "c",
+    specimen: "Dispatches from the first defense valley.",
+    caption: "Spectral + IBM Plex Mono captions — printed matter, set for screens",
+    palette: [
+      { hex: "#F4F1EA", name: "newsprint" },
+      { hex: "#1C1C1C", name: "ink" },
+      { hex: "#21374F", name: "navy" },
+      { hex: "#C33B2A", name: "signal red" },
+    ],
+    images: [
+      {
+        src: "https://images.unsplash.com/photo-1495020689067-958852a7765e?w=1400&q=80",
+        alt: "Man reading a broadsheet on a bench",
+        note: "the reader is the brand",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1522093007474-d86e9bf7ba6f?w=1400&q=80",
+        alt: "Paris side street at dusk",
+        tall: true,
+      },
+      {
+        src: "https://upload.wikimedia.org/wikipedia/commons/e/e5/US_Navy_080909-N-7571S-033_Flight_deck_personnel_aboard_the_aircraft_carrier_USS_Theodore_Roosevelt_%28CVN_71%29_observe_flight_operations.jpg",
+        alt: "Flight-deck crew watch an F/A-18 overhead",
+        note: "reportage, not renders",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1524661135-423995f22d0b?w=1400&q=80",
+        alt: "Pinned world map",
+        tall: true,
+      },
+      {
+        src: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?w=1400&q=80",
+        alt: "Container terminal from the air",
+        note: "logistics is a defense story",
+      },
+      {
+        src: "https://upload.wikimedia.org/wikipedia/commons/d/d6/NATO_Ministers_of_Defense_and_of_Foreign_Affairs_meet_at_NATO_headquarters_in_Brussels_2010.jpg",
+        alt: "NATO ministers at the round table, Brussels",
+      },
+      {
+        src: "https://images.unsplash.com/photo-1555881400-74d7acaacd8b?w=1400&q=80",
+        alt: "Porto riverfront facades",
+        tall: true,
+      },
+    ],
+  },
+];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Three worlds — NSIN identity moodboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Young+Serif&family=EB+Garamond:ital,wght@0,400..700;1,400..700&family=Spectral:ital,wght@0,300;0,400;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&family=Caveat:wght@500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- ── the thesis ── -->
+    <header class="thesis">
+      <p class="thesis-kicker">NSIN at San José State — identity moodboard, round one</p>
+      <h1>A quiet summer is the product of deterrence.</h1>
+      <p class="thesis-body">
+        Europe's coastline is its playground and its most defended ground at
+        once. The leisure isn't irony and it isn't decoration — it's the
+        argument: this is what the work protects. Three ways to build a world
+        out of that idea, below. React to feelings, not layouts — everything
+        here is disposable.
+      </p>
+    </header>
+
+    {worlds.map((w) => (
+      <section class={`world world-${w.id}`} id={w.id}>
+        <div class="world-head">
+          <p class="world-index">{w.index}</p>
+          <h2 class={`world-name font-${w.font}`}>{w.name}</h2>
+          <p class="world-thesis">{w.thesis}</p>
+        </div>
+
+        {w.images.length > 0 ? (
+          <div class="collage">
+            {w.images.map((img) => (
+              <figure class={img.tall ? "tall" : ""}>
+                <img src={img.src} alt={img.alt} loading="lazy" />
+                {img.note && <figcaption class="scribble">{img.note}</figcaption>}
+              </figure>
+            ))}
+          </div>
+        ) : (
+          <p class="pending">[ image set loading — see below ]</p>
+        )}
+
+        <div class="world-meta">
+          <div class="chips">
+            {w.palette.map((c) => (
+              <div class="chip">
+                <span class="swatch" style={`background:${c.hex}`}></span>
+                <span class="chip-label">{c.name}<br />{c.hex}</span>
+              </div>
+            ))}
+          </div>
+          <div class="specimen">
+            <p class={`specimen-line font-${w.font}`}>{w.specimen}</p>
+            <p class="specimen-caption">{w.caption}</p>
+          </div>
+          <p class="serious"><strong>Where the seriousness lives:</strong> {w.serious}</p>
+        </div>
+      </section>
+    ))}
+
+    <footer class="board-foot">
+      <p>
+        Pick one. Or mix two. Or tell me which single image above feels most
+        like the club — that answer is worth more than any label.
+      </p>
+    </footer>
+
+    <style>
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: #f1efe9;
+        color: #161616;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 1.125rem;
+        line-height: 1.5;
+      }
+
+      /* world-specific display faces */
+      .font-a {
+        font-family: "Archivo", sans-serif;
+        font-variation-settings: "wdth" 118;
+        font-weight: 800;
+        letter-spacing: -0.02em;
+      }
+      .font-b {
+        font-family: "Young Serif", Georgia, serif;
+        font-weight: 400;
+      }
+      .font-c {
+        font-family: "Spectral", Georgia, serif;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+      }
+
+      .thesis {
+        padding: clamp(3.5rem, 9vw, 7rem) clamp(1.5rem, 6vw, 5rem) clamp(2.5rem, 6vw, 4.5rem);
+        max-width: 72rem;
+      }
+      .thesis-kicker {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.8125rem;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #6b6357;
+      }
+      .thesis h1 {
+        font-family: "Newsreader", serif;
+        font-optical-sizing: auto;
+        font-size: clamp(2.6rem, 1.2rem + 6vw, 6rem);
+        font-weight: 300;
+        line-height: 1.02;
+        letter-spacing: -0.02em;
+        margin: 1.4rem 0 1.6rem;
+        max-width: 18ch;
+        text-wrap: balance;
+      }
+      .thesis-body {
+        max-width: 46rem;
+        font-size: clamp(1.15rem, 1rem + 0.5vw, 1.35rem);
+        color: #3c372f;
+        text-wrap: pretty;
+      }
+
+      .world {
+        padding: clamp(3rem, 7vw, 5.5rem) clamp(1.5rem, 6vw, 5rem);
+        border-top: 1.5px solid #16161622;
+      }
+      .world-head {
+        max-width: 72rem;
+        margin-bottom: 2.4rem;
+      }
+      .world-index {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.8125rem;
+        letter-spacing: 0.06em;
+        color: #6b6357;
+      }
+      .world-name {
+        font-size: clamp(2.4rem, 1.4rem + 4.5vw, 5rem);
+        line-height: 1;
+        margin: 0.5rem 0 1rem;
+      }
+      .world-thesis {
+        max-width: 44rem;
+        font-size: 1.2rem;
+        color: #3c372f;
+        text-wrap: pretty;
+      }
+
+      /* collage — overlapping, slightly askew, annotated */
+      .collage {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+        grid-auto-rows: 11rem;
+        gap: 1.1rem;
+        max-width: 90rem;
+      }
+      .collage figure {
+        position: relative;
+        overflow: visible;
+        grid-row: span 2;
+      }
+      .collage figure.tall {
+        grid-row: span 3;
+      }
+      .collage img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        box-shadow: 0 14px 30px -18px rgb(22 22 22 / 0.45);
+        transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+      .collage figure:nth-child(3n) img {
+        transform: rotate(0.7deg);
+      }
+      .collage figure:nth-child(3n + 1) img {
+        transform: rotate(-0.6deg);
+      }
+      .collage figure:hover img {
+        transform: rotate(0deg) scale(1.025);
+      }
+      .scribble {
+        position: absolute;
+        bottom: -0.4rem;
+        left: 0.6rem;
+        transform: rotate(-2deg);
+        font-family: "Caveat", cursive;
+        font-size: 1.35rem;
+        color: #161616;
+        background: #f1efe9;
+        padding: 0 0.5rem;
+        box-shadow: 0 2px 10px -4px rgb(22 22 22 / 0.35);
+      }
+
+      .pending {
+        font-family: "IBM Plex Mono", monospace;
+        color: #6b6357;
+        padding: 2rem 0;
+      }
+
+      .world-meta {
+        max-width: 72rem;
+        margin-top: 2.6rem;
+        display: grid;
+        grid-template-columns: 1fr 1.4fr;
+        gap: 2.5rem;
+        align-items: start;
+      }
+      .chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.9rem;
+      }
+      .chip {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+      }
+      .swatch {
+        width: 2.6rem;
+        height: 2.6rem;
+        border-radius: 50%;
+        border: 1.5px solid #16161633;
+        display: inline-block;
+      }
+      .chip-label {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        line-height: 1.35;
+        color: #4a453c;
+        text-transform: uppercase;
+      }
+      .specimen-line {
+        font-size: clamp(1.7rem, 1.2rem + 2vw, 2.7rem);
+        line-height: 1.08;
+        text-wrap: balance;
+      }
+      .specimen-caption {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.8125rem;
+        color: #6b6357;
+        margin-top: 0.7rem;
+      }
+      .serious {
+        grid-column: 1 / -1;
+        max-width: 56rem;
+        color: #3c372f;
+        border-top: 1.5px solid #16161622;
+        padding-top: 1.1rem;
+      }
+
+      .board-foot {
+        border-top: 1.5px solid #16161622;
+        padding: 2.5rem clamp(1.5rem, 6vw, 5rem) 4rem;
+      }
+      .board-foot p {
+        font-family: "Caveat", cursive;
+        font-size: 1.6rem;
+        max-width: 34rem;
+        transform: rotate(-0.5deg);
+      }
+
+      @media (max-width: 760px) {
+        .world-meta {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </body>
+</html>
