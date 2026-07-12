@@ -18,38 +18,22 @@ const tickerLines = [
   "SAN JOSÉ, CALIFORNIA",
 ];
 
-const menu = [
+const programs = [
   {
-    emoji: "🫱🏽‍🫲🏼",
-    name: "CONSULTING CLEANSE",
-    desc: "Student teams paired with defense & intelligence orgs on live problems. Ships a real deliverable.",
-    price: "$0.00",
-    tag: "STAFF PICK",
-    tagClass: "tag-pick",
+    name: "CONSULTING",
+    desc: "Student teams paired with defense & intelligence orgs on live problems. Ships a real deliverable. The flagship.",
   },
   {
-    emoji: "🎙️",
-    name: "RAW SPEAKER SERIES",
-    desc: "Defense-tech founders, policymakers, and intelligence veterans. In the room, unfiltered.",
-    price: "$0.00",
-    tag: "IN STOCK",
-    tagClass: "tag-stock",
+    name: "SPEAKER SERIES",
+    desc: "Defense-tech founders, policymakers, and intelligence veterans. In the room, on the record.",
   },
   {
-    emoji: "🛠️",
-    name: "HACKATHON PRE-WORKOUT",
+    name: "BUILD & COMPETE",
     desc: "Prototype sprints + DoD challenges. The pipeline to the National Security Hackathon.",
-    price: "$0.00",
-    tag: "LIMITED",
-    tagClass: "tag-limited",
   },
   {
-    emoji: "📜",
-    name: "COLD-PRESSED POLICY",
+    name: "POLICY & STRATEGY",
     desc: "AI governance, export controls, deterrence — argued across engineering, business & poli-sci.",
-    price: "$0.00",
-    tag: "IN STOCK",
-    tagClass: "tag-stock",
   },
 ];
 ---
@@ -96,7 +80,7 @@ const menu = [
       </h1>
 
       <div class="stickers" aria-hidden="true">
-        <span class="sticker sticker-free">FREE</span>
+        <span class="sticker sticker-free">DROP 001</span>
         <span class="sticker sticker-loc">SAN JOSÉ, CA</span>
       </div>
 
@@ -129,18 +113,15 @@ const menu = [
       </div>
     </main>
 
-    <!-- ── the shelf ── -->
+    <!-- ── programs ── -->
     <section class="shelf">
-      <h2 class="shelf-h">THIS SEMESTER'S MENU</h2>
-      <p class="shelf-sub">all items $0.00 with a student ID · no experience required</p>
-      <div class="tags-grid">
-        {menu.map((m) => (
-          <article class="shelf-tag">
-            <p class="tag-emoji">{m.emoji}</p>
-            <span class={`stock ${m.tagClass}`}>{m.tag}</span>
-            <h3>{m.name}</h3>
-            <p class="tag-desc">{m.desc}</p>
-            <p class="tag-price">{m.price}</p>
+      <h2 class="shelf-h">WHAT WE RUN</h2>
+      <p class="shelf-sub">everything is free · no experience required · every major has a seat</p>
+      <div class="rows">
+        {programs.map((p) => (
+          <article class="row">
+            <h3>{p.name}</h3>
+            <p class="row-desc">{p.desc}</p>
           </article>
         ))}
       </div>
@@ -418,58 +399,38 @@ const menu = [
         margin: 0.5rem 0 2rem;
         color: #55503f;
       }
-      .tags-grid {
+      .rows {
+        border-top: 3px solid var(--ink);
+      }
+      .row {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-        gap: 1.4rem;
+        grid-template-columns: minmax(14rem, 1fr) 2fr;
+        gap: 1.5rem;
+        align-items: baseline;
+        padding: 1.6rem 0.2rem;
+        border-bottom: 3px solid var(--ink);
+        transition: background 0.15s ease, padding-left 0.15s ease;
       }
-      .shelf-tag {
-        position: relative;
+      .row:hover {
         background: #fff;
-        border: 3px solid var(--ink);
-        box-shadow: 6px 6px 0 var(--ink);
-        padding: 1.3rem 1.2rem 1.1rem;
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        padding-left: 0.8rem;
       }
-      .shelf-tag:hover {
-        transform: translate(-2px, -4px) rotate(-0.6deg);
-        box-shadow: 9px 10px 0 var(--ink);
-      }
-      .tag-emoji {
-        font-size: 2rem;
-      }
-      .stock {
-        position: absolute;
-        top: 1rem;
-        right: 1rem;
-        font-family: "IBM Plex Mono", monospace;
-        font-size: 0.62rem;
-        font-weight: 600;
-        letter-spacing: 0.08em;
-        padding: 0.3em 0.6em;
-        border: 2px solid var(--ink);
-      }
-      .tag-pick { background: var(--gold); }
-      .tag-stock { background: #c9e4d2; }
-      .tag-limited { background: var(--red); color: #fff; }
-      .shelf-tag h3 {
+      .row h3 {
         font-family: "Anton", Impact, sans-serif;
         font-weight: 400;
-        font-size: 1.45rem;
-        margin: 0.8rem 0 0.5rem;
+        font-size: clamp(1.6rem, 3.4vw, 2.6rem);
+        line-height: 1;
       }
-      .tag-desc {
-        font-size: 0.95rem;
-        line-height: 1.45;
-        min-height: 4.2em;
+      .row-desc {
+        font-size: 1.02rem;
+        line-height: 1.5;
+        max-width: 40rem;
       }
-      .tag-price {
-        font-family: "IBM Plex Mono", monospace;
-        font-weight: 600;
-        font-size: 1.5rem;
-        margin-top: 0.9rem;
-        border-top: 2px dashed var(--ink);
-        padding-top: 0.6rem;
+      @media (max-width: 640px) {
+        .row {
+          grid-template-columns: 1fr;
+          gap: 0.5rem;
+        }
       }
 
       .foot {
