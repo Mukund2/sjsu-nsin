@@ -1,0 +1,130 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// The one action we want most people to take. Set `href` to the live
+// application form; leave it null to hide the block entirely.
+const primary = {
+  label: "Apply — Defense Innovation Program",
+  note: "Fall 2026 cohort",
+  href: null as string | null,
+};
+
+const links = [
+  {
+    label: "Membership form",
+    note: "General club membership",
+    href: "https://forms.gle/9MLweCMRaaTkrEkGA",
+  },
+  {
+    label: "About the club",
+    note: "What we work on and who runs it",
+    href: "/about",
+  },
+  {
+    label: "Instagram",
+    note: "@sjsu_nsin",
+    href: "https://www.instagram.com/sjsu_nsin/",
+  },
+  {
+    label: "LinkedIn",
+    note: "SJSU NSIN",
+    href: "https://www.linkedin.com/company/sjsu-nsin/",
+  },
+  {
+    label: "Contact",
+    note: "Speakers, partnerships, questions",
+    href: "/contact",
+  },
+];
+
+const isExternal = (href: string) => href.startsWith("http");
+---
+
+<BaseLayout
+  title="Links — SJSU NSIN"
+  description="Application, membership, and socials for National Security Innovation Network SJSU."
+>
+  <section class="py-20 sm:py-28 px-5">
+    <div class="max-w-xl mx-auto">
+      <header class="text-center">
+        <img
+          src="/logo.svg"
+          alt=""
+          width="44"
+          height="30"
+          class="mx-auto mb-7"
+          aria-hidden="true"
+        />
+        <h1 class="text-3xl sm:text-4xl font-display text-near-black leading-tight">
+          National Security Innovation Network
+        </h1>
+        <p
+          class="mt-3 text-[13px] font-medium uppercase tracking-[0.15em] text-mid-gray"
+        >
+          San José State University
+        </p>
+      </header>
+
+      {
+        primary.href && (
+          <a
+            href={primary.href}
+            target={isExternal(primary.href) ? "_blank" : undefined}
+            rel={isExternal(primary.href) ? "noopener noreferrer" : undefined}
+            class="mt-12 block bg-near-black text-white text-center px-6 py-5 hover:bg-dark-gray transition-colors"
+          >
+            <span
+              class="block text-[13px] font-medium uppercase tracking-[0.15em]"
+            >
+              {primary.label}
+            </span>
+            <span class="block mt-1.5 text-sm text-white/60">
+              {primary.note}
+            </span>
+          </a>
+        )
+      }
+
+      <nav class="mt-12" aria-label="Club links">
+        <ul class="border-t border-light-gray">
+          {
+            links.map((link) => (
+              <li class="border-b border-light-gray">
+                <a
+                  href={link.href}
+                  target={isExternal(link.href) ? "_blank" : undefined}
+                  rel={
+                    isExternal(link.href) ? "noopener noreferrer" : undefined
+                  }
+                  class="group flex items-center justify-between gap-6 py-5 text-near-black hover:text-sjsu-blue transition-colors"
+                >
+                  <span>
+                    <span class="block font-medium">{link.label}</span>
+                    <span class="block mt-0.5 text-sm text-mid-gray">
+                      {link.note}
+                    </span>
+                  </span>
+                  <svg
+                    class="w-4 h-4 flex-none text-light-gray group-hover:text-sjsu-blue transition-colors"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    aria-hidden="true"
+                  >
+                    <path d="M6 3l5 5-5 5" stroke-linecap="square" />
+                  </svg>
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+
+      <p class="mt-12 text-sm text-mid-gray leading-relaxed text-center">
+        A student organization at San José State University. Not affiliated with
+        the U.S. Department of Defense program of the same name.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
