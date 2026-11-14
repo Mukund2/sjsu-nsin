@@ -8,7 +8,7 @@ interface Props {
 }
 
 const {
-  title = "SJSU National Security Innovation Network",
+  title = "National Security Innovation Network SJSU",
   description = "Applying innovation methodologies to national security challenges. A student organization at San Jose State University."
 } = Astro.props;
 
@@ -31,7 +31,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/images/f117.jpg" />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:site_name" content="SJSU NSIN" />
+    <meta property="og:site_name" content="NSIN SJSU" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
